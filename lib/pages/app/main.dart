@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 05:27:00
-/// LastEditTime: 2023-04-29 01:21:49
+/// LastEditTime: 2023-04-29 02:08:46
 /// FilePath: /lib/pages/app/main.dart
 /// ===========================================================================
 
@@ -136,10 +136,17 @@ class _AppPageState extends State<AppPage> with WindowListener {
     return const DragToMoveArea(
       child: Align(
         alignment: AlignmentDirectional.centerStart,
-        child: Text("SRCat", style: TextStyle(
-          fontSize: 14
-        )),
-      )
+        child: Text.rich(TextSpan(
+          style: TextStyle(fontSize: 14),
+          children: <InlineSpan>[
+            TextSpan(text: "S"),
+            TextSpan(text: "R"),
+            TextSpan(text: "C", style: TextStyle(fontSize: 16, fontFamily: "Cattie", fontWeight: FontWeight.w600)),
+            TextSpan(text: "a"),
+            TextSpan(text: "t"),
+          ]
+        ),
+      ))
     );
   }
 

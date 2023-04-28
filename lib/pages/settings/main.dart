@@ -1,13 +1,15 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 23:33:29
-/// LastEditTime: 2023-04-29 01:28:20
+/// LastEditTime: 2023-04-29 02:29:02
 /// FilePath: /lib/pages/settings/main.dart
 /// ===========================================================================
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:srcat/components/global/card/item.dart';
+import 'package:srcat/components/global/icon/main.dart';
 import 'package:srcat/components/global/scroll/normal.dart';
+import 'package:srcat/icons/iconfont/srcat.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -67,11 +69,37 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  Widget _panel2() {
+    Widget version = const SCItemCard(
+      icon: SRCatIcon.cat_food,
+      title: "SRCat",
+      description: "Ver.1.0.0",
+      rightChild: SCIcon(FluentIcons.link12, size: 20),
+    );
+
+    Widget github = const SCItemCard(
+      icon: SRCatIcon.github,
+      title: "GitHub",
+      description: "https://github.com/BoxCatTeam/SRCat",
+      rightChild: SCIcon(FluentIcons.link12, size: 20),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        const SizedBox(height: 15),
+        const Text("关于", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
+        const SizedBox(height: 5),
+        version, github
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget child = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_panel1()],
+      children: [_panel1(), _panel2()],
     );
 
     return SCNormalScroll(
