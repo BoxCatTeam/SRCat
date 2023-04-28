@@ -2,7 +2,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 03:54:06
-/// LastEditTime: 2023-04-28 19:09:50
+/// LastEditTime: 2023-04-28 23:35:48
 /// FilePath: /lib/pages/router.dart
 /// ===========================================================================
 
@@ -18,6 +18,8 @@ import 'app/main.dart';
 import 'home/main.dart';
 /// Wrap
 import 'tools/wrap.dart';
+/// Settings
+import 'settings/main.dart';
 
 class PagesRouter implements SRCatRouteInterface {
   final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -43,6 +45,11 @@ class PagesRouter implements SRCatRouteInterface {
           path: "/tools/wrap",
           name: "ToolsWrap",
           builder: (context, state) => const ToolsWrapPage()
+        ),
+        GoRoute(
+          path: "/settings",
+          name: "Settings",
+          builder: (context, state) => const SettingsPage()
         )
       ],
     );

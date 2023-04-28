@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 01:54:10
-/// LastEditTime: 2023-04-28 19:27:14
+/// LastEditTime: 2023-04-29 01:38:44
 /// FilePath: /lib/main.dart
 /// ===========================================================================
 
@@ -11,7 +11,6 @@ import 'package:srcat/application.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'package:srcat/libs/router/main.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:flutter_acrylic/flutter_acrylic.dart' as flutter_acrylic;
 
@@ -25,7 +24,7 @@ Future<void> main() async {
 
   // Window config
   WindowOptions windowOptions = const WindowOptions(
-    size: Size(900, 600),
+    size: Size(1200, 600),
     minimumSize: Size(900, 600),
     center: true,
     titleBarStyle: TitleBarStyle.hidden,
@@ -90,11 +89,6 @@ class _SRCatAPPState extends State<SRCatAPP> {
       ),
     );
 
-    return ScreenUtilInit(
-      designSize: const Size(900, 600),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context , child) => app,
-    );
+    return app;
   }
 }

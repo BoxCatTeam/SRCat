@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 05:27:00
-/// LastEditTime: 2023-04-28 19:25:07
+/// LastEditTime: 2023-04-29 01:21:49
 /// FilePath: /lib/pages/app/main.dart
 /// ===========================================================================
 
@@ -9,7 +9,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:srcat/application.dart';
 import 'package:window_manager/window_manager.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 
 class AppPage extends StatefulWidget {
@@ -116,6 +115,7 @@ class _AppPageState extends State<AppPage> with WindowListener {
       icon: const Icon(FluentIcons.settings),
       title: const Text("设置"),
       body: const SizedBox.shrink(),
+      onTap: () => Application.router.push("/settings")
     )
   ];
 
@@ -125,8 +125,8 @@ class _AppPageState extends State<AppPage> with WindowListener {
       selected: _selectedIndex(),
       items: _navItems,
       footerItems: _footerNavItems,
-      size: NavigationPaneSize(
-        openMaxWidth: 200.w
+      size: const NavigationPaneSize(
+        openMaxWidth: 200
       )
     );
   }
@@ -146,7 +146,7 @@ class _AppPageState extends State<AppPage> with WindowListener {
   @override
   Widget build(BuildContext context) {
     Window.setEffect(
-      effect: WindowEffect.mica,
+      effect: WindowEffect.tabbed,
       dark: false,
     );
     return NavigationView(

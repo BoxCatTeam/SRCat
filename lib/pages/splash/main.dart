@@ -2,14 +2,12 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 03:59:16
-/// LastEditTime: 2023-04-28 19:31:02
+/// LastEditTime: 2023-04-29 01:40:33
 /// FilePath: /lib/pages/splash/main.dart
 /// ===========================================================================
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:srcat/application.dart';
-
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -43,9 +41,9 @@ class _SplashPageState extends State<SplashPage> {
       decoration: const BoxDecoration(
         color: Colors.white,
       ),
-      child: Center(
+      child: const Center(
         child: ProgressRing(
-          strokeWidth: 5.r,
+          strokeWidth: 5,
         ),
       ),
     );

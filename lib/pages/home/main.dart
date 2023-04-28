@@ -6,7 +6,6 @@
 /// ===========================================================================
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:srcat/components/global/icon/main.dart';
 import 'package:srcat/icons/iconfont/srcat.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -21,10 +20,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   /// 标题
   Widget _title() {
-    return Text.rich(
+    return const Text.rich(
       TextSpan(
-        style: TextStyle(fontSize: 80.sp, fontFamily: "VarelaRound"),
-        children: const <InlineSpan>[
+        style: TextStyle(fontSize: 80, fontFamily: "VarelaRound"),
+        children: <InlineSpan>[
           TextSpan(
             style: TextStyle(color: Color.fromRGBO(30, 136, 229, 1)),
             children: <InlineSpan>[
@@ -52,9 +51,9 @@ class _HomePageState extends State<HomePage> {
     Widget button(IconData icon, String? text, String? url) {
       return Button(child: Row(
         children: <Widget>[
-          SCIcon(icon, size: 25.sp),
-          if (text != null) SizedBox(width: 5.w),
-          if (text != null) Text(text, style: TextStyle(fontSize: 20.sp))
+          SCIcon(icon, size: 25),
+          if (text != null) const SizedBox(width: 5),
+          if (text != null) Text(text, style: const TextStyle(fontSize: 20))
         ],
       ), onPressed: () => {
         if (url != null) openLink(url)

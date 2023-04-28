@@ -2,12 +2,11 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 22:28:11
-/// LastEditTime: 2023-04-28 22:30:27
+/// LastEditTime: 2023-04-29 01:41:26
 /// FilePath: /lib/components/global/icon/main.dart
 /// ===========================================================================
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SCIcon extends StatefulWidget {
   const SCIcon(this.icon, {
@@ -39,9 +38,10 @@ class _SCIconState extends State<SCIcon> {
     return Text(
       String.fromCharCode(widget.icon.codePoint),
       style: TextStyle(
-        fontSize: widget.size ?? 19.sp,
+        fontSize: widget.size ?? 19,
         fontWeight: widget.weight ?? FontWeight.w500,
         fontFamily: widget.icon.fontFamily,
+        package: widget.icon.fontPackage,
         color: widget.color
       )
     );

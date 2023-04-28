@@ -39,11 +39,6 @@ dependencies:
   # https://pub.flutter-io.cn/packages/window_manager
   window_manager: ^0.3.2
 
-  # Flutter Screen Util
-  # https://pub.dev/packages/flutter_screenutil
-  # https://pub.flutter-io.cn/packages/flutter_screenutil
-  flutter_screenutil: ^5.7.0
-
   # Go Router
   # https://pub.dev/packages/go_router
   # https://pub.flutter-io.cn/packages/go_router
