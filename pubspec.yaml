@@ -1,0 +1,86 @@
+name: srcat
+description: "Honkai: Star Rail Toolbox on Windows"
+publish_to: 'none'
+
+# 软件版本号
+# 前半部分为用户所见的版本号，可以随意填写（
+# 后半部分版本号为内部版本号，系统将以此版本号为准，来判断是否为新版本
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.19.4 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Fluent UI
+  # https://pub.dev/packages/fluent_ui
+  # https://pub.flutter-io.cn/packages/fluent_ui
+  fluent_ui: ^4.5.0
+
+  # flutter_acrylic
+  # https://pub.dev/packages/flutter_acrylic
+  # https://pub.flutter-io.cn/packages/flutter_acrylic
+  flutter_acrylic: ^1.1.2
+
+  # Fluent UI Icons
+  # https://pub.dev/packages/fluentui_system_icons
+  # https://pub.flutter-io.cn/packages/fluentui_system_icons
+  fluentui_system_icons: ^1.1.199
+
+  # Flutter Riverpod
+  # https://pub.dev/packages/flutter_riverpod
+  # https://pub.flutter-io.cn/packages/flutter_riverpod
+  flutter_riverpod: ^2.3.6
+
+  # Window Manager
+  # https://pub.dev/packages/window_manager
+  # https://pub.flutter-io.cn/packages/window_manager
+  window_manager: ^0.3.2
+
+  # Flutter Screen Util
+  # https://pub.dev/packages/flutter_screenutil
+  # https://pub.flutter-io.cn/packages/flutter_screenutil
+  flutter_screenutil: ^5.7.0
+
+  # Go Router
+  # https://pub.dev/packages/go_router
+  # https://pub.flutter-io.cn/packages/go_router
+  go_router: ^6.5.8
+
+  # Url Launcher
+  # https://pub.dev/packages/url_launcher
+  # https://pub.flutter-io.cn/packages/url_launcher
+  url_launcher: ^6.1.10
+
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+flutter:
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  fonts:
+    - family: PingFang
+      fonts:
+        - asset: assets/fonts/PingFang-Bold.ttf
+    - family: Cattie
+      fonts:
+        - asset: assets/fonts/Cattie-Regular.ttf
+    - family: VarelaRound
+      fonts:
+        - asset: assets/fonts/VarelaRound-Regular.ttf
+    - family: SRCatIcon
+      fonts:
+        - asset: assets/iconfont/srcat-icon.ttf
+
+  assets:
+    - assets/iconfont/
