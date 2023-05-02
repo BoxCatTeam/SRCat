@@ -1,0 +1,130 @@
+name: srcat
+description: "Honkai: Star Rail Toolbox on Windows"
+publish_to: 'none'
+
+# 软件版本号
+# 前半部分为用户所见的版本号，可以随意填写（
+# 后半部分版本号为内部版本号，系统将以此版本号为准，来判断是否为新版本
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.19.4 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  file:
+
+  # Fluent UI
+  # https://pub.dev/packages/fluent_ui
+  # https://pub.flutter-io.cn/packages/fluent_ui
+  fluent_ui: ^4.5.0
+
+  # flutter_acrylic
+  # https://pub.dev/packages/flutter_acrylic
+  # https://pub.flutter-io.cn/packages/flutter_acrylic
+  flutter_acrylic: ^1.1.2
+
+  # Fluent UI Icons
+  # https://pub.dev/packages/fluentui_system_icons
+  # https://pub.flutter-io.cn/packages/fluentui_system_icons
+  fluentui_system_icons: ^1.1.199
+
+  # Flutter Riverpod
+  # https://pub.dev/packages/flutter_riverpod
+  # https://pub.flutter-io.cn/packages/flutter_riverpod
+  flutter_riverpod: ^2.3.6
+
+  # Window Manager
+  # https://pub.dev/packages/window_manager
+  # https://pub.flutter-io.cn/packages/window_manager
+  window_manager: ^0.3.2
+
+  # Go Router
+  # https://pub.dev/packages/go_router
+  # https://pub.flutter-io.cn/packages/go_router
+  go_router: ^6.5.8
+
+  # Url Launcher
+  # https://pub.dev/packages/url_launcher
+  # https://pub.flutter-io.cn/packages/url_launcher
+  url_launcher: ^6.1.10
+
+  # Chart
+  # https://pub.dev/packages/fl_chart
+  # https://pub.flutter-io.cn/packages/fl_chart
+  fl_chart: ^0.62.0
+
+  # Proxy Manager
+  # https://pub.dev/packages/proxy_manager
+  # https://pub.flutter-io.cn/packages/proxy_manager
+  proxy_manager: ^0.0.3
+
+  # Mini LocalServer
+  # https://pub.dev/packages/mini_server
+  # https://pub.flutter-io.cn/packages/mini_server
+  mini_server: ^1.1.0
+
+  # Path Provider
+  # https://pub.dev/packages/path_provider
+  # https://pub.flutter-io.cn/packages/path_provider
+  path_provider: ^2.0.14
+
+  # File Selector
+  # https://pub.dev/packages/file_selector
+  # https://pub.flutter-io.cn/packages/file_selector
+  file_selector: ^0.9.2+4
+
+  # SQLite
+  # https://pub.dev/packages/sqflite
+  # https://pub.flutter-io.cn/packages/sqflite
+  sqflite: ^2.2.8
+  sqflite_common_ffi: ^2.2.5
+
+  # Share Preferences
+  # https://pub.dev/packages/shared_preferences
+  # https://pub.flutter-io.cn/packages/shared_preferences
+  shared_preferences: ^2.1.0
+
+  # Dio
+  # https://pub.dev/packages/dio
+  # https://pub.flutter-io.cn/packages/dio
+  dio: ^5.1.1
+
+  # Connectivity
+  # https://pub.dev/packages/connectivity_plus
+  # https://pub.flutter-io.cn/packages/connectivity_plus
+  connectivity_plus: ^3.0.6
+
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+flutter:
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  fonts:
+    - family: PingFang
+      fonts:
+        - asset: assets/fonts/PingFang-Bold.ttf
+    - family: Cattie
+      fonts:
+        - asset: assets/fonts/Cattie-Regular.ttf
+    - family: VarelaRound
+      fonts:
+        - asset: assets/fonts/VarelaRound-Regular.ttf
+    - family: SRCatIcon
+      fonts:
+        - asset: assets/iconfont/srcat-icon.ttf
+
+  assets:
+    - assets/iconfont/
+    - assets/images/hidden-pack/

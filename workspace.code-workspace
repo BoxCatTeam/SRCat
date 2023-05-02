@@ -1,0 +1,24 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "fileheader.configObj": {
+      "language": {
+        "dart": {
+          "head": "/// ===========================================================================",
+          "middle": "/// ",
+          "end": "/// ==========================================================================="
+        }
+      }
+    },
+    "fileheader.customMade": {
+      "custom_string_obkoro1_copyright": "Copyright (c) 2020-${now_year}, BoxCat. All rights reserved.",
+      "Date": "",
+      "LastEditTime": "Do not edit",
+      "FilePath": "no item name"
+    }
+  }
+}
