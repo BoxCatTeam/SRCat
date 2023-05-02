@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 05:27:00
-/// LastEditTime: 2023-04-29 02:08:46
+/// LastEditTime: 2023-05-02 08:08:01
 /// FilePath: /lib/pages/app/main.dart
 /// ===========================================================================
 
@@ -96,14 +96,22 @@ class _AppPageState extends State<AppPage> with WindowListener {
       icon: const Icon(FluentIcons.home),
       title: const Text("主页"),
       body: const SizedBox.shrink(),
-      onTap: () => Application.router.push("/home")
+      onTap: () {
+        if (Application.router.location != "/home") {
+          Application.router.push("/home");
+        }
+      }
     ),
     PaneItem(
-      key: const Key('/tools/wrap'),
+      key: const Key('/tools/warp'),
       icon: const Icon(FluentIcons.six_point_star),
       title: const Text("跃迁记录"),
       body: const SizedBox.shrink(),
-      onTap: () => Application.router.push("/tools/wrap")
+      onTap: () {
+        if (Application.router.location != "/tools/warp") {
+          Application.router.push("/tools/warp");
+        }
+      }
     )
   ];
 
@@ -115,7 +123,11 @@ class _AppPageState extends State<AppPage> with WindowListener {
       icon: const Icon(FluentIcons.settings),
       title: const Text("设置"),
       body: const SizedBox.shrink(),
-      onTap: () => Application.router.push("/settings")
+      onTap: () {
+        if (Application.router.location != "/settings") {
+          Application.router.push("/settings");
+        }
+      }
     )
   ];
 

@@ -2,7 +2,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-29 00:25:27
-/// LastEditTime: 2023-04-29 01:30:04
+/// LastEditTime: 2023-05-02 01:38:52
 /// FilePath: /lib/components/global/card/item.dart
 /// ===========================================================================
 
@@ -17,6 +17,7 @@ class SCItemCard extends StatefulWidget {
     this.description,
     this.rightChild,
     this.margin,
+    this.onTap,
   }) : super(key: key);
 
   /// 图标
@@ -33,6 +34,9 @@ class SCItemCard extends StatefulWidget {
 
   /// 外边距
   final EdgeInsets? margin;
+
+  /// 点击回调
+  final void Function()? onTap;
 
   @override
   State<SCItemCard> createState() => _SCItemCardState();
@@ -75,17 +79,44 @@ class _SCItemCardState extends State<SCItemCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-      margin: widget.margin ?? const EdgeInsets.only(bottom: 3),
-      child: Row(
-        children: <Widget>[
-          if (widget.icon != null) _icon(),
-          if (widget.icon != null) const SizedBox(width: 18),
-          _text(),
-          if (widget.rightChild != null) widget.rightChild!
-        ],
-      )
+    Widget child = Row(
+      children: <Widget>[
+        if (widget.icon != null) _icon(),
+        if (widget.icon != null) const SizedBox(width: 18),
+        _text(),
+        if (widget.rightChild != null) widget.rightChild!
+      ],
+    );
+
+    return HoverButton(
+      onPressed: widget.onTap,
+      cursor: SystemMouseCursors.click,
+      builder: (context, states) {
+        Widget ac = AnimatedContainer(
+          duration: FluentTheme.of(context).fasterAnimationDuration,
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+          decoration: BoxDecoration(
+            color: ButtonThemeData.uncheckedInputColor(
+              FluentTheme.of(context),
+              states,
+              transparentWhenNone: true,
+            ),
+            borderRadius: BorderRadius.circular(4.0),
+          ),
+          child: child,
+        );
+
+        return FocusBorder(
+          focused: states.isFocused,
+          renderOutside: false,
+          child: RepaintBoundary(
+            child: Card(
+              padding: EdgeInsets.zero,
+              child: ac
+            )
+          )
+        );
+      },
     );
   }
 }

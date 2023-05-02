@@ -2,7 +2,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 03:54:06
-/// LastEditTime: 2023-04-28 23:35:48
+/// LastEditTime: 2023-05-01 22:52:17
 /// FilePath: /lib/pages/router.dart
 /// ===========================================================================
 
@@ -16,8 +16,8 @@ import 'splash/main.dart';
 import 'app/main.dart';
 /// Home
 import 'home/main.dart';
-/// Wrap
-import 'tools/wrap.dart';
+/// Warp
+import 'tools/warp.dart';
 /// Settings
 import 'settings/main.dart';
 
@@ -42,9 +42,9 @@ class PagesRouter implements SRCatRouteInterface {
           builder: (context, state) => const HomePage()
         ),
         GoRoute(
-          path: "/tools/wrap",
-          name: "ToolsWrap",
-          builder: (context, state) => const ToolsWrapPage()
+          path: "/tools/warp",
+          name: "ToolsWarp",
+          builder: (context, state) => const ToolsWarpPage()
         ),
         GoRoute(
           path: "/settings",

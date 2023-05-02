@@ -3,7 +3,10 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  connectivity_plus
+  file_selector_windows
   flutter_acrylic
+  proxy_manager
   screen_retriever
   url_launcher_windows
   window_manager
