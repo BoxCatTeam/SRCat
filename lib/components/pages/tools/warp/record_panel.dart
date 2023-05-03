@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-29 04:47:02
-/// LastEditTime: 2023-05-03 18:01:11
+/// LastEditTime: 2023-05-03 18:56:35
 /// FilePath: /lib/components/pages/tools/warp/record_panel.dart
 /// ===========================================================================
 // ignore_for_file: unused_local_variable
@@ -326,13 +326,37 @@ class _WarpRecordPanelState extends State<WarpRecordPanel> {
       ),
     );
   }
+
+  Widget _emptyPage() {
+    return SizedBox(
+      height: widget.height,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 100,
+            height: 103,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(SRCatPackLoader.parse(SRCatImagePack.smile_hm_5_pack)),
+                fit: BoxFit.cover
+              )
+            ),
+          ),
+          const SizedBox(height: 10),
+          const Text("没有数据欸...", style: TextStyle(fontSize: 18))
+        ],
+      )
+    );
+  }
   
   @override
   Widget build(BuildContext context) {
     Widget panel = Expander(
       initiallyExpanded: true,
       header: _header(),
-      content: _content(),
+      content: widget.data.isEmpty ? _emptyPage(): _content(),
     );
 
     return ConstrainedBox(

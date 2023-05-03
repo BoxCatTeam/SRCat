@@ -90,6 +90,7 @@ class _WarpContentListItemState extends State<WarpContentListItem> {
       id: widget.id,
       type: widget.type == WarpContentListItemType.character ? "character" : "lightcone"
     ).then((value) {
+      if (value.isEmpty) return;
       Map<String, dynamic> data = value[0];
       Map<String, dynamic> name = jsonDecode(data["name"]);
       _name = name["zh_CN"];

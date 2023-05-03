@@ -27,6 +27,9 @@ class SrWrapToolServiceUtils {
 
   /// 计算抽卡最早的时间与最晚的时间
   static List<int> timeRange(List<int> times) {
+    if (times.isEmpty) {
+      return [0, 0];
+    }
     int min = times[0];
     int max = times[0];
     for (int time in times) {

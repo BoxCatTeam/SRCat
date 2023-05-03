@@ -2,7 +2,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 19:08:54
-/// LastEditTime: 2023-05-03 18:31:53
+/// LastEditTime: 2023-05-03 18:44:19
 /// FilePath: /lib/pages/tools/warp.dart
 /// ===========================================================================
 
@@ -157,8 +157,10 @@ class _ToolsWarpPageState extends State<ToolsWarpPage> {
       items: _warpUsers.map(
         (item) => ComboBoxItem(value: item["uid"].toString(), child: Text(item["uid"].toString()))
       ).toList(),
-      onChanged: (value) => {
-        Application.router.push("/tools/warp?uid=$value")
+      onChanged: (value) {
+        if (value != null && value != _nowSelectedUID.toString()) {
+          Application.router.push("/tools/warp?uid=$value");
+        }
       },
     );
 
