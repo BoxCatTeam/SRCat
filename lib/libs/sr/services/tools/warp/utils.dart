@@ -85,7 +85,7 @@ class SrWrapToolServiceUtils {
 
       if (list[index]["rank_type"] == 5) {
         /// 距离上次五星的抽数
-        int count = 0;
+        int count = 1; /// 哪有人是第 0 抽出的啊？
         /// 从当前位置向前遍历
         for (int inIndex = index + 1; inIndex < list.length; inIndex++) {
           /// 如果是五星或者到了最后一抽
