@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-29 04:47:02
-/// LastEditTime: 2023-05-03 02:45:28
+/// LastEditTime: 2023-05-03 18:01:11
 /// FilePath: /lib/components/pages/tools/warp/record_panel.dart
 /// ===========================================================================
 // ignore_for_file: unused_local_variable
@@ -212,6 +212,8 @@ class _WarpRecordPanelState extends State<WarpRecordPanel> {
       ];
     }
 
+    List<int> upAndDownRange = SrWrapToolServiceUtils.upAndDownRange(resultData);
+
     Widget cardItems = Column(
       children: <Widget>[
         ...cardChildItem,
@@ -219,11 +221,11 @@ class _WarpRecordPanelState extends State<WarpRecordPanel> {
         const SizedBox(height: 18),
         cardTextItem("总抽数", "${widget.data.length} 抽"),
         const SizedBox(height: 2),
-        cardTextItem("UP 平均抽数", "NaN 抽"),
-        const SizedBox(height: 2),
+        widget.type == GachaWarpType.character || widget.type == GachaWarpType.lightCone ? cardTextItem("UP 平均抽数", "NaN 抽") : Container(),
+        SizedBox(height: widget.type == GachaWarpType.character || widget.type == GachaWarpType.lightCone ? 2 : 0),
         cardTextItem("五星平均抽数", "${SrWrapToolServiceUtils.star5Average(resultData)} 抽"),
-        const SizedBox(height: 2),
-        cardTextItem("最欧 NaN 抽", "最非 NaN 抽"),
+        SizedBox(height: widget.type == GachaWarpType.character || widget.type == GachaWarpType.lightCone ? 2 : 0),
+        widget.type != GachaWarpType.starter ? cardTextItem("最欧 ${upAndDownRange[0]} 抽", "最非 ${upAndDownRange[1]} 抽") : Container(),
       ],
     );
 

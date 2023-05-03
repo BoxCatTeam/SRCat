@@ -2,7 +2,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 19:08:54
-/// LastEditTime: 2023-05-03 02:27:33
+/// LastEditTime: 2023-05-03 18:31:53
 /// FilePath: /lib/pages/tools/warp.dart
 /// ===========================================================================
 
@@ -18,7 +18,13 @@ import 'package:srcat/libs/sr/services/tools/warp/db.dart';
 import 'package:srcat/libs/sr/services/tools/warp/main.dart';
 
 class ToolsWarpPage extends StatefulWidget {
-  const ToolsWarpPage({Key? key}) : super(key: key);
+  const ToolsWarpPage({
+    Key? key,
+    this.uid
+  }) : super(key: key);
+
+  /// 判断是否有 uid
+  final String? uid;
 
   @override
   State<ToolsWarpPage> createState() => _ToolsWarpPageState();
@@ -41,7 +47,7 @@ class _ToolsWarpPageState extends State<ToolsWarpPage> {
         setState(() {});
         return;
       }
-      _nowSelectedUID = int.parse(value[0]["uid"].toString());
+      _nowSelectedUID = int.parse(widget.uid ?? value[0]["uid"].toString());
 
       _gachaLog[GachaWarpType.regular] = await SrWrapToolDatabaseService.userGachaLog(
         uid:_nowSelectedUID,
@@ -152,8 +158,7 @@ class _ToolsWarpPageState extends State<ToolsWarpPage> {
         (item) => ComboBoxItem(value: item["uid"].toString(), child: Text(item["uid"].toString()))
       ).toList(),
       onChanged: (value) => {
-        _nowSelectedUID = int.parse(value!),
-        setState(() {})
+        Application.router.push("/tools/warp?uid=$value")
       },
     );
 

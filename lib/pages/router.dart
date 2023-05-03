@@ -44,7 +44,7 @@ class PagesRouter implements SRCatRouteInterface {
         GoRoute(
           path: "/tools/warp",
           name: "ToolsWarp",
-          builder: (context, state) => const ToolsWarpPage()
+          builder: (context, state) => ToolsWarpPage(uid: state.queryParams["uid"])
         ),
         GoRoute(
           path: "/settings",
