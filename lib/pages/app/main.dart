@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 05:27:00
-/// LastEditTime: 2023-05-02 08:08:01
+/// LastEditTime: 2023-05-03 19:30:14
 /// FilePath: /lib/pages/app/main.dart
 /// ===========================================================================
 
@@ -47,7 +47,7 @@ class _AppPageState extends State<AppPage> with WindowListener {
 
   /// 当前 Index
   int _selectedIndex() {
-    final location = Application.router.location;
+    final location = Application.router.location.split("?")[0];
     
     int index = _navItems
       .where((element) => element.key != null)
@@ -108,7 +108,7 @@ class _AppPageState extends State<AppPage> with WindowListener {
       title: const Text("跃迁记录"),
       body: const SizedBox.shrink(),
       onTap: () {
-        if (Application.router.location != "/tools/warp") {
+        if (Application.router.location.split("?")[0] != "/tools/warp") {
           Application.router.push("/tools/warp");
         }
       }
