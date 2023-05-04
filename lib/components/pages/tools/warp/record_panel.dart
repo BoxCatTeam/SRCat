@@ -264,22 +264,17 @@ class _WarpRecordPanelState extends State<WarpRecordPanel> {
           return WarpContentListItemType.unknown;
       }
     }
-
-    // TODO:暂时摆了
-    if (
-      widget.type == GachaWarpType.regular ||
-      widget.type == GachaWarpType.starter ||
-      widget.type == GachaWarpType.character) {
-      for (Map<String, dynamic> gacha in resultData) {
-        if (gacha["rank_type"] == 5) {
-          wclitem.add(WarpContentListItem(
-            id: gacha["item_id"],
-            type: getWarpContentType(gacha["item_type"]),
-            lastNum: gacha["lastNum"] != null && gacha["lastNum"] is int ? gacha["lastNum"] : 0,
-          ));
-        }
+    
+    for (Map<String, dynamic> gacha in resultData) {
+      if (gacha["rank_type"] == 5) {
+        wclitem.add(WarpContentListItem(
+          id: gacha["item_id"],
+          type: getWarpContentType(gacha["item_type"]),
+          lastNum: gacha["lastNum"] != null && gacha["lastNum"] is int ? gacha["lastNum"] : 0,
+        ));
       }
     }
+    
 
     Widget warpList = Expanded(child: star5.isEmpty ? warpListEmpty : WarpContentList(
       items: <WarpContentListItem>[...wclitem],

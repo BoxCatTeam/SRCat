@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-02 08:11:51
-/// LastEditTime: 2023-05-03 17:54:06
+/// LastEditTime: 2023-05-04 23:26:47
 /// FilePath: /lib/libs/sr/services/tools/warp/utils.dart
 /// ===========================================================================
 
@@ -121,7 +121,7 @@ class SrWrapToolServiceUtils {
         /// 从当前位置向前遍历
         for (int inIndex = index + 1; inIndex < list.length; inIndex++) {
           /// 如果是五星或者到了最后一抽
-          if (list[inIndex]["rank_type"] == 5 || inIndex == 0) {
+          if (list[inIndex]["rank_type"] == 5 || inIndex - 1 == list.length) {
             break;
           }
           count = count + 1;

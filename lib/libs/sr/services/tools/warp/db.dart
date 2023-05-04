@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-02 00:28:47
-/// LastEditTime: 2023-05-04 18:46:27
+/// LastEditTime: 2023-05-04 23:30:14
 /// FilePath: /lib/libs/sr/services/tools/warp/db.dart
 /// ===========================================================================
 
@@ -62,6 +62,8 @@ class SrWrapToolDatabaseService {
           '${itemType != null ? " AND item_type=$itemType" : ""}'
           '${rankType != null ? " AND rank_type=$rankType" : ""}'
           '${time != null ? " AND time=$time" : ""}'
+          ' ORDER BY'
+          ' raw_id DESC'
         ';'
       );
       return result;
