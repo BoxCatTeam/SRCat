@@ -2,7 +2,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 03:59:16
-/// LastEditTime: 2023-05-04 22:05:33
+/// LastEditTime: 2023-05-05 01:22:35
 /// FilePath: /lib/pages/splash/main.dart
 /// ===========================================================================
 
@@ -167,8 +167,8 @@ class _SplashPageState extends State<SplashPage> {
     
     return Container(
       key: _stateKey,
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: FluentTheme.of(context).menuColor,
       ),
       child: _needDownload ? _downloadPage() : const Center(
         child: ProgressRing(

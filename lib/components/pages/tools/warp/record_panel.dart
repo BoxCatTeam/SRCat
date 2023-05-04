@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-29 04:47:02
-/// LastEditTime: 2023-05-03 19:49:14
+/// LastEditTime: 2023-05-05 01:35:36
 /// FilePath: /lib/components/pages/tools/warp/record_panel.dart
 /// ===========================================================================
 // ignore_for_file: unused_local_variable
@@ -299,7 +299,7 @@ class _WarpRecordPanelState extends State<WarpRecordPanel> {
             Text(time, style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.bold,
-              color: Colors.black.withOpacity(0.8)
+              color: (FluentTheme.of(context).brightness.isDark ? Colors.white : Colors.black).withOpacity(0.8)
             ))
           ])),
           const SizedBox(width: 10),

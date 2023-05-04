@@ -1,14 +1,16 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 01:54:10
-/// LastEditTime: 2023-05-01 17:23:55
+/// LastEditTime: 2023-05-05 01:14:42
 /// FilePath: /lib/main.dart
 /// ===========================================================================
 
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:srcat/application.dart';
+import 'package:srcat/riverpod/global/theme.dart';
 import 'package:srcat/utils/file/init.dart';
 import 'package:srcat/utils/settings/main.dart';
 import 'package:srcat/utils/storage/sqlite.dart';
@@ -32,6 +34,11 @@ Future<void> main() async {
   }
 
   SCSQLiteUtils.init();
+
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  WindowsDeviceInfo windows = await deviceInfo.windowsInfo;
+  Application.buildNumber = windows.buildNumber;
+  Application.productName = windows.productName;
 
   /* 初始设置项 */
   await SCSettingsUtils.init();
@@ -68,21 +75,25 @@ Future<void> main() async {
   runApp(const ProviderScope(child: SRCatAPP()));
 }
 
-class SRCatAPP extends StatefulWidget {
-  const SRCatAPP({Key? key}) : super(key: key);
-
+class SRCatAPP extends ConsumerWidget {
+  const SRCatAPP({super.key});
   @override
-  State<SRCatAPP> createState() => _SRCatAPPState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    bool notWin11 = false;
+    final Map<String, dynamic> theme = ref.watch(themeRiverpod);
+    ThemeMode themeMode;
+    if (theme["theme"] == "auto") {
+      themeMode = ThemeMode.system;
+    } else if (theme["theme"] == "dark") {
+      themeMode = ThemeMode.dark;
+    } else {
+      themeMode = ThemeMode.light;
+    }
 
-class _SRCatAPPState extends State<SRCatAPP> {
-  @override
-  void initState() {
-    super.initState();
-  }
+    if (Application.buildNumber < 22000) {
+      notWin11 = true;
+    }
 
-  @override
-  Widget build(BuildContext context) {
     Widget app = FluentApp.router(
       
       debugShowCheckedModeBanner: false,
@@ -97,14 +108,25 @@ class _SRCatAPPState extends State<SRCatAPP> {
       routerDelegate: Application.router.routerDelegate,
       routeInformationProvider: Application.router.routeInformationProvider,
 
+      themeMode: themeMode,
+      darkTheme: FluentThemeData(
+        brightness: Brightness.dark,
+        visualDensity: VisualDensity.standard,
+        focusTheme: FocusThemeData(
+          glowFactor: is10footScreen() ? 2.0 : 0.0,
+        ),
+        navigationPaneTheme: NavigationPaneThemeData(
+          backgroundColor: (theme["material"] == "default" || notWin11) ? null :Colors.transparent
+        )
+      ),
       theme: FluentThemeData(
         fontFamily: "PingFang",
         visualDensity: VisualDensity.standard,
         focusTheme: FocusThemeData(
           glowFactor: is10footScreen() ? 2.0 : 0.0
         ),
-        navigationPaneTheme: const NavigationPaneThemeData(
-          backgroundColor: Colors.transparent
+        navigationPaneTheme: NavigationPaneThemeData(
+          backgroundColor: (theme["material"] == "default" || notWin11) ? null :Colors.transparent
         )
       ),
     );

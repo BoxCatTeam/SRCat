@@ -15,4 +15,9 @@ class Application {
 
   /* App NavigatorKey */
   static GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
+
+  /* Windows buildNumber */
+  static late int buildNumber;
+  /* Windows productName */
+  static late String productName;
 }
