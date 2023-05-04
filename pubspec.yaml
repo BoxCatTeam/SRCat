@@ -96,6 +96,11 @@ dependencies:
   # https://pub.dev/packages/connectivity_plus
   # https://pub.flutter-io.cn/packages/connectivity_plus
   connectivity_plus: ^3.0.6
+  
+  # Device Info
+  # https://pub.dev/packages/device_info_plus
+  # https://pub.flutter-io.cn/packages/device_info_plus
+  device_info_plus: ^8.2.2
 
   cupertino_icons: ^1.0.2
 
