@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 23:33:29
-/// LastEditTime: 2023-05-05 01:12:21
+/// LastEditTime: 2023-05-05 02:06:41
 /// FilePath: /lib/pages/settings/main.dart
 /// ===========================================================================
 
@@ -48,7 +48,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     _materialType = {
       "default": "Default",
       "mica": "Mica",
-      "acrylic": "Arylic",
+      "acrylic": "Acrylic",
       "tabbed": "Tabbed"
     };
 

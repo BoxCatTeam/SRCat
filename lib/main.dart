@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 01:54:10
-/// LastEditTime: 2023-05-05 01:14:42
+/// LastEditTime: 2023-05-05 01:56:47
 /// FilePath: /lib/main.dart
 /// ===========================================================================
 
@@ -110,6 +110,7 @@ class SRCatAPP extends ConsumerWidget {
 
       themeMode: themeMode,
       darkTheme: FluentThemeData(
+        fontFamily: "PingFang",
         brightness: Brightness.dark,
         visualDensity: VisualDensity.standard,
         focusTheme: FocusThemeData(

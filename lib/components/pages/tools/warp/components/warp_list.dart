@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-29 09:54:19
-/// LastEditTime: 2023-05-04 22:28:07
+/// LastEditTime: 2023-05-05 02:22:12
 /// FilePath: /lib/components/pages/tools/warp/components/warp_list.dart
 /// ===========================================================================
 
@@ -12,6 +12,7 @@ import 'package:srcat/components/global/scroll/normal.dart';
 import 'package:srcat/libs/img/pak_loader.dart';
 import 'package:srcat/libs/sr/services/data/base_item.dart';
 import 'package:srcat/libs/sr/services/tools/warp/image.dart';
+import 'package:srcat/utils/main.dart';
 
 class WarpContentList extends StatefulWidget {
   const WarpContentList({
@@ -56,7 +57,8 @@ class WarpContentListItem extends StatefulWidget {
     this.type = WarpContentListItemType.character,
     this.isUP = false,
     required this.lastNum,
-    this.isGuaranteed = false
+    this.isGuaranteed = false,
+    required this.time
   }) : super(key: key);
 
   /// ID
@@ -73,6 +75,9 @@ class WarpContentListItem extends StatefulWidget {
 
   /// 是否保底
   final bool isGuaranteed;
+
+  /// 时间
+  final int time;
 
   @override
   State<WarpContentListItem> createState() => _WarpContentListItemState();
@@ -185,12 +190,18 @@ class _WarpContentListItemState extends State<WarpContentListItem> {
       ]
     );
 
-    return Container(
+    Widget item = Container(
       margin: const EdgeInsets.only(bottom: 2),
       child: Card(
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
         child: child
       ),
+    );
+
+    return Tooltip(
+      message: "$_name：${SCUtils.unixTimeToStr(widget.time, format: "yyyy-MM-dd HH:mm:ss")}",
+      triggerMode: TooltipTriggerMode.longPress,
+      child: item,
     );
   }
 }

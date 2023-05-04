@@ -271,6 +271,7 @@ class _WarpRecordPanelState extends State<WarpRecordPanel> {
           id: gacha["item_id"],
           type: getWarpContentType(gacha["item_type"]),
           lastNum: gacha["lastNum"] != null && gacha["lastNum"] is int ? gacha["lastNum"] : 0,
+          time: gacha["time"],
         ));
       }
     }
