@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-02 00:28:47
-/// LastEditTime: 2023-05-03 01:13:42
+/// LastEditTime: 2023-05-04 18:46:27
 /// FilePath: /lib/libs/sr/services/tools/warp/db.dart
 /// ===========================================================================
 
@@ -88,61 +88,6 @@ class SrWrapToolDatabaseService {
         'INSERT INTO ${SCDatabaseConfig.warpGachaLogTable}'
           '(raw_id, uid, gacha_id, gacha_type, item_id, item_type, rank_type, time)'
           ' VALUES($rawId, $uid, $gachaId, $gachaType, $itemId, "$itemType", $rankType, $time)'
-        ';'
-      );
-    } catch (e) {
-      return;
-    }
-  }
-
-  /// 从数据库中获取角色/光锥信息
-  static Future<List<Map<String, Object?>>> item({
-    int id = 1001,
-    String type = "character"
-  }) async {
-    Database database = await SCSQLiteUtils.warp();
-
-    try {
-      List<Map<String, Object?>> result = await database.rawQuery(
-        'SELECT * FROM ${SCDatabaseConfig.warpItemTable}'
-          ' WHERE raw_id=$id'
-          ' AND type="$type"'
-        ';'
-      );
-      return result;
-    } catch (e) {
-      return [];
-    }
-  }
-
-  /// 获取所有角色/光锥信息
-  static Future<List<Map<String, Object?>>> allItem() async {
-    Database database = await SCSQLiteUtils.warp();
-
-    try {
-      List<Map<String, Object?>> result = await database.query(
-        SCDatabaseConfig.warpItemTable
-      );
-      return result;
-    } catch (e) {
-      return [];
-    }
-  }
-
-  /// 插入角色/光锥信息
-  static Future<void> insertItem({
-    required int rawId,
-    required String name,
-    required String type,
-    required String color,
-  }) async {
-    Database database = await SCSQLiteUtils.warp();
-
-    try {
-      await database.rawInsert(
-        'INSERT INTO ${SCDatabaseConfig.warpItemTable}'
-          '(raw_id, name, type, color)'
-          ' VALUES($rawId, \'$name\', "$type", "$color")'
         ';'
       );
     } catch (e) {

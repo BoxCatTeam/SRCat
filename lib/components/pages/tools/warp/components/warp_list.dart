@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-29 09:54:19
-/// LastEditTime: 2023-05-03 02:45:21
+/// LastEditTime: 2023-05-04 22:28:07
 /// FilePath: /lib/components/pages/tools/warp/components/warp_list.dart
 /// ===========================================================================
 
@@ -10,7 +10,7 @@ import 'dart:convert';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:srcat/components/global/scroll/normal.dart';
 import 'package:srcat/libs/img/pak_loader.dart';
-import 'package:srcat/libs/sr/services/tools/warp/db.dart';
+import 'package:srcat/libs/sr/services/data/base_item.dart';
 import 'package:srcat/libs/sr/services/tools/warp/image.dart';
 
 class WarpContentList extends StatefulWidget {
@@ -86,15 +86,16 @@ class _WarpContentListItemState extends State<WarpContentListItem> {
   void initState() {
     super.initState();
 
-    SrWrapToolDatabaseService.item(
+    SrBaseItemDataService.item(
       id: widget.id,
       type: widget.type == WarpContentListItemType.character ? "character" : "lightcone"
     ).then((value) {
       if (value.isEmpty) return;
       Map<String, dynamic> data = value[0];
-      Map<String, dynamic> name = jsonDecode(data["name"]);
-      _name = name["zh_CN"];
-      _nameColor = int.parse("0xff${data["color"]}");
+      _name = data["name_zh_CN"];
+      _nameColor = data["color"].isEmpty
+        ? 0xffec407a :
+        int.parse("0xff${data["color"]}");
       setState(() {});
     });
   }
@@ -103,10 +104,19 @@ class _WarpContentListItemState extends State<WarpContentListItem> {
   Widget _avatar() {
     /// 获取头像路径
     String path = SRCatPackLoader.parse(SRCatImagePack.smile_hm_5_pack);
-    for (Map<String, dynamic> avatarItem in SrWrapToolImageService.avatar) {
-      if (avatarItem["id"] == widget.id) {
-        path = avatarItem["avatar"];
-        break;
+    if (widget.type == WarpContentListItemType.character) {
+      for (Map<String, dynamic> avatarItem in SrWrapToolImageService.avatar) {
+        if (avatarItem["id"] == widget.id) {
+          path = avatarItem["avatar"];
+          break;
+        }
+      }
+    } else if (widget.type == WarpContentListItemType.lightcone) {
+      for (Map<String, dynamic> avatarItem in SrWrapToolImageService.lightconeNormal) {
+        if (avatarItem["id"] == widget.id) {
+          path = avatarItem["normal"];
+          break;
+        }
       }
     }
     

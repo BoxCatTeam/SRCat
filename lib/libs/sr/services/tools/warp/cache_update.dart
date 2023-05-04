@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-02 01:52:42
-/// LastEditTime: 2023-05-02 07:50:20
+/// LastEditTime: 2023-05-03 21:10:34
 /// FilePath: /lib/libs/sr/services/tools/warp/cache_update.dart
 /// ===========================================================================
 // ignore_for_file: use_build_context_synchronously
@@ -174,7 +174,11 @@ class SrWrapToolCacheUpdateService {
 
     /// 如果当前数据条数少于每页条数，则已到末页
     /// 不用继续请求
-    if (firstData.length < size) return;
+    if (firstData.length < size) {
+      /// 关闭进度弹窗
+      Application.router.pop();
+      return;
+    }
 
     /// 循环请求之前，页数先加一
     page = page + 1;

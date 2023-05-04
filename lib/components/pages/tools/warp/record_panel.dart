@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-29 04:47:02
-/// LastEditTime: 2023-05-03 18:56:35
+/// LastEditTime: 2023-05-03 19:49:14
 /// FilePath: /lib/components/pages/tools/warp/record_panel.dart
 /// ===========================================================================
 // ignore_for_file: unused_local_variable
@@ -336,10 +336,10 @@ class _WarpRecordPanelState extends State<WarpRecordPanel> {
         children: [
           Container(
             width: 100,
-            height: 103,
+            height: 98,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(SRCatPackLoader.parse(SRCatImagePack.smile_hm_5_pack)),
+                image: AssetImage(SRCatPackLoader.parse(SRCatImagePack.smile_syq_5_pack)),
                 fit: BoxFit.cover
               )
             ),
