@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-02 01:52:42
-/// LastEditTime: 2023-05-05 22:42:16
+/// LastEditTime: 2023-05-06 00:59:44
 /// FilePath: /lib/libs/sr/services/tools/warp/cache_update.dart
 /// ===========================================================================
 // ignore_for_file: use_build_context_synchronously
@@ -17,9 +17,11 @@ import 'main.dart';
 import 'package:srcat/libs/extensions/provider/context.dart';
 
 class SrWrapToolCacheUpdateService {
+  static int _refreshUID = 0;
+
   /// 入口
-  static Future<void> init(BuildContext context) async {
-    context.read(globalDialogRiverpod).set("提示", child: const Text("获取数据中...")).show();
+  static Future<int> init(BuildContext context) async {
+    context.read(globalDialogRiverpod).set("提示", child: const Text("获取数据中..."), cacheActions: false, actions: null).show();
     await Future.delayed(const Duration(milliseconds: 100));
     await _character(context);
     await Future.delayed(const Duration(milliseconds: 100));
@@ -32,6 +34,8 @@ class SrWrapToolCacheUpdateService {
     context.read(globalDialogRiverpod).hidden();
     await Future.delayed(const Duration(milliseconds: 200));
     context.read(globalDialogRiverpod).clean();
+
+    return _refreshUID;
   }
 
   /// 判断数据库中是否包含相同抽卡记录
@@ -89,6 +93,7 @@ class SrWrapToolCacheUpdateService {
           if (firstData.isEmpty) return;
 
           uid = int.parse(firstData[0]?["uid"] ?? "0");
+          _refreshUID = uid;
 
           /// 显示进度弹窗
           context.read(globalDialogRiverpod).set(title, child: const Text("正在获取第 1 页数据..."));

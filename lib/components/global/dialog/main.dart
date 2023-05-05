@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-05 08:39:39
-/// LastEditTime: 2023-05-05 22:44:36
+/// LastEditTime: 2023-05-05 23:41:40
 /// FilePath: /lib/components/global/dialog/main.dart
 /// ===========================================================================
 
@@ -16,7 +16,25 @@ class SCGlobalDialog extends ConsumerStatefulWidget {
   ConsumerState<SCGlobalDialog> createState() => _SCGlobalDialogState();
 }
 
-class _SCGlobalDialogState extends ConsumerState<SCGlobalDialog> {
+class _SCGlobalDialogState extends ConsumerState<SCGlobalDialog> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 140),
+    );
+
+    _animation = Tween<double>(
+      begin: 1.0,
+      end: 1.08,
+    ).animate(_controller);
+  }
+  
   /// 半透明背景
   Widget _background() {
     return Container(
@@ -30,11 +48,23 @@ class _SCGlobalDialogState extends ConsumerState<SCGlobalDialog> {
   Widget build(BuildContext context) {
     bool isShow = ref.watch(globalDialogRiverpod).isShow;
     String title = ref.watch(globalDialogRiverpod).title;
+    double titleSize = ref.watch(globalDialogRiverpod).titleSize;
     Widget? child = ref.watch(globalDialogRiverpod).child;
+    List<Widget>? actions = ref.watch(globalDialogRiverpod).actions;
+
+    if (isShow) {
+      _controller.reverse();
+    } else {
+      _controller.forward();
+    }
 
     Widget dialog = ContentDialog(
-      title: Text(title),
+      constraints: const BoxConstraints(
+        maxWidth: 400,
+      ),
+      title: Text(title, style: TextStyle(fontSize: titleSize)),
       content: child,
+      actions: actions
     );
     
     Widget stack = Stack(
@@ -45,13 +75,16 @@ class _SCGlobalDialogState extends ConsumerState<SCGlobalDialog> {
           left: 0,
           right: 0,
           bottom: 0,
-          child: Center(child: dialog),
+          child: Center(child: ScaleTransition(
+            scale: _animation,
+            child: dialog
+          )),
         )
       ],
     );
 
     Widget opacity = AnimatedOpacity(
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 100),
       opacity: isShow ? 1 : 0,
       child: stack,
     );

@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-02 00:28:47
-/// LastEditTime: 2023-05-04 23:30:14
+/// LastEditTime: 2023-05-06 00:23:35
 /// FilePath: /lib/libs/sr/services/tools/warp/db.dart
 /// ===========================================================================
 
@@ -95,5 +95,60 @@ class SrWrapToolDatabaseService {
     } catch (e) {
       return;
     }
+  }
+
+  /// 删除指定用户的档案与跃迁记录
+  static Future<Map<String, dynamic>> deleteUserProfileAndGachaLog({
+    required int uid
+  }) async {
+    Database database = await SCSQLiteUtils.warp();
+
+    /// 判断数据库内有无此用户
+    try {
+      var result = await database.rawQuery(
+        'SELECT * FROM ${SCDatabaseConfig.warpIndexTable}'
+          ' WHERE uid=$uid'
+        ';'
+      );
+
+      if (result.isEmpty) {
+        throw Exception("Not found this user");
+      }
+    } catch (e) {
+      return {
+        "status": false,
+        "message": e.toString(),
+      };
+    }
+
+    /// 从 gacha_log 表中删除用户的所有记录
+    try {
+      await database.rawDelete(
+        'DELETE FROM ${SCDatabaseConfig.warpGachaLogTable}'
+          ' WHERE uid=$uid'
+        ';'
+      );
+    } catch (e) {
+      return {
+        "status": false,
+        "message": e.toString()
+      };
+    }
+
+    /// 从 warp_index 删除该用户信息
+    try {
+      await database.rawDelete(
+        'DELETE FROM ${SCDatabaseConfig.warpIndexTable}'
+          ' WHERE uid=$uid'
+        ';'
+      );
+    } catch (e) {
+      return {
+        "status": false,
+        "message": e.toString()
+      };
+    }
+
+    return {"status": true, "message": "Success"};
   }
 }
