@@ -1,9 +1,3 @@
-<!--
- * Copyright (c) 2020-2023, BoxCat. All rights reserved.
- * @Date: 2023-04-28 23:12:00
- * @LastEditTime: 2023-05-03 19:37:23
- * @FilePath: f:/GitHub/Organization/BoxCat/SRCat/README.md
--->
 <h1 align="center">SRCat</h1>
 <p align="center">崩坏：星穹铁道 - 工具箱</p>
 
@@ -15,6 +9,10 @@
 3. 双击 `srcat.exe` 启动 SRCat，第一次启动可能稍微有点慢 (需要下载部分资源)
 4. 根据 SRCat 的指引选择 `StarRail` 的启动 `exe` 文件（`游戏安装目录/Game/StarRail.exe`）
 5. 请启动一次游戏，并进入跃迁页面，打开一次跃迁记录的页面，然后回到 `SRCat` 主程序内，点击侧栏的 `跃迁记录`，根据提示刷新跃迁记录
+
+## 当前版本截图
+![](assets/github/1.png) <br/>
+![](assets/github/2.png)
 
 ## 计划
 - [ ] 跃迁记录
