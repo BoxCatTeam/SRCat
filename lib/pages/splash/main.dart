@@ -2,7 +2,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 03:59:16
-/// LastEditTime: 2023-05-05 01:22:35
+/// LastEditTime: 2023-05-05 07:58:55
 /// FilePath: /lib/pages/splash/main.dart
 /// ===========================================================================
 
@@ -67,7 +67,7 @@ class _SplashPageState extends State<SplashPage> {
           content: Text(text),
           action: IconButton(
            icon: const Icon(FluentIcons.clear),
-           onPressed: () => Application.router.pop()
+           onPressed: close
           ),
           severity: severity,
        );
@@ -80,11 +80,9 @@ class _SplashPageState extends State<SplashPage> {
         title: const Text("提示"),
         content: const Text("需要选择游戏本体 (StarRail.exe) 才能正常使用跃迁记录分析工具"),
         actions: <Widget>[
-          Button(
-            child: const Text("暂不选择"),
-            onPressed: () {
-              Application.router.go("/home");
-            }
+          const Button(
+            onPressed: null,
+            child: Text("不可以暂不选择")
           ),
           FilledButton(
             child: const Text("选择..."),

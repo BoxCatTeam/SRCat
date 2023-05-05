@@ -1,47 +1,37 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-02 01:52:42
-/// LastEditTime: 2023-05-03 21:10:34
+/// LastEditTime: 2023-05-05 22:42:16
 /// FilePath: /lib/libs/sr/services/tools/warp/cache_update.dart
 /// ===========================================================================
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:srcat/application.dart';
+import 'package:srcat/utils/main.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:srcat/libs/sr/services/tools/warp/db.dart';
-import 'package:srcat/utils/main.dart';
+import 'package:srcat/riverpod/global/dialog.dart';
 
 import 'main.dart';
+
+import 'package:srcat/libs/extensions/provider/context.dart';
 
 class SrWrapToolCacheUpdateService {
   /// 入口
   static Future<void> init(BuildContext context) async {
+    context.read(globalDialogRiverpod).set("提示", child: const Text("获取数据中...")).show();
+    await Future.delayed(const Duration(milliseconds: 100));
     await _character(context);
+    await Future.delayed(const Duration(milliseconds: 100));
     await _lightcone(context);
+    await Future.delayed(const Duration(milliseconds: 100));
     await _regular(context);
+    await Future.delayed(const Duration(milliseconds: 100));
     await _starter(context);
-  }
-
-  /// 展示进度弹窗
-  static Future<void> showProgress(
-    BuildContext context,
-    {
-      required String title,
-      required Widget content
-    }
-  ) async {
-    await showDialog<String>(
-      context: context,
-      barrierColor: Colors.transparent,
-      builder: (context) => ContentDialog(
-        title: Text(title, style: const TextStyle(fontSize: 23)),
-        style: const ContentDialogThemeData(
-          barrierColor: Colors.transparent
-        ),
-        content: content,
-      )
-    );
+    await Future.delayed(const Duration(milliseconds: 100));
+    context.read(globalDialogRiverpod).hidden();
+    await Future.delayed(const Duration(milliseconds: 200));
+    context.read(globalDialogRiverpod).clean();
   }
 
   /// 判断数据库中是否包含相同抽卡记录
@@ -58,22 +48,18 @@ class SrWrapToolCacheUpdateService {
 
   /// 获取 UP 池数据
   static Future<void> _character(BuildContext context) async {
-    SrWrapToolCacheUpdateService.showProgress(context, title: "提示", content: const Text("获取数据中..."));
     await _gachaLogData(context, title: "角色活动", warpType: GachaWarpType.character);
   }
   /// 获取 UP 光锥池
   static Future<void> _lightcone(BuildContext context) async {
-    SrWrapToolCacheUpdateService.showProgress(context, title: "提示", content: const Text("获取数据中..."));
     await _gachaLogData(context, title: "流光定影", warpType: GachaWarpType.lightCone);
   }
   /// 获取常驻池
   static Future<void> _regular(BuildContext context) async {
-    SrWrapToolCacheUpdateService.showProgress(context, title: "提示", content: const Text("获取数据中..."));
     await _gachaLogData(context, title: "群星跃迁", warpType: GachaWarpType.regular);
   }
   /// 获取新手池
   static Future<void> _starter(BuildContext context) async {
-    SrWrapToolCacheUpdateService.showProgress(context, title: "提示", content: const Text("获取数据中..."));
     await _gachaLogData(context, title: "始发跃迁", warpType: GachaWarpType.starter);
   }
 
@@ -97,9 +83,6 @@ class SrWrapToolCacheUpdateService {
     await SrWrapToolService.getGachaData(
       type: GachaGetType.cache,
       success: (response, data) async {
-        /// 关闭进度弹窗
-        Application.router.pop();
-
         if (data is Map<String, dynamic>) {
           firstData = data["data"]["list"];
 
@@ -108,7 +91,7 @@ class SrWrapToolCacheUpdateService {
           uid = int.parse(firstData[0]?["uid"] ?? "0");
 
           /// 显示进度弹窗
-          await SrWrapToolCacheUpdateService.showProgress(context, title: title, content: const Text("正在获取第 1 页数据..."));
+          context.read(globalDialogRiverpod).set(title, child: const Text("正在获取第 1 页数据..."));
         } else {
           isEnd = true;
         }
@@ -166,19 +149,11 @@ class SrWrapToolCacheUpdateService {
       );
     }
 
-    if (firstSame) {
-      /// 关闭进度弹窗
-      Application.router.pop();
-      return;
-    }
+    if (firstSame) return;
 
     /// 如果当前数据条数少于每页条数，则已到末页
     /// 不用继续请求
-    if (firstData.length < size) {
-      /// 关闭进度弹窗
-      Application.router.pop();
-      return;
-    }
+    if (firstData.length < size) return;
 
     /// 循环请求之前，页数先加一
     page = page + 1;
@@ -186,11 +161,8 @@ class SrWrapToolCacheUpdateService {
     endId = int.parse(firstData[firstData.length - 1]["id"]);
     /// 循环请求
     while (!isEnd) {
-      /// 关闭进度弹窗
-      Application.router.pop();
-      await Future.delayed(const Duration(milliseconds: 10));
       /// 显示进度弹窗
-      SrWrapToolCacheUpdateService.showProgress(context, title: title, content: Text("正在获取第 $page 页数据..."));
+      context.read(globalDialogRiverpod).set(title, child: Text("正在获取第 $page 页数据..."));
       if (kDebugMode) print("当前页数：$page");
       await SrWrapToolService.getGachaData(
         type: GachaGetType.cache,
@@ -253,8 +225,5 @@ class SrWrapToolCacheUpdateService {
         await Future.delayed(const Duration(seconds: 1));
       }
     }
-
-    /// 关闭进度弹窗
-    Application.router.pop();
   }
 }

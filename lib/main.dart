@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 01:54:10
-/// LastEditTime: 2023-05-05 01:56:47
+/// LastEditTime: 2023-05-05 08:37:03
 /// FilePath: /lib/main.dart
 /// ===========================================================================
 
@@ -10,6 +10,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:srcat/application.dart';
+import 'package:srcat/components/global/dialog/main.dart';
 import 'package:srcat/riverpod/global/theme.dart';
 import 'package:srcat/utils/file/init.dart';
 import 'package:srcat/utils/settings/main.dart';
@@ -130,6 +131,21 @@ class SRCatAPP extends ConsumerWidget {
           backgroundColor: (theme["material"] == "default" || notWin11) ? null :Colors.transparent
         )
       ),
+
+      builder: (context, child) {
+        return Stack(
+          children: <Widget>[
+            child!,
+            const Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: SCGlobalDialog()
+            )
+          ],
+        );
+      }
     );
 
     return app;
