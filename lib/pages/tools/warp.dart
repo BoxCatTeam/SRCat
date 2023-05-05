@@ -2,29 +2,40 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 19:08:54
-/// LastEditTime: 2023-05-03 02:27:33
+/// LastEditTime: 2023-05-06 00:46:13
 /// FilePath: /lib/pages/tools/warp.dart
 /// ===========================================================================
 
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:srcat/application.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:srcat/libs/img/pak_loader.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:srcat/components/global/card/item.dart';
 import 'package:srcat/components/global/icon/main.dart';
 import 'package:srcat/components/global/scroll/normal.dart';
 import 'package:srcat/components/pages/tools/warp/record_panel.dart';
-import 'package:srcat/libs/img/pak_loader.dart';
-import 'package:srcat/libs/sr/services/tools/warp/cache_update.dart';
+
 import 'package:srcat/libs/sr/services/tools/warp/db.dart';
 import 'package:srcat/libs/sr/services/tools/warp/main.dart';
+import 'package:srcat/libs/sr/services/tools/warp/cache_update.dart';
 
-class ToolsWarpPage extends StatefulWidget {
-  const ToolsWarpPage({Key? key}) : super(key: key);
+import 'package:srcat/riverpod/global/dialog.dart';
+
+class ToolsWarpPage extends ConsumerStatefulWidget {
+  const ToolsWarpPage({
+    Key? key,
+    this.uid
+  }) : super(key: key);
+
+  /// 判断是否有 uid
+  final String? uid;
 
   @override
-  State<ToolsWarpPage> createState() => _ToolsWarpPageState();
+  ConsumerState<ToolsWarpPage> createState() => _ToolsWarpPageState();
 }
 
-class _ToolsWarpPageState extends State<ToolsWarpPage> {
+class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
   bool _loadStatus = false;
   int _nowSelectedUID = 0;
   late List<Map<String, Object?>> _warpUsers = [];
@@ -41,7 +52,8 @@ class _ToolsWarpPageState extends State<ToolsWarpPage> {
         setState(() {});
         return;
       }
-      _nowSelectedUID = int.parse(value[0]["uid"].toString());
+      int uid = int.parse(widget.uid ?? value[0]["uid"].toString());
+      _nowSelectedUID = uid != 0 ? uid : int.parse(value[0]["uid"].toString());
 
       _gachaLog[GachaWarpType.regular] = await SrWrapToolDatabaseService.userGachaLog(
         uid:_nowSelectedUID,
@@ -151,13 +163,14 @@ class _ToolsWarpPageState extends State<ToolsWarpPage> {
       items: _warpUsers.map(
         (item) => ComboBoxItem(value: item["uid"].toString(), child: Text(item["uid"].toString()))
       ).toList(),
-      onChanged: (value) => {
-        _nowSelectedUID = int.parse(value!),
-        setState(() {})
+      onChanged: (value) {
+        if (value != null && value != _nowSelectedUID.toString()) {
+          Application.router.push("/tools/warp?uid=$value");
+        }
       },
     );
 
-    /*Widget deleteButton = Tooltip(
+    Widget deleteButton = Tooltip(
       message: "删除当前记录",
       child: IconButton(
         icon: SCIcon(
@@ -166,9 +179,22 @@ class _ToolsWarpPageState extends State<ToolsWarpPage> {
           weight: FontWeight.w600,
           color: Colors.red
         ),
-        onPressed: () => {},
+        onPressed: () => {
+          ref.read(globalDialogRiverpod).set("确定要删除「$_nowSelectedUID」的跃迁记录吗？",
+            titleSize: 18,
+            child: const Text("该操作将永久删除（真的很久很久）当前用户的存档以及跃迁记录，且将不可逆 (＃°Д°)"),
+            actions: <Widget>[
+              Button(child: const Text("确认删除"), onPressed: () => _deleteUserWarpLog()),
+              FilledButton(child: const Text("手滑了！不删了！"), onPressed: () async {
+                ref.read(globalDialogRiverpod).hidden();
+                await Future.delayed(const Duration(milliseconds: 200));
+                ref.read(globalDialogRiverpod).clean();
+              })
+            ]
+          ).show()
+        },
       )
-    );*/
+    );
 
     return SizedBox(
       height: 50,
@@ -185,7 +211,7 @@ class _ToolsWarpPageState extends State<ToolsWarpPage> {
             const SizedBox(width: 8),
             divider,
             const SizedBox(width: 2),
-            //deleteButton
+            deleteButton
           ],
         ),
       )
@@ -299,7 +325,7 @@ class _ToolsWarpPageState extends State<ToolsWarpPage> {
 
   /// 刷新数据
   void refreshGachaLog() async {
-    await SrWrapToolCacheUpdateService.init(_stateKey.currentContext!);
+    int uid = await SrWrapToolCacheUpdateService.init(_stateKey.currentContext!);
     _warpUsers = await SrWrapToolDatabaseService.allWarpUser();
     _loadStatus = true;
     _nowSelectedUID = _nowSelectedUID == 0 ? int.parse(_warpUsers[0]["uid"].toString()) : _nowSelectedUID;
@@ -326,10 +352,56 @@ class _ToolsWarpPageState extends State<ToolsWarpPage> {
 
     await Future.delayed(const Duration(seconds: 1));
 
-    _loadGachaLog = true;
-    setState(() {});
+    Application.router.push("/tools/warp?uid=$uid");
+  }
 
-    Application.router.push("/tools/warp");
+  void _deleteUserWarpLog() async {
+    ref.read(globalDialogRiverpod).set("操作执行中",
+      titleSize: 18,
+      child: Text("正在删除「$_nowSelectedUID」的存档和跃迁记录，请稍后..."),
+      actions: <Widget>[
+        Button(
+          onPressed: null,
+          child: SizedBox(
+            height: 20,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const <Widget>[
+                SizedBox(
+                  width: 15,
+                  height: 15,
+                  child: ProgressRing(strokeWidth: 2.5)
+                ),
+                SizedBox(width: 10),
+                Text("删除中")
+              ],
+            )
+          ),
+        ),
+        const FilledButton(onPressed: null, child: Text("现在手滑已经晚了..."))
+      ]
+    );
+
+    Map<String, dynamic> result = await SrWrapToolDatabaseService.deleteUserProfileAndGachaLog(uid: _nowSelectedUID);
+    if (result["status"] == false) {
+      ref.read(globalDialogRiverpod).set("错误",
+        titleSize: 18,
+        child: Text("删除存档时发生错误：${result['message']}"),
+        actions: null,
+        cacheActions: false
+      );
+
+      await Future.delayed(const Duration(seconds: 2));
+      ref.read(globalDialogRiverpod).hidden();
+      await Future.delayed(const Duration(milliseconds: 200));
+      ref.read(globalDialogRiverpod).clean();
+    } else {
+      await Future.delayed(const Duration(seconds: 2));
+      ref.read(globalDialogRiverpod).hidden();
+      await Future.delayed(const Duration(milliseconds: 200));
+      ref.read(globalDialogRiverpod).clean();
+      Application.router.push("/tools/warp");
+    }
   }
 
   @override

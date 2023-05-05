@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-29 04:47:02
-/// LastEditTime: 2023-05-03 02:45:28
+/// LastEditTime: 2023-05-05 01:35:36
 /// FilePath: /lib/components/pages/tools/warp/record_panel.dart
 /// ===========================================================================
 // ignore_for_file: unused_local_variable
@@ -212,6 +212,8 @@ class _WarpRecordPanelState extends State<WarpRecordPanel> {
       ];
     }
 
+    List<int> upAndDownRange = SrWrapToolServiceUtils.upAndDownRange(resultData);
+
     Widget cardItems = Column(
       children: <Widget>[
         ...cardChildItem,
@@ -219,11 +221,11 @@ class _WarpRecordPanelState extends State<WarpRecordPanel> {
         const SizedBox(height: 18),
         cardTextItem("总抽数", "${widget.data.length} 抽"),
         const SizedBox(height: 2),
-        cardTextItem("UP 平均抽数", "NaN 抽"),
-        const SizedBox(height: 2),
+        widget.type == GachaWarpType.character || widget.type == GachaWarpType.lightCone ? cardTextItem("UP 平均抽数", "NaN 抽") : Container(),
+        SizedBox(height: widget.type == GachaWarpType.character || widget.type == GachaWarpType.lightCone ? 2 : 0),
         cardTextItem("五星平均抽数", "${SrWrapToolServiceUtils.star5Average(resultData)} 抽"),
-        const SizedBox(height: 2),
-        cardTextItem("最欧 NaN 抽", "最非 NaN 抽"),
+        SizedBox(height: widget.type == GachaWarpType.character || widget.type == GachaWarpType.lightCone ? 2 : 0),
+        widget.type != GachaWarpType.starter ? cardTextItem("最欧 ${upAndDownRange[0]} 抽", "最非 ${upAndDownRange[1]} 抽") : Container(),
       ],
     );
 
@@ -262,22 +264,18 @@ class _WarpRecordPanelState extends State<WarpRecordPanel> {
           return WarpContentListItemType.unknown;
       }
     }
-
-    // TODO:暂时摆了
-    if (
-      widget.type == GachaWarpType.regular ||
-      widget.type == GachaWarpType.starter ||
-      widget.type == GachaWarpType.character) {
-      for (Map<String, dynamic> gacha in resultData) {
-        if (gacha["rank_type"] == 5) {
-          wclitem.add(WarpContentListItem(
-            id: gacha["item_id"],
-            type: getWarpContentType(gacha["item_type"]),
-            lastNum: gacha["lastNum"] != null && gacha["lastNum"] is int ? gacha["lastNum"] : 0,
-          ));
-        }
+    
+    for (Map<String, dynamic> gacha in resultData) {
+      if (gacha["rank_type"] == 5) {
+        wclitem.add(WarpContentListItem(
+          id: gacha["item_id"],
+          type: getWarpContentType(gacha["item_type"]),
+          lastNum: gacha["lastNum"] != null && gacha["lastNum"] is int ? gacha["lastNum"] : 0,
+          time: gacha["time"],
+        ));
       }
     }
+    
 
     Widget warpList = Expanded(child: star5.isEmpty ? warpListEmpty : WarpContentList(
       items: <WarpContentListItem>[...wclitem],
@@ -302,7 +300,7 @@ class _WarpRecordPanelState extends State<WarpRecordPanel> {
             Text(time, style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.bold,
-              color: Colors.black.withOpacity(0.8)
+              color: (FluentTheme.of(context).brightness.isDark ? Colors.white : Colors.black).withOpacity(0.8)
             ))
           ])),
           const SizedBox(width: 10),
@@ -324,13 +322,37 @@ class _WarpRecordPanelState extends State<WarpRecordPanel> {
       ),
     );
   }
+
+  Widget _emptyPage() {
+    return SizedBox(
+      height: widget.height,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 100,
+            height: 98,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(SRCatPackLoader.parse(SRCatImagePack.smile_syq_5_pack)),
+                fit: BoxFit.cover
+              )
+            ),
+          ),
+          const SizedBox(height: 10),
+          const Text("没有数据欸...", style: TextStyle(fontSize: 18))
+        ],
+      )
+    );
+  }
   
   @override
   Widget build(BuildContext context) {
     Widget panel = Expander(
       initiallyExpanded: true,
       header: _header(),
-      content: _content(),
+      content: widget.data.isEmpty ? _emptyPage(): _content(),
     );
 
     return ConstrainedBox(

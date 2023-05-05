@@ -1,3 +1,9 @@
+<!--
+ * Copyright (c) 2020-2023, BoxCat. All rights reserved.
+ * @Date: 2023-04-28 23:12:00
+ * @LastEditTime: 2023-05-03 19:37:23
+ * @FilePath: f:/GitHub/Organization/BoxCat/SRCat/README.md
+-->
 <h1 align="center">SRCat</h1>
 <p align="center">崩坏：星穹铁道 - 工具箱</p>
 
@@ -12,15 +18,15 @@
 
 ## 计划
 - [ ] 跃迁记录
-    - [ ] 多账号支持 (目前进度: 内部已支持存储多账号的记录，但并未完善 UI)
+    - [x] 多账号支持
     - [ ] 数据导入/导出
     - [ ] 以 `代理模式`、`SToken` 刷新跃迁记录
     - [ ] 保底计算
-    - [ ] 光锥基本数据补全
+    - [x] 光锥基本数据补全
 - [ ] 设置
-    - [ ] 主题
+    - [x] 主题
     - [ ] 多语言支持
-    - [ ] 背景材质切换
+    - [x] 背景材质切换
 
 还有更多功能正在逐步咕咕中...
 

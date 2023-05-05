@@ -115,7 +115,7 @@ class SCSettingsUtils {
       SCSettingsSPKey.hsrExe: "",             // HSR EXE
       SCSettingsSPKey.theme: "auto",          // 主题
       SCSettingsSPKey.language: "zh_CN",      // 语言
-      SCSettingsSPKey.material: "mica",       // 背景材质
+      SCSettingsSPKey.material: "default",    // 背景材质
     };
 
     return settings;

@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-02 08:11:51
-/// LastEditTime: 2023-05-03 02:39:21
+/// LastEditTime: 2023-05-04 23:26:47
 /// FilePath: /lib/libs/sr/services/tools/warp/utils.dart
 /// ===========================================================================
 
@@ -27,6 +27,9 @@ class SrWrapToolServiceUtils {
 
   /// 计算抽卡最早的时间与最晚的时间
   static List<int> timeRange(List<int> times) {
+    if (times.isEmpty) {
+      return [0, 0];
+    }
     int min = times[0];
     int max = times[0];
     for (int time in times) {
@@ -53,6 +56,35 @@ class SrWrapToolServiceUtils {
     }
 
     return (sum / count).floor();
+  }
+
+  /// 计算最欧与最啡抽数
+  static List<int> upAndDownRange(List<Map<String, dynamic>> data) {
+    List<int> list = [];
+    for (Map<String, dynamic> item in data) {
+      if (item["rank_type"] == 5 && item["lastNum"] != null) {
+        list.add(item["lastNum"]);
+      }
+    }
+
+    if (list.isEmpty) {
+      return [0, 0];
+    }
+
+    /// 计算 List 的最大值与最小值
+    int min = list[0];
+    int max = list[0];
+
+    for (int item in list) {
+      if (item < min) {
+        min = item;
+      }
+      if (item > max) {
+        max = item;
+      }
+    }
+
+    return [min, max];
   }
 
   /// 计算是否为保底
@@ -85,11 +117,11 @@ class SrWrapToolServiceUtils {
 
       if (list[index]["rank_type"] == 5) {
         /// 距离上次五星的抽数
-        int count = 0;
+        int count = 1; /// 哪有人是第 0 抽出的啊？
         /// 从当前位置向前遍历
         for (int inIndex = index + 1; inIndex < list.length; inIndex++) {
           /// 如果是五星或者到了最后一抽
-          if (list[inIndex]["rank_type"] == 5 || inIndex == 0) {
+          if (list[inIndex]["rank_type"] == 5 || inIndex - 1 == list.length) {
             break;
           }
           count = count + 1;

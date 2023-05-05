@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-01 23:27:10
-/// LastEditTime: 2023-05-03 00:31:19
+/// LastEditTime: 2023-05-04 18:32:13
 /// FilePath: /lib/config/db.dart
 /// ===========================================================================
 
@@ -13,9 +13,14 @@ class SCDatabaseConfig {
   static String base = "${FileUtils.getExeDir()}/${SCFileConfig.databases}";
   /// Warp
   static String warpMaster = "$base/warp.db";
+  /// Data
+  static String dataMaster = "$base/data.db";
 
   /// Warp Table Name
   static String warpIndexTable = "warp_index";
   static String warpGachaLogTable = "gacha_log";
-  static String warpItemTable = "item_data";
+  static String warpItemTable = "item_data"; /// DELETE
+
+  /// Data Table Name
+  static String dataItemBaseTable = "sr_base_item";
 }

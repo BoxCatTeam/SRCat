@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         SizedBox(height: 40, child: button(SRCatIcon.github, "GitHub", "https://github.com/BoxCatTeam/SRCat")),
-        _hasNewVer ? Container(height: 40, margin: const EdgeInsets.only(left: 10), child: newVerButton) : Container()
+        _hasNewVer ? Container(height: 40, margin: const EdgeInsets.only(left: 10), child: newVerButton) : Container(),
       ]
     );
   }

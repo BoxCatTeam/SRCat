@@ -2,7 +2,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 03:59:16
-/// LastEditTime: 2023-05-03 02:16:07
+/// LastEditTime: 2023-05-05 07:58:55
 /// FilePath: /lib/pages/splash/main.dart
 /// ===========================================================================
 
@@ -10,8 +10,7 @@ import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:srcat/application.dart';
 import 'package:srcat/config/settings.dart';
-import 'package:srcat/libs/sr/services/tools/warp/data.dart';
-import 'package:srcat/libs/sr/services/tools/warp/db.dart';
+import 'package:srcat/libs/sr/services/data/base_item.dart';
 import 'package:srcat/utils/settings/main.dart';
 
 class SplashPage extends StatefulWidget {
@@ -36,7 +35,7 @@ class _SplashPageState extends State<SplashPage> {
 
     /// 判断是否需要下载数据
     /// 检查 item_data 是否有数据
-    await SrWrapToolDatabaseService.allItem().then((value) {
+    await SrBaseItemDataService.allItem().then((value) {
       if (value.isEmpty) {
         _needDownload = true;
       }
@@ -68,7 +67,7 @@ class _SplashPageState extends State<SplashPage> {
           content: Text(text),
           action: IconButton(
            icon: const Icon(FluentIcons.clear),
-           onPressed: () => Application.router.pop()
+           onPressed: close
           ),
           severity: severity,
        );
@@ -81,11 +80,9 @@ class _SplashPageState extends State<SplashPage> {
         title: const Text("提示"),
         content: const Text("需要选择游戏本体 (StarRail.exe) 才能正常使用跃迁记录分析工具"),
         actions: <Widget>[
-          Button(
-            child: const Text("暂不选择"),
-            onPressed: () {
-              Application.router.go("/home");
-            }
+          const Button(
+            onPressed: null,
+            child: Text("不可以暂不选择")
           ),
           FilledButton(
             child: const Text("选择..."),
@@ -116,36 +113,29 @@ class _SplashPageState extends State<SplashPage> {
   /// Init Warp Data
   void initDownload() async {
     /// 从 API 下载角色/光锥数据
-    Map<String, dynamic> data = await SrWrapToolDataService.downloadItemData();
+    Map<String, dynamic> data = await SrBaseItemDataService.download();
     if (data.isNotEmpty) {
-      if (data["character"].isNotEmpty) {
-        for (Map<String, dynamic> item in data["character"]) {
-          await SrWrapToolDatabaseService.insertItem(
+      if (data["character"].isNotEmpty || data["lightcone"].isNotEmpty) {
+
+        Future<void> insert(Map<String, dynamic> item, String type) async {
+          await SrBaseItemDataService.insert(
             rawId: item["id"],
-            name: '{"zh_CN": "${item["name"]["zh_CN"]}",'
-              ' "zh_TW": "${item["name"]["zh_TW"]}",'
-              ' "en_US": "${item["name"]["en_US"]}",'
-              ' "ja_JP": "${item["name"]["ja_JP"]}",'
-              ' "ko_KR": "${item["name"]["ko_KR"]}"}',
-            type: "character",
+            zhCNName: item["name"]["zh_CN"],
+            zhTWName: item["name"]["zh_TW"],
+            enUSName: item["name"]["en_US"],
+            jaJPName: item["name"]["ja_JP"],
+            koKRName: item["name"]["ko_KR"],
+            type: type,
+            rank: int.parse(item["rank_type"].toString()),
             color: item["name_color"]
           );
         }
-      }
 
-      if (data["lightcone"].isNotEmpty) {
+        for (Map<String, dynamic> item in data["character"]) {
+          await insert(item, "character");
+        }
         for (Map<String, dynamic> item in data["lightcone"]) {
-          if (item["id"] == 2333333) break;
-          await SrWrapToolDatabaseService.insertItem(
-            rawId: item["id"],
-            name: '{"zh_CN": "${item["name"]["zh_CN"]}",'
-              ' "zh_TW": "${item["name"]["zh_TW"]}",'
-              ' "en_US": "${item["name"]["en_US"]}",'
-              ' "ja_JP": "${item["name"]["ja_JP"]}",'
-              ' "ko_KR": "${item["name"]["ko_KR"]}"}',
-            type: "lightcone",
-            color: item["name_color"]
-          );
+          await insert(item, "lightcone");
         }
       }
     }
@@ -175,8 +165,8 @@ class _SplashPageState extends State<SplashPage> {
     
     return Container(
       key: _stateKey,
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: FluentTheme.of(context).menuColor,
       ),
       child: _needDownload ? _downloadPage() : const Center(
         child: ProgressRing(

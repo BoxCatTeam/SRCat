@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-01 22:53:02
-/// LastEditTime: 2023-05-03 00:32:20
+/// LastEditTime: 2023-05-04 22:41:42
 /// FilePath: /lib/utils/storage/sqlite.dart
 /// ===========================================================================
 
@@ -11,6 +11,7 @@ import 'package:srcat/config/db.dart';
 class SCSQLiteUtils {
   static Future<void> init() async {
     await warp();
+    await data();
   }
 
   /// Warp
@@ -39,20 +40,53 @@ class SCSQLiteUtils {
           '"time" int(10) NOT NULL default \'0\''                   // 抽卡时间
         ');'
       );
+    }
+
+    Future<void> onUpgrade(Database db) async {
+      /// DELETE WarpItemTable
+      /// 判断是否存在表
+      List<Map<String, dynamic>> tables = await db.rawQuery(
+        "select * from Sqlite_master where type = 'table' and name = '${SCDatabaseConfig.warpItemTable}'"
+      );
+      if (tables.isNotEmpty) {
+        await db.execute(
+          'DROP TABLE ${SCDatabaseConfig.warpItemTable};'
+        );
+      }
+    }
+
+    Database database = await openDatabase(
+      SCDatabaseConfig.warpMaster,
+      version: 2,
+      onCreate: (Database db, int version) => onCreate(db, version),
+      onUpgrade: (Database db, int version, int un) => onUpgrade(db)
+    );
+
+    return database;
+  }
+
+  /// Data
+  static Future<Database> data() async {
+    Future<void> onCreate(Database db, int version) async {
       await db.execute(
-        'CREATE TABLE ${SCDatabaseConfig.warpItemTable} ('
+        'CREATE TABLE ${SCDatabaseConfig.dataItemBaseTable} ('
           '"id" INTEGER NOT NULL PRIMARY KEY,'                      // ID
           '"raw_id" int(25) NOT NULL default \'0\','                // 原始 ID
-          '"name" TEXT NOT NULL default \'{}\','                    // 名称
+          '"name_zh_CN" TEXT NOT NULL default \'\','                // 名称 zh_CN
+          '"name_zh_TW" TEXT NOT NULL default \'\','                // 名称 zh_TW
+          '"name_en_US" TEXT NOT NULL default \'\','                // 名称 en_US
+          '"name_ko_KR" TEXT NOT NULL default \'\','                // 名称 ko_KR
+          '"name_ja_JP" TEXT NOT NULL default \'\','                // 名称 ja_JP
           '"color" varchar(10) NOT NULL default \'000000\','        // 颜色
+          '"rank" int(2) NOT NULL default \'0\','                   // 物品星级
           '"type" varchar(15) NOT NULL default \'unknown\''         // 物品类型 (lighecone/character)
         ');'
       );
     }
 
     Database database = await openDatabase(
-      SCDatabaseConfig.warpMaster,
-      version: 1,
+      SCDatabaseConfig.dataMaster,
+      version: 2,
       onCreate: (Database db, int version) => onCreate(db, version)
     );
 

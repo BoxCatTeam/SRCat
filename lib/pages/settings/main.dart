@@ -1,12 +1,14 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 23:33:29
-/// LastEditTime: 2023-05-03 02:49:13
+/// LastEditTime: 2023-05-05 02:06:41
 /// FilePath: /lib/pages/settings/main.dart
 /// ===========================================================================
 
 import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:srcat/application.dart';
 import 'package:srcat/components/global/card/item.dart';
 import 'package:srcat/components/global/icon/main.dart';
 import 'package:srcat/components/global/scroll/normal.dart';
@@ -16,20 +18,24 @@ import 'package:srcat/config/settings.dart';
 import 'package:srcat/utils/settings/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class SettingsPage extends StatefulWidget {
+import '../../riverpod/global/theme.dart';
+
+class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  ConsumerState<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _SettingsPageState extends ConsumerState<SettingsPage> {
   /// 主题类型
   late Map<String, String> _themeType = {};
   /// 背景材质
   late Map<String, String> _materialType = {};
   /// 语言
   late Map<String, String> _languageType = {};
+  /// 是否禁用背景材质选择
+  bool _isDisableMaterial = false;
 
   @override
   void initState() {
@@ -40,14 +46,22 @@ class _SettingsPageState extends State<SettingsPage> {
     };
 
     _materialType = {
+      "default": "Default",
       "mica": "Mica",
-      "arylic": "Arylic",
+      "acrylic": "Acrylic",
       "tabbed": "Tabbed"
     };
 
     _languageType = {
       "zh_CN": "中文（简体）"
     };
+
+    if (Application.buildNumber < 22000) {
+      _isDisableMaterial = true;
+      if (SCSettingsUtils.get(SCSettingsSPKey.material) is String && SCSettingsUtils.get(SCSettingsSPKey.material) != "default") {
+        SCSettingsUtils.set(SCSettingsSPKey.material, "default");
+      }
+    }
 
     super.initState();
   }
@@ -71,6 +85,7 @@ class _SettingsPageState extends State<SettingsPage> {
         items: themeItem,
         onChanged: (value) {
           SCSettingsUtils.set(SCSettingsSPKey.theme, value);
+          ref.read(themeRiverpod.notifier).setTheme(value!);
           setState(() => {});
         },
       ),
@@ -93,8 +108,9 @@ class _SettingsPageState extends State<SettingsPage> {
       rightChild: ComboBox<String>(
         value: SCSettingsUtils.get(SCSettingsSPKey.material) is String ? SCSettingsUtils.get(SCSettingsSPKey.material) : "mica",
         items: backgroundItem,
-        onChanged: (value) {
+        onChanged: _isDisableMaterial ? null : (value) {
           SCSettingsUtils.set(SCSettingsSPKey.material, value);
+          ref.read(themeRiverpod.notifier).setMaterial(value!);
           setState(() => {});
         },
       ),

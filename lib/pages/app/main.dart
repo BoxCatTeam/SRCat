@@ -1,17 +1,19 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 05:27:00
-/// LastEditTime: 2023-05-02 08:08:01
+/// LastEditTime: 2023-05-05 00:56:13
 /// FilePath: /lib/pages/app/main.dart
 /// ===========================================================================
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:srcat/application.dart';
+import 'package:srcat/riverpod/global/theme.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 
-class AppPage extends StatefulWidget {
+class AppPage extends ConsumerStatefulWidget {
   const AppPage({
     Key? key,
     required this.child,
@@ -29,10 +31,10 @@ class AppPage extends StatefulWidget {
   final GoRouterState state;
 
   @override
-  State<AppPage> createState() => _AppPageState();
+  ConsumerState<AppPage> createState() => _AppPageState();
 }
 
-class _AppPageState extends State<AppPage> with WindowListener {
+class _AppPageState extends ConsumerState<AppPage> with WindowListener {
   @override
   void initState() {
     windowManager.addListener(this);
@@ -47,7 +49,7 @@ class _AppPageState extends State<AppPage> with WindowListener {
 
   /// 当前 Index
   int _selectedIndex() {
-    final location = Application.router.location;
+    final location = Application.router.location.split("?")[0];
     
     int index = _navItems
       .where((element) => element.key != null)
@@ -108,7 +110,7 @@ class _AppPageState extends State<AppPage> with WindowListener {
       title: const Text("跃迁记录"),
       body: const SizedBox.shrink(),
       onTap: () {
-        if (Application.router.location != "/tools/warp") {
+        if (Application.router.location.split("?")[0] != "/tools/warp") {
           Application.router.push("/tools/warp");
         }
       }
@@ -164,9 +166,32 @@ class _AppPageState extends State<AppPage> with WindowListener {
 
   @override
   Widget build(BuildContext context) {
+    WindowEffect effect = WindowEffect.disabled;
+    bool isDark = false;
+    final String material = ref.watch(themeRiverpod)["material"];
+    final String theme = ref.watch(themeRiverpod)["theme"];
+    if (material == "mica") {
+      effect = WindowEffect.mica;
+    } else if (material == "acrylic") {
+      effect = WindowEffect.acrylic;
+    } else if (material == "tabbed") {
+      effect = WindowEffect.tabbed;
+    } else {
+      effect = WindowEffect.disabled;
+    }
+    if (Application.buildNumber < 22000) {
+      effect = WindowEffect.disabled;
+    }
+    if (theme == "auto") {
+      isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    } else if (theme == "dark") {
+      isDark = true;
+    } else {
+      isDark = false;
+    }
     Window.setEffect(
-      effect: WindowEffect.tabbed,
-      dark: false,
+      effect: effect,
+      dark: isDark,
     );
     return NavigationView(
       key: widget.key,
