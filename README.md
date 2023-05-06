@@ -28,9 +28,6 @@
 
 还有更多功能正在逐步咕咕中...
 
-## 其他
-- 目前 `设置项`、`跃迁记录的账号切换` 暂不可用，仅摆设
-
 ## License
 Copyright © 2023 [BoxCatTeam](https://boxcat.org), under MIT License
 
