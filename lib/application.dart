@@ -1,3 +1,8 @@
+///
+/// Author: ohmyga
+/// Date: 2023-05-13 17:45:29
+/// LastEditTime: 2023-05-14 07:34:56
+///
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-04-28 18:09:31
@@ -11,7 +16,7 @@ import 'package:go_router/go_router.dart';
 class Application {
   static late GoRouter router;
   static late GlobalKey<NavigatorState> rootNavigatorKey;
-  static int appNumVersion = 100002;
+  static int appNumVersion = 100006;
 
   /* App NavigatorKey */
   static GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();

@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-02 01:52:42
-/// LastEditTime: 2023-05-06 00:59:44
+/// LastEditTime: 2023-05-13 18:59:59
 /// FilePath: /lib/libs/sr/services/tools/warp/cache_update.dart
 /// ===========================================================================
 // ignore_for_file: use_build_context_synchronously
@@ -39,15 +39,14 @@ class SrWrapToolCacheUpdateService {
   }
 
   /// 判断数据库中是否包含相同抽卡记录
-  static bool _isSameData(String id, List<Map<String, dynamic>> allData) {
-    bool isSame = false;
-    for (var item in allData) {
-      if (item["raw_id"].toString() == id) {
-        isSame = true;
-        break;
-      }
-    }
-    return isSame;
+  static Future<bool> _isSameData(int uid, GachaWarpType warpType, int rawId,) async {
+    List<Map<String, dynamic>> gachaItem = await SrWrapToolDatabaseService.userGachaLog(
+      uid: uid,
+      rawId: rawId,
+      gachaType: gachaWarpTypeValue[warpType]
+    );
+
+    return gachaItem.isNotEmpty ? true : false;
   }
 
   /// 获取 UP 池数据
@@ -127,12 +126,10 @@ class SrWrapToolCacheUpdateService {
     if (!hasUser) {
       await SrWrapToolDatabaseService.insertWarpUser(uid: uid);
     }
-
-    /// 从数据库中查询当前用户的所有抽卡记录
-    List<Map<String, dynamic>> gachaList = await SrWrapToolDatabaseService.userGachaLog(uid: uid, gachaType: gachaWarpTypeValue[warpType]);
+    
 
     for (var log in firstData) {
-      if (gachaList.isNotEmpty && _isSameData(log["id"], gachaList)) {
+      if (await _isSameData(uid, warpType, int.parse(log["id"]))) {
         firstSame = true;
         break;
       }
@@ -165,7 +162,8 @@ class SrWrapToolCacheUpdateService {
     /// 顺带赋值 end_id
     endId = int.parse(firstData[firstData.length - 1]["id"]);
     /// 循环请求
-    while (!isEnd) {
+    while (true) {
+      if (isEnd) break;
       /// 显示进度弹窗
       context.read(globalDialogRiverpod).set(title, child: Text("正在获取第 $page 页数据..."));
       if (kDebugMode) print("当前页数：$page");
@@ -178,11 +176,9 @@ class SrWrapToolCacheUpdateService {
 
             /// 遍历列表
             for (var log in list) {
-              /// 如果当前抽卡记录与数据库中最新一条记录相同，则不再写入
-              if (gachaList.isNotEmpty && _isSameData(log["id"], gachaList)) {
-                isEnd = true;
-                if (kDebugMode) print("while: 已到末页");
-                break;
+              if (await _isSameData(uid, warpType, int.parse(log["id"]))) {
+                if (kDebugMode) print("while:存在相同的记录，跳过插入。");
+                continue;
               }
 
               String itemType = "";

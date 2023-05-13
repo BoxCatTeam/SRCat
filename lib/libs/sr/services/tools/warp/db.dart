@@ -44,6 +44,7 @@ class SrWrapToolDatabaseService {
   static Future<List<Map<String, Object?>>> userGachaLog({
     required int uid,
     int? gachaId,
+    int? rawId,
     int? gachaType,
     int? itemId,
     String? itemType,
@@ -57,6 +58,7 @@ class SrWrapToolDatabaseService {
         'SELECT * FROM ${SCDatabaseConfig.warpGachaLogTable}'
           ' WHERE uid=$uid'
           '${gachaId != null ? " AND gacha_id=$gachaId" : ""}'
+          '${rawId != null ? " AND raw_id=$rawId" : ""}'
           '${gachaType != null ? " AND gacha_type=$gachaType" : ""}'
           '${itemId != null ? " AND item_id=$itemId" : ""}'
           '${itemType != null ? " AND item_type=$itemType" : ""}'

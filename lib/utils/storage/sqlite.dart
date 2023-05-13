@@ -1,12 +1,15 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-01 22:53:02
-/// LastEditTime: 2023-05-04 22:41:42
+/// LastEditTime: 2023-05-14 07:43:24
 /// FilePath: /lib/utils/storage/sqlite.dart
 /// ===========================================================================
 
+import 'dart:io';
+
 import 'package:sqflite/sqflite.dart';
 import 'package:srcat/config/db.dart';
+import 'package:srcat/utils/storage/sqlite_fix.dart';
 
 class SCSQLiteUtils {
   static Future<void> init() async {
@@ -53,11 +56,17 @@ class SCSQLiteUtils {
           'DROP TABLE ${SCDatabaseConfig.warpItemTable};'
         );
       }
+
+      /// 备份旧表
+      File v2WarpDatabase = File(SCDatabaseConfig.warpMaster);
+      await v2WarpDatabase.copy("${SCDatabaseConfig.base}/warp.v2.db");
+
+      await SCSQLiteFixUtils.init(db);
     }
 
     Database database = await openDatabase(
       SCDatabaseConfig.warpMaster,
-      version: 2,
+      version: 3,
       onCreate: (Database db, int version) => onCreate(db, version),
       onUpgrade: (Database db, int version, int un) => onUpgrade(db)
     );

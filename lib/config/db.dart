@@ -18,7 +18,8 @@ class SCDatabaseConfig {
 
   /// Warp Table Name
   static String warpIndexTable = "warp_index";
-  static String warpGachaLogTable = "gacha_log";
+  static String warpGachaLogOldTable = "gacha_log";
+  static String warpGachaLogTable = "warp_gacha_log";
   static String warpItemTable = "item_data"; /// DELETE
 
   /// Data Table Name
