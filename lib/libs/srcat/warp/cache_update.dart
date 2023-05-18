@@ -1,14 +1,8 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
-<<<<<<< HEAD:lib/libs/srcat/warp/cache_update.dart
 /// Date: 2023-05-09 10:13:07
 /// LastEditTime: 2023-05-18 04:47:07
 /// FilePath: /lib/libs/srcat/warp/cache_update.dart
-=======
-/// Date: 2023-05-02 01:52:42
-/// LastEditTime: 2023-05-13 18:59:59
-/// FilePath: /lib/libs/sr/services/tools/warp/cache_update.dart
->>>>>>> bf52e1f8badeeb9d60ede91a40c54344d5a423a3:lib/libs/sr/services/tools/warp/cache_update.dart
 /// ===========================================================================
 // ignore_for_file: use_build_context_synchronously
 
@@ -47,11 +41,7 @@ class SRCatWarpCacheUpdateLib {
 
   /// 判断数据库中是否包含相同抽卡记录
   static Future<bool> _isSameData(int uid, GachaWarpType warpType, int rawId,) async {
-<<<<<<< HEAD:lib/libs/srcat/warp/cache_update.dart
     List<Map<String, dynamic>> gachaItem = await SRCatWarpDatabaseLib.userGachaLog(
-=======
-    List<Map<String, dynamic>> gachaItem = await SrWrapToolDatabaseService.userGachaLog(
->>>>>>> bf52e1f8badeeb9d60ede91a40c54344d5a423a3:lib/libs/sr/services/tools/warp/cache_update.dart
       uid: uid,
       rawId: rawId,
       gachaType: gachaWarpTypeValue[warpType]
@@ -140,10 +130,6 @@ class SRCatWarpCacheUpdateLib {
     if (!hasUser) {
       await SRCatWarpDatabaseLib.insertWarpUser(uid: uid);
     }
-<<<<<<< HEAD:lib/libs/srcat/warp/cache_update.dart
-=======
-    
->>>>>>> bf52e1f8badeeb9d60ede91a40c54344d5a423a3:lib/libs/sr/services/tools/warp/cache_update.dart
 
     for (var log in firstData) {
       if (await _isSameData(uid, warpType, int.parse(log["id"]))) {
@@ -195,11 +181,7 @@ class SRCatWarpCacheUpdateLib {
             for (var log in list) {
               if (await _isSameData(uid, warpType, int.parse(log["id"]))) {
                 if (kDebugMode) print("while:存在相同的记录，跳过插入。");
-<<<<<<< HEAD:lib/libs/srcat/warp/cache_update.dart
                 break;
-=======
-                continue;
->>>>>>> bf52e1f8badeeb9d60ede91a40c54344d5a423a3:lib/libs/sr/services/tools/warp/cache_update.dart
               }
 
               String itemType = "";

@@ -1,24 +1,13 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
-<<<<<<< HEAD
 /// Date: 2023-05-08 23:30:14
 /// LastEditTime: 2023-05-18 07:15:28
 /// FilePath: /lib/utils/storage/sqlite.dart
 /// ===========================================================================
 
 import 'main.dart';
-=======
-/// Date: 2023-05-01 22:53:02
-/// LastEditTime: 2023-05-14 07:43:24
-/// FilePath: /lib/utils/storage/sqlite.dart
-/// ===========================================================================
-
-import 'dart:io';
-
->>>>>>> bf52e1f8badeeb9d60ede91a40c54344d5a423a3
 import 'package:sqflite/sqflite.dart';
 import 'package:srcat/config/db.dart';
-import 'package:srcat/utils/storage/sqlite_fix.dart';
 
 class SRCatSQLiteUtils {
   static late String _base;
@@ -55,43 +44,6 @@ class SRCatSQLiteUtils {
           '"time" int(10) NOT NULL default \'0\''                   // 抽卡时间
         ');'
       );
-<<<<<<< HEAD
-=======
-    }
-
-    Future<void> onUpgrade(Database db) async {
-      /// DELETE WarpItemTable
-      /// 判断是否存在表
-      List<Map<String, dynamic>> tables = await db.rawQuery(
-        "select * from Sqlite_master where type = 'table' and name = '${SCDatabaseConfig.warpItemTable}'"
-      );
-      if (tables.isNotEmpty) {
-        await db.execute(
-          'DROP TABLE ${SCDatabaseConfig.warpItemTable};'
-        );
-      }
-
-      /// 备份旧表
-      File v2WarpDatabase = File(SCDatabaseConfig.warpMaster);
-      await v2WarpDatabase.copy("${SCDatabaseConfig.base}/warp.v2.db");
-
-      await SCSQLiteFixUtils.init(db);
-    }
-
-    Database database = await openDatabase(
-      SCDatabaseConfig.warpMaster,
-      version: 3,
-      onCreate: (Database db, int version) => onCreate(db, version),
-      onUpgrade: (Database db, int version, int un) => onUpgrade(db)
-    );
-
-    return database;
-  }
-
-  /// Data
-  static Future<Database> data() async {
-    Future<void> onCreate(Database db, int version) async {
->>>>>>> bf52e1f8badeeb9d60ede91a40c54344d5a423a3
       await db.execute(
         'CREATE TABLE ${SRCatDatabaseConfig.userdataGameAccountsTable} ('
           '"id" TEXT NOT NULL PRIMARY KEY,'                         // UUID
