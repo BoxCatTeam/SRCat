@@ -1,3 +1,4 @@
+<center><img src="github-assets/images/app_icon.png" width="80" height="80"></center>
 <h1 align="center">SRCat</h1>
 <p align="center">崩坏：星穹铁道 - 工具箱 / 愿此行，有猫猫一直相伴</p>
 
