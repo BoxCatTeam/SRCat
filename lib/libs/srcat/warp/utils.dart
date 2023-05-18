@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-09 10:23:21
-/// LastEditTime: 2023-05-18 09:25:46
+/// LastEditTime: 2023-05-18 12:37:40
 /// FilePath: /lib/libs/srcat/warp/utils.dart
 /// ===========================================================================
 
@@ -126,6 +126,7 @@ class SRCatWarpUtilsLib {
       return result;
     }
     pool().sort((a, b) => a["start_time"].compareTo(b["start_time"]));
+    data.sort((a, b) => a["raw_id"].compareTo(b["raw_id"]));
 
     int nowItemCount = 0;
 
@@ -138,7 +139,7 @@ class SRCatWarpUtilsLib {
           "isGuaranteed": false
         };
         nowItemCount = nowItemCount + 1;
-        /// 根据时间区间计算每个池子中抽中的五星是否保底
+        /// 计算每个池子中抽中的五星是否保底
         if (pool().isNotEmpty) {
           for (var gacha in pool()) {
             if (nowItemCount == 1) {
@@ -157,7 +158,7 @@ class SRCatWarpUtilsLib {
             }
           }
         }
-        star5.add(temp);
+        star5.insert(0, temp);
       }
     }
 
