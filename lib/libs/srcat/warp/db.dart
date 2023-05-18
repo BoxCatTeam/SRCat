@@ -73,6 +73,7 @@ class SRCatWarpDatabaseLib {
     required int uid,
     int? rawId,
     int? gachaId,
+    int? rawId,
     int? gachaType,
     int? itemId,
     String? itemType,
@@ -87,6 +88,7 @@ class SRCatWarpDatabaseLib {
           ' WHERE uid=$uid'
           '${rawId != null ? " AND raw_id=$rawId" : ""}'
           '${gachaId != null ? " AND gacha_id=$gachaId" : ""}'
+          '${rawId != null ? " AND raw_id=$rawId" : ""}'
           '${gachaType != null ? " AND gacha_type=$gachaType" : ""}'
           '${itemId != null ? " AND item_id=$itemId" : ""}'
           '${itemType != null ? " AND item_type='$itemType'" : ""}'

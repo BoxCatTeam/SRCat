@@ -5,6 +5,7 @@
 /// FilePath: /lib/config/db.dart
 /// ===========================================================================
 
+<<<<<<< HEAD
 /// 数据库配置文件
 class SRCatDatabaseConfig {
   /// 用户数据库
@@ -27,4 +28,25 @@ class SRCatDatabaseConfig {
   static String metadataImageTable = "images";
   /// 信息
   static String metadataFilesTable = "files";
+=======
+import 'package:srcat/config/file.dart';
+import 'package:srcat/utils/file/main.dart';
+
+class SCDatabaseConfig {
+  /// Base
+  static String base = "${FileUtils.getExeDir()}/${SCFileConfig.databases}";
+  /// Warp
+  static String warpMaster = "$base/warp.db";
+  /// Data
+  static String dataMaster = "$base/data.db";
+
+  /// Warp Table Name
+  static String warpIndexTable = "warp_index";
+  static String warpGachaLogOldTable = "gacha_log";
+  static String warpGachaLogTable = "warp_gacha_log";
+  static String warpItemTable = "item_data"; /// DELETE
+
+  /// Data Table Name
+  static String dataItemBaseTable = "sr_base_item";
+>>>>>>> bf52e1f8badeeb9d60ede91a40c54344d5a423a3
 }
