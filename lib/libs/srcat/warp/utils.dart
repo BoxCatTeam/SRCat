@@ -7,6 +7,8 @@
 
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
+
 import 'main.dart';
 
 class SRCatWarpUtilsLib {
@@ -200,5 +202,16 @@ class SRCatWarpUtilsLib {
     }
 
     return double.parse(average(Uint8List.fromList(list), isFloor: false).toStringAsFixed(3));
+  }
+
+  /// 计算已经垫了的抽数
+  static num itemsFromLastStar5(List<Map<String, dynamic>> data) {
+    num last = 0;
+    for (Map<String, dynamic> item in data) {
+      if (item["rank_type"] == 5 && item["lastNum"] != null) {
+        last += item["lastNum"];
+      }
+    }
+    return last > 0 ? data.length - last : data.length ;
   }
 }

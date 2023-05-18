@@ -26,7 +26,7 @@ class WarpRecordPanel extends StatefulWidget {
     required this.title,
     required this.data,
     required this.type,
-    this.height = 200,
+    this.height = 215,
     this.disableInfoScroll = false,
     required this.gachaPool,
   }) : super(key: key);
@@ -225,6 +225,8 @@ class _WarpRecordPanelState extends State<WarpRecordPanel> {
 
         const SizedBox(height: 18),
         cardTextItem("总抽数", "${widget.data.length} 抽"),
+        const SizedBox(height: 2),
+        cardTextItem("保底已垫", "${SRCatWarpUtilsLib.itemsFromLastStar5(resultData)} 抽"),
         const SizedBox(height: 2),
         widget.type == GachaWarpType.character || widget.type == GachaWarpType.lightCone ? cardTextItem("UP 平均抽数", "${SRCatWarpUtilsLib.upAverage(star5, 5)} 抽") : Container(),
         SizedBox(height: widget.type == GachaWarpType.character || widget.type == GachaWarpType.lightCone ? 2 : 0),
