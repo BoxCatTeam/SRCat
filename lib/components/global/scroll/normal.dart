@@ -1,21 +1,23 @@
-/// 普通的滚动容器
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
-/// Date: 2023-04-28 23:46:19
-/// LastEditTime: 2023-05-02 19:37:08
+/// Date: 2023-05-07 03:29:02
+/// LastEditTime: 2023-05-13 17:16:58
 /// FilePath: /lib/components/global/scroll/normal.dart
 /// ===========================================================================
 
+import 'package:dyn_mouse_scroll/dyn_mouse_scroll.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-class SCNormalScroll extends StatefulWidget {
-  const SCNormalScroll({
+/// 普通的滚动容器
+class SRCatNormalScroll extends StatefulWidget {
+  const SRCatNormalScroll({
     Key? key,
     required this.child,
     this.physics,
     this.controller,
     this.defaultPhysics = true,
     this.hiddenBar = false,
+    this.useDynScroll = true,
   }) : super(key: key);
 
   /// 子容器
@@ -33,11 +35,14 @@ class SCNormalScroll extends StatefulWidget {
   /// 是否隐藏滚动条
   final bool hiddenBar;
 
+  /// 是否启用平滑滚动
+  final bool useDynScroll;
+
   @override
-  State<SCNormalScroll> createState() => _SCNormalScrollState();
+  State<SRCatNormalScroll> createState() => _SRCatNormalScrollState();
 }
 
-class _SCNormalScrollState extends State<SCNormalScroll> {
+class _SRCatNormalScrollState extends State<SRCatNormalScroll> {
   final defaultScrollController = ScrollController();
   
   @override
@@ -53,9 +58,17 @@ class _SCNormalScrollState extends State<SCNormalScroll> {
       child: widget.child,
     );
 
+    Widget dynScroll = DynMouseScroll(
+      builder: (context, controller, physics) => SingleChildScrollView(
+        physics: physics,
+        controller: controller,
+        child: widget.child,
+      )
+    );
+
     return widget.hiddenBar ? ScrollConfiguration(
       behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-      child: scroll
-    ) : scroll;
+      child: widget.useDynScroll ? dynScroll :scroll
+    ) : widget.useDynScroll ? dynScroll :scroll;
   }
 }

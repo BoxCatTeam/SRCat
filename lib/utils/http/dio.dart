@@ -1,16 +1,16 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
-/// Date: 2023-05-01 18:02:34
-/// LastEditTime: 2023-05-01 18:16:30
+/// Date: 2023-05-09 09:45:53
+/// LastEditTime: 2023-05-15 07:31:18
 /// FilePath: /lib/utils/http/dio.dart
 /// ===========================================================================
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 // ignore: constant_identifier_names
 enum Method { GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH }
-enum Status { networkError, responseError, unkownError, warpCacheEmpty }
+enum Status { networkError, responseError, unkownError, warpCacheEmpty, cancelDownload }
 enum FailType { mhu, srcat, dio }
 
 const methodValues = {
@@ -27,7 +27,8 @@ const statusCode = {
   Status.networkError: 10001,
   Status.responseError: 10002,
   Status.unkownError: 10003,
-  Status.warpCacheEmpty: 10010
+  Status.warpCacheEmpty: 10010,
+  Status.cancelDownload: 20001
 };
 
 typedef Success<T> = Function(Response response, T data);
@@ -76,13 +77,56 @@ class SCDioUtils {
           data: method == Method.POST ? params : uri.queryParameters,
           options: Options(method: methodValues[method], headers: headers));
       success(response, response.data);
-    }  on DioError catch (e) {
+    } on DioError catch (e) {
       if (e.response != null) {
          fail(e.response?.statusCode ?? statusCode[Status.responseError]!,
             e.response?.statusMessage ?? "未知错误", FailType.dio, e);
       } else {
         fail(statusCode[Status.unkownError]!, "未知错误", FailType.dio, e);
       }
+    } on Exception {
+      fail(statusCode[Status.unkownError]!, "未知错误", FailType.dio, null);
+    }
+  }
+
+  /// 文件下载
+  static Future download({
+    required Uri uri,
+    required String savePath,
+    required CancelToken? cancelToken,
+    required Success success,
+    required Fail fail,
+    required void Function(int code, int total)? onReceiveProgress
+  }) async {
+    try {
+      var connectivityResult = await (Connectivity().checkConnectivity());
+      if (connectivityResult == ConnectivityResult.none) {
+        fail(statusCode[Status.networkError]!, "网络连接失败", FailType.dio, null);
+        return;
+      }
+
+      Dio dio = createInstance();
+      Response response = await dio.download(
+        uri.toString(),
+        savePath,
+        cancelToken: cancelToken,
+        onReceiveProgress: onReceiveProgress
+      );
+
+      success(response, response.data);
+    } on DioError catch (e) {
+      if (CancelToken.isCancel(e)) {
+        fail(statusCode[Status.cancelDownload]!, "下载已取消", FailType.dio, e);
+      } else {
+        if (e.response != null) {
+          fail(e.response?.statusCode ?? statusCode[Status.responseError]!,
+            e.response?.statusMessage ?? "未知错误", FailType.dio, e);
+        } else {
+          fail(statusCode[Status.unkownError]!, "未知错误", FailType.dio, e);
+        }
+      }
+    } on Exception {
+      fail(statusCode[Status.unkownError]!, "未知错误", FailType.dio, null);
     }
   }
 }

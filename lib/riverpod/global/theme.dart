@@ -1,13 +1,12 @@
-/// 全局主题状态管理
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
-/// Date: 2023-05-04 23:56:53
-/// LastEditTime: 2023-05-05 00:05:47
+/// Date: 2023-05-09 01:02:24
+/// LastEditTime: 2023-05-09 01:02:40
 /// FilePath: /lib/riverpod/global/theme.dart
 /// ===========================================================================
 
+import 'package:srcat/utils/settings.dart';
 import 'package:srcat/config/settings.dart';
-import 'package:srcat/utils/settings/main.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class GlobalThemeRiverpod extends StateNotifier<Map<String, dynamic>> {
@@ -30,7 +29,7 @@ class GlobalThemeRiverpod extends StateNotifier<Map<String, dynamic>> {
 
 final themeRiverpod = StateNotifierProvider<GlobalThemeRiverpod, Map<String, dynamic>>((ref) {
   return GlobalThemeRiverpod({
-    "theme": SCSettingsUtils.get(SCSettingsSPKey.theme) is String ? SCSettingsUtils.get(SCSettingsSPKey.theme) : "auto",
-    "material": SCSettingsUtils.get(SCSettingsSPKey.material) is String ? SCSettingsUtils.get(SCSettingsSPKey.material) : "mica"
+    "theme": SRCatSettingsUtils.get(SRCatSettingsKey.theme) is String ? SRCatSettingsUtils.get(SRCatSettingsKey.theme) : "auto",
+    "material": SRCatSettingsUtils.get(SRCatSettingsKey.material) is String ? SRCatSettingsUtils.get(SRCatSettingsKey.material) : "default"
   });
 });

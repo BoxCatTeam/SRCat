@@ -19,6 +19,9 @@
       "Date": "",
       "LastEditTime": "Do not edit",
       "FilePath": "no item name"
+    },
+    "files.associations": {
+      "xstring": "cpp"
     }
   }
 }

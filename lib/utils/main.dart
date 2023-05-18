@@ -1,11 +1,26 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
-/// Date: 2023-05-02 03:46:40
-/// LastEditTime: 2023-05-02 17:43:08
+/// Date: 2023-05-08 00:24:09
+/// LastEditTime: 2023-05-13 17:03:12
 /// FilePath: /lib/utils/main.dart
 /// ===========================================================================
 
-class SCUtils {
+import 'package:url_launcher/url_launcher.dart';
+import 'package:uuid/uuid.dart';
+
+/// 常用工具类
+class SRCatUtils {
+  static String listToString(List<int> list) {
+    final codeUnits = list.map((i) => String.fromCharCode(i)).toList();
+    return codeUnits.join('');
+  }
+
+  /// 打开外部链接
+  static void openUrl(Uri uri) => launchUrl(uri);
+  /// 打开目录
+  static void openFolder(Uri folder) => openUrl(folder);
+
+  /// 字符串转 10 位时间戳
   static strToUnixTime(String time) {
     DateTime dateTime = DateTime.parse(time);
     return dateTime.millisecondsSinceEpoch ~/ 1000;
@@ -21,5 +36,21 @@ class SCUtils {
       .replaceAll("HH", dateTime.hour.toString().padLeft(2, "0"))
       .replaceAll("mm", dateTime.minute.toString().padLeft(2, "0"))
       .replaceAll("ss", dateTime.second.toString().padLeft(2, "0"));
+  }
+
+  /// 获取当前时间戳
+  static int getUnixTime() => DateTime.now().millisecondsSinceEpoch ~/ 1000;
+
+  /// 根据值获取 UUID v5
+  static String getUUIDv5(String value) {
+    Uuid uuid = const Uuid();
+    return uuid.v5(Uuid.NAMESPACE_URL, value);
+  }
+
+  /// 字符串版本号转为数字版本号
+  static int getVersionNumber(String version) {
+    List versionCells = version.split('.');
+    versionCells = versionCells.map((i) => int.parse(i)).toList();
+    return versionCells[0] * 100000 + versionCells[1] * 1000 + versionCells[2];
   }
 }

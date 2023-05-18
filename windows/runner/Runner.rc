@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "org.boxcat" "\0"
-            VALUE "FileDescription", "SRCat" "\0"
+            VALUE "FileDescription", "srcat" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "SRCat" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2023 BoxCat Team. All rights reserved." "\0"
-            VALUE "OriginalFilename", "SRCat.exe" "\0"
-            VALUE "ProductName", "SRCat" "\0"
+            VALUE "InternalName", "srcat" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2023 org.boxcat. All rights reserved." "\0"
+            VALUE "OriginalFilename", "srcat.exe" "\0"
+            VALUE "ProductName", "srcat" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

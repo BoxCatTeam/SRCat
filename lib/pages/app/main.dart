@@ -1,18 +1,24 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
-/// Date: 2023-04-28 05:27:00
-/// LastEditTime: 2023-05-05 00:56:13
+/// Date: 2023-05-07 00:24:49
+/// LastEditTime: 2023-05-14 10:24:01
 /// FilePath: /lib/pages/app/main.dart
 /// ===========================================================================
 
-import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:srcat/application.dart';
-import 'package:srcat/riverpod/global/theme.dart';
-import 'package:window_manager/window_manager.dart';
-import 'package:flutter_acrylic/flutter_acrylic.dart';
 
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:go_router/go_router.dart';
+import 'package:srcat/utils/storage/main.dart';
+import 'package:window_manager/window_manager.dart';
+
+import 'package:srcat/riverpod/global/theme.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:flutter_i18n/flutter_i18n.dart';
+
+/// App Base Page
 class AppPage extends ConsumerStatefulWidget {
   const AppPage({
     Key? key,
@@ -72,7 +78,26 @@ class _AppPageState extends ConsumerState<AppPage> with WindowListener {
     return index;
   }
 
-  /// 顶栏右侧按钮
+  /// 标题栏
+  Widget _title() {
+    return const DragToMoveArea(
+      child: Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: Text.rich(TextSpan(
+          style: TextStyle(fontSize: 14),
+          children: <InlineSpan>[
+            TextSpan(text: "S"),
+            TextSpan(text: "R"),
+            TextSpan(text: "C", style: TextStyle(fontSize: 16, fontFamily: "Cattie", fontWeight: FontWeight.w600)),
+            TextSpan(text: "a"),
+            TextSpan(text: "t"),
+          ]
+        ),
+      ))
+    );
+  }
+
+  /// 顶栏右侧操作区
   Widget _actions() {
     final FluentThemeData theme = FluentTheme.of(context);
 
@@ -96,7 +121,12 @@ class _AppPageState extends ConsumerState<AppPage> with WindowListener {
     PaneItem(
       key: const Key('/home'),
       icon: const Icon(FluentIcons.home),
-      title: const Text("主页"),
+      title: Text(
+        FlutterI18n.translate(
+          Application.rootNavigatorKey.currentContext!,
+          "app.root.nav.title.home"
+        )
+      ),
       body: const SizedBox.shrink(),
       onTap: () {
         if (Application.router.location != "/home") {
@@ -105,16 +135,53 @@ class _AppPageState extends ConsumerState<AppPage> with WindowListener {
       }
     ),
     PaneItem(
+      key: const Key('/tools/game/launch'),
+      icon: const Icon(FluentIcons.game),
+      title: Text(
+        FlutterI18n.translate(
+          Application.rootNavigatorKey.currentContext!,
+          "app.root.nav.title.gameLaunch"
+        )
+      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (Application.router.location != "/tools/game/launch") {
+          Application.router.push("/tools/game/launch");
+        }
+      }
+    ),
+    /*PaneItem(
+      key: const Key('/tools/game/photo'),
+      icon: const Icon(FluentIcons.photo_collection),
+      title: Text(
+        FlutterI18n.translate(
+          Application.rootNavigatorKey.currentContext!,
+          "app.root.nav.title.gamePhoto"
+        )
+      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        if (Application.router.location != "/tools/game/photo") {
+          Application.router.push("/tools/game/photo");
+        }
+      }
+    ),*/
+    PaneItem(
       key: const Key('/tools/warp'),
       icon: const Icon(FluentIcons.six_point_star),
-      title: const Text("跃迁记录"),
+      title: Text(
+        FlutterI18n.translate(
+          Application.rootNavigatorKey.currentContext!,
+          "app.root.nav.title.warp"
+        )
+      ),
       body: const SizedBox.shrink(),
       onTap: () {
         if (Application.router.location.split("?")[0] != "/tools/warp") {
           Application.router.push("/tools/warp");
         }
       }
-    )
+    ),
   ];
 
   /// 导航栏底部列表
@@ -123,7 +190,12 @@ class _AppPageState extends ConsumerState<AppPage> with WindowListener {
     PaneItem(
       key: const Key('/settings'),
       icon: const Icon(FluentIcons.settings),
-      title: const Text("设置"),
+      title: Text(
+        FlutterI18n.translate(
+          Application.rootNavigatorKey.currentContext!,
+          "app.root.nav.title.settings"
+        )
+      ),
       body: const SizedBox.shrink(),
       onTap: () {
         if (Application.router.location != "/settings") {
@@ -142,25 +214,6 @@ class _AppPageState extends ConsumerState<AppPage> with WindowListener {
       size: const NavigationPaneSize(
         openMaxWidth: 200
       )
-    );
-  }
-
-  /// 标题栏
-  Widget _title() {
-    return const DragToMoveArea(
-      child: Align(
-        alignment: AlignmentDirectional.centerStart,
-        child: Text.rich(TextSpan(
-          style: TextStyle(fontSize: 14),
-          children: <InlineSpan>[
-            TextSpan(text: "S"),
-            TextSpan(text: "R"),
-            TextSpan(text: "C", style: TextStyle(fontSize: 16, fontFamily: "Cattie", fontWeight: FontWeight.w600)),
-            TextSpan(text: "a"),
-            TextSpan(text: "t"),
-          ]
-        ),
-      ))
     );
   }
 
@@ -193,13 +246,14 @@ class _AppPageState extends ConsumerState<AppPage> with WindowListener {
       effect: effect,
       dark: isDark,
     );
+    
     return NavigationView(
       key: widget.key,
       appBar: NavigationAppBar(
-        automaticallyImplyLeading: false,
         leading: null,
+        title: _title(),
         actions: _actions(),
-        title: _title()
+        automaticallyImplyLeading: false,
       ),
       pane: _navs(),
       paneBodyBuilder: (item, child) {
@@ -209,12 +263,36 @@ class _AppPageState extends ConsumerState<AppPage> with WindowListener {
           child: widget.child,
         );
       }
-    );
+    ); 
   }
 
   @override
   void onWindowClose() async {
     bool isPreventClose = await windowManager.isPreventClose();
     if (isPreventClose) windowManager.destroy();
+  }
+
+  @override
+  void onWindowFocus() {
+    windowManager.focus();
+    setState(() {});
+  }
+
+  @override
+  void onWindowBlur() {
+    windowManager.blur();
+    setState(() {});
+  }
+
+  @override
+  void onWindowResized() async {
+    Size windowSize = await WindowManager.instance.getSize();
+    SRCatStorageUtils.write("window_size", [windowSize.width, windowSize.height]);
+  }
+
+  @override
+  void onWindowMoved() async {
+    Offset windowPosition = await WindowManager.instance.getPosition();
+    SRCatStorageUtils.write("window_position", [windowPosition.dx, windowPosition.dy]);
   }
 }

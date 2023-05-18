@@ -1,18 +1,20 @@
-/// Card
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
-/// Date: 2023-04-29 00:25:27
-/// LastEditTime: 2023-05-02 01:38:52
+/// Date: 2023-05-07 03:31:28
+/// LastEditTime: 2023-05-18 07:18:33
 /// FilePath: /lib/components/global/card/item.dart
 /// ===========================================================================
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:srcat/components/global/icon/main.dart';
 
-class SCItemCard extends StatefulWidget {
-  const SCItemCard({
+/// 卡片组件
+class SRCatCard extends StatefulWidget {
+  const SRCatCard({
     Key? key,
     this.icon,
+    this.iconSize = 20,
+    this.iconWeight = FontWeight.w600,
     required this.title,
     this.description,
     this.rightChild,
@@ -22,6 +24,12 @@ class SCItemCard extends StatefulWidget {
 
   /// 图标
   final IconData? icon;
+
+  /// 图标大小
+  final double iconSize;
+
+  /// 图标字号
+  final FontWeight iconWeight;
 
   /// 标题
   final String title;
@@ -39,15 +47,15 @@ class SCItemCard extends StatefulWidget {
   final void Function()? onTap;
 
   @override
-  State<SCItemCard> createState() => _SCItemCardState();
+  State<SRCatCard> createState() => _SRCatCardState();
 }
 
-class _SCItemCardState extends State<SCItemCard> {
+class _SRCatCardState extends State<SRCatCard> {
   Widget _icon() {
-    return SCIcon(
+    return SRCatIcon(
       widget.icon!,
-      size: 20,
-      weight: FontWeight.w600,
+      size: widget.iconSize,
+      weight: widget.iconWeight,
     );
   }
 
@@ -66,8 +74,6 @@ class _SCItemCardState extends State<SCItemCard> {
       style: const TextStyle(
         fontSize: 12,
       ),
-      overflow: TextOverflow.ellipsis,
-      maxLines: 1,
     ) : Container();
 
     return Expanded(child: Column(
@@ -84,13 +90,14 @@ class _SCItemCardState extends State<SCItemCard> {
         if (widget.icon != null) _icon(),
         if (widget.icon != null) const SizedBox(width: 18),
         _text(),
+        if (widget.rightChild != null) const SizedBox(width: 5),
         if (widget.rightChild != null) widget.rightChild!
       ],
     );
 
     return HoverButton(
       onPressed: widget.onTap,
-      cursor: SystemMouseCursors.click,
+      cursor: widget.onTap != null ? SystemMouseCursors.click : SystemMouseCursors.disappearing,
       builder: (context, states) {
         Widget ac = AnimatedContainer(
           duration: FluentTheme.of(context).fasterAnimationDuration,
@@ -112,6 +119,7 @@ class _SCItemCardState extends State<SCItemCard> {
           child: RepaintBoundary(
             child: Card(
               padding: EdgeInsets.zero,
+              margin: widget.margin,
               child: ac
             )
           )

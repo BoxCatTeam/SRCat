@@ -1,0 +1,19 @@
+languageTitle = "中文（简体）"
+appTitle = "SRCat"
+
+## ==================== Global ==================== ##
+[global.dialog]
+defaultTitle = "提示"
+
+## ==================== APP ==================== ##
+## ========== Root ========== ##
+[app.root.nav.title]
+home        = "主页"
+gameLaunch  = "游戏启动"
+gamePhoto   = "游戏相册"
+warp        = "跃迁记录"
+settings    = "设置"
+## ========== Tools - GameLaunch ========== ##
+[app.tools.gameLaunch]
+## ========== Tools - Warp ========== ##
+[app.tools.warp]

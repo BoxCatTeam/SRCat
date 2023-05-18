@@ -1,30 +1,34 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
-/// Date: 2023-05-01 15:55:53
-/// LastEditTime: 2023-05-01 23:43:27
+/// Date: 2023-05-08 23:10:31
+/// LastEditTime: 2023-05-08 23:15:22
 /// FilePath: /lib/utils/file/init.dart
 /// ===========================================================================
 
 import 'main.dart';
-import 'package:srcat/config/file.dart';
+import 'package:srcat/utils/storage/main.dart';
 
-class FileInitUtils {
+/// 文件初始化类
+class SRCatFileInitUtils {
   /// 初始化入口
   static Future<void> init() async {
     await _createDataDir();
+    await _createMetaDir();
     await _createCacheDir();
-    await _createImageCahceDir();
-    await _createDatabaseDir();
   }
 
-  /// 创建数据目录
-  static Future<void> _createDataDir() async => await FileUtils.createDir("${FileUtils.getExeDir()}/${SCFileConfig.data}");
+  /// 创建数据库存放目录
+  static Future<void> _createDataDir() async => await SRCatFileUtils.createDir(
+    "${await SRCatStorageUtils.read("data_path") as String}/database"
+  );
+
+  /// 创建元数据存放目录
+  static Future<void> _createMetaDir() async => await SRCatFileUtils.createDir(
+    "${await SRCatStorageUtils.read("data_path") as String}/metadata"
+  );
 
   /// 创建缓存目录
-  static Future<void> _createCacheDir() async => await FileUtils.createDir("${FileUtils.getExeDir()}/${SCFileConfig.cache}");
-  /// 创建图片缓存目录
-  static Future<void> _createImageCahceDir() async => await FileUtils.createDir("${FileUtils.getExeDir()}/${SCFileConfig.imageCache}");
-
-  /// 创建数据库存储目录
-  static Future<void> _createDatabaseDir() async => await FileUtils.createDir("${FileUtils.getExeDir()}/${SCFileConfig.databases}");
+  static Future<void> _createCacheDir() async => await SRCatFileUtils.createDir(
+    "${await SRCatStorageUtils.read("data_path") as String}/cache"
+  );
 }

@@ -1,15 +1,15 @@
-/// 自定义图标组件
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
-/// Date: 2023-04-28 22:28:11
-/// LastEditTime: 2023-04-29 01:41:26
+/// Date: 2023-05-07 03:30:09
+/// LastEditTime: 2023-05-07 03:30:17
 /// FilePath: /lib/components/global/icon/main.dart
 /// ===========================================================================
 
 import 'package:fluent_ui/fluent_ui.dart';
 
-class SCIcon extends StatefulWidget {
-  const SCIcon(this.icon, {
+/// 自定义图标组件
+class SRCatIcon extends StatefulWidget {
+  const SRCatIcon(this.icon, {
     Key? key,
     this.size,
     this.color,
@@ -29,10 +29,10 @@ class SCIcon extends StatefulWidget {
   final FontWeight? weight;
 
   @override
-  State<SCIcon> createState() => _SCIconState();
+  State<SRCatIcon> createState() => _SRCatIconState();
 }
 
-class _SCIconState extends State<SCIcon> {
+class _SRCatIconState extends State<SRCatIcon> {
   @override
   Widget build(BuildContext context) {
     return Text(

@@ -1,20 +1,21 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
-/// Date: 2023-04-28 03:37:34
-/// LastEditTime: 2023-04-28 18:35:32
+/// Date: 2023-05-06 22:28:26
+/// LastEditTime: 2023-05-15 09:32:18
 /// FilePath: /lib/libs/router/main.dart
 /// ===========================================================================
 
 export 'interface.dart';
+export 'package:go_router/go_router.dart';
+
+import 'interface.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
 
-import 'interface.dart';
-import 'package:srcat/pages/router.dart';
+import 'package:srcat/pages/routes.dart';
 
-export 'package:go_router/go_router.dart';
-import 'package:go_router/go_router.dart';
-
+/// Router
 class SRCatRouter {
   static String rootRoute = "/";
 
@@ -30,7 +31,7 @@ class SRCatRouter {
 
     /* 注册各模块的路由 */
     /* 将路由注册入口添加至待注册列表 */
-    _routes.add(PagesRouter());
+    _routes.add(PageRoutes());
 
     /* 注册路由 */
     for (var router in _routes) {
@@ -42,7 +43,7 @@ class SRCatRouter {
   GoRouter goRouter(GlobalKey<NavigatorState> rootNavigatorKey) {
     return GoRouter(
       navigatorKey: rootNavigatorKey,
-      initialLocation: '/',
+      initialLocation: SRCatRouter.rootRoute,
       routes: _routesResult
     );
   }
