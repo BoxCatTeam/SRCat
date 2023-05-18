@@ -33,6 +33,19 @@
 
 还有更多功能正在逐步咕咕中...
 
+## 特别感谢
+- [UIGF](https://uigf.org/)
+### 参考项目
+- [xunkong/xunkong](https://github.com/xunkong/xunkong)
+- [DGP-Studio/Snap.Hutao](https://github.com/DGP-Studio/Snap.Hutao)
+- [DGP-Studio/Snap.Genshin](https://github.com/DGP-Studio/Snap.Genshin)
+
+### 技术栈
+- [dart](https://github.com/dart-lang/sdk)
+- [flutter/flutter](https://github.com/flutter/flutter)
+
+## 活跃数据
+![Alt](https://repobeats.axiom.co/api/embed/24cb7ef0f3737b890c89ee7b4a59f84816aa20db.svg "Repobeats analytics image")
+
 ## License
 Copyright © 2023 [BoxCatTeam](https://boxcat.org), under MIT License
-
