@@ -7,6 +7,7 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class Application {
   static late GoRouter router;
@@ -16,4 +17,6 @@ class Application {
   static late int buildNumber;
   /* Windows productName */
   static late String productName;
+
+  static late PackageInfo packageInfo;
 }

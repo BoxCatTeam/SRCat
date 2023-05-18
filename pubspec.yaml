@@ -2,7 +2,7 @@ name: srcat
 description: "Honkai: Star Rail Toolbox on Windows"
 publish_to: none
 
-version: 1.0.0+1
+version: 0.1.0+7
 
 environment:
   sdk: '>=2.18.0 <4.0.0'
@@ -95,6 +95,8 @@ dependencies:
 
   dyn_mouse_scroll: ^1.0.7
 
+  package_info_plus: ^4.0.0
+
   ffi: ^2.0.2
 
   # Dio
@@ -119,6 +121,8 @@ dependencies:
 
   convert: ^3.1.1
 
+  flutter_widget_from_html_core: ^0.10.1
+
   cupertino_icons: ^1.0.2
 
 dependency_overrides:
@@ -132,6 +136,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^2.0.0
+  msix: ^3.12.2
 
 flutter:
   uses-material-design: true

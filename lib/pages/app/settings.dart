@@ -1,19 +1,23 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-07 03:42:37
-/// LastEditTime: 2023-05-16 04:16:45
+/// LastEditTime: 2023-05-18 16:23:36
 /// FilePath: /lib/pages/app/settings.dart
 /// ===========================================================================
 
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:srcat/application.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:srcat/components/global/base/app_title.dart';
 import 'package:srcat/components/global/icon/main.dart';
+import 'package:srcat/config/api.dart';
 import 'package:srcat/riverpod/global/dialog.dart';
 import 'package:srcat/riverpod/global/theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:srcat/riverpod/pages/settings.dart';
+import 'package:srcat/utils/http/dio.dart';
 import 'package:srcat/utils/main.dart';
 
 import 'package:srcat/utils/settings.dart';
@@ -124,21 +128,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
         ),
         const SizedBox(width: 10),
         Button(
-          onPressed: () => {
-            ref.read(globalDialogRiverpod).set("咕咕", titleSize: 20,
-              child: const Text("在咕了在咕了"),
-              actions: <Widget>[
-                FilledButton(
-                  onPressed: () async {
-                    ref.read(globalDialogRiverpod).hidden();
-                    await Future.delayed(const Duration(milliseconds: 200));
-                    ref.read(globalDialogRiverpod).clean();
-                  },
-                  child: const Text("咕咕咕！"),
-                )
-              ]
-            ).show()
-          },
+          onPressed: () => SRCatUtils.openUrl(Uri.parse("https://afdian.net/a/boxcat")),
           child: const Text("赞助我们")
         ),
         const SizedBox(width: 10),
@@ -196,6 +186,59 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
           const SizedBox(height: 20),
         ],
       )
+    );
+  }
+
+  Widget _panel1() {
+    Widget title = const Text("关于");
+
+    bool isChecking = ref.watch(settingsRiverpod).isCheckingUpdate;
+
+    Widget about = Expander(
+      headerHeight: 55,
+      header: Row(
+        children: <Widget>[
+          const SRCatIcon(fluent_system_icons.FluentIcons.apps_48_regular, size: 23),
+          const SizedBox(width: 15),
+          Center(child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text("SRCat"),
+              Text("${Application.packageInfo.version}.0", style: const TextStyle(fontSize: 13))
+            ]
+          )),
+          Expanded(child: Container()),
+          Button(
+            onPressed: isChecking ? null : () => _checkUpdate(),
+            child: isChecking ? const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                SizedBox(
+                  width: 15,
+                  height: 15,
+                  child: ProgressRing(strokeWidth: 2.5)
+                ),
+                SizedBox(width: 10),
+                Text("检查更新中...")
+              ]
+            ) : const Text("检查更新")
+          )
+        ]
+      ),
+      content: const Text("暂无更新日志"),
+      onStateChanged: (open) {}
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        title,
+        const SizedBox(height: 10),
+        about,
+        const SizedBox(height: 20),
+      ],
     );
   }
 
@@ -401,7 +444,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   Widget build(BuildContext context) {
     Widget child = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_header(), _panel2(), _panel3(), _panel4()],
+      children: [_header(), _panel1(), _panel2(), _panel3(), _panel4()],
     );
 
     return SRCatNormalScroll(
@@ -429,5 +472,54 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
         severity: severity,
       );
     });
+  }
+
+  void _checkUpdate() async {
+    ref.read(settingsRiverpod).changeCheckUpdateStatus(true);
+
+    await SCDioUtils.request(
+      method: Method.GET,
+      uri: Uri.parse("${SRCatAPIConfig.checkUpdate}?version=${Application.packageInfo.version}"),
+      success: (response, data) {
+        if (SRCatUtils.getVersionNumber(data["latest_version"]) > SRCatUtils.getVersionNumber(Application.packageInfo.version)) {
+          ref.read(globalDialogRiverpod).set("发现新版本", child: SizedBox(
+            height: 300,
+            child: SRCatNormalScroll(child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "本地版本: ${Application.packageInfo.version}\n"
+                  "远端版本: ${data["latest_version"]}\n"
+                  "更新日期: ${SRCatUtils.unixTimeToStr(data["update_time"], format: "yyyy-MM-dd HH:mm:ss")}"
+                ),
+                const SizedBox(height: 10),
+                const Text("更新日志: ", style: TextStyle(fontSize: 18)),
+                const SizedBox(height: 5),
+                HtmlWidget(data["update_log"] ?? "", textStyle: const TextStyle(inherit: false, fontFamily: "PingFang")),
+              ],
+            ))),
+            actions: [
+              Button(onPressed: () async {
+                ref.read(globalDialogRiverpod).hidden();
+                await Future.delayed(const Duration(milliseconds: 200));
+                ref.read(globalDialogRiverpod).clean();
+              }, child: const Text("好的")),
+              FilledButton(onPressed: () async {
+                SRCatUtils.openUrl(Uri.parse(data["download_link"] ?? "https://github.com/BoxCatTeam/SRCat"));
+                ref.read(globalDialogRiverpod).hidden();
+                await Future.delayed(const Duration(milliseconds: 200));
+                ref.read(globalDialogRiverpod).clean();
+              }, child: const Text("前往更新"))
+            ]
+          ).show();
+        } else {
+          _displayBar(title: "提示", text: "已是最新版本啦！", severity: InfoBarSeverity.success);
+        }
+        ref.read(settingsRiverpod).changeCheckUpdateStatus(false);
+      },
+      fail: (code, message, failType, dioError) {
+        _displayBar(title: "发生错误", text: message);
+      }
+    );
   }
 }

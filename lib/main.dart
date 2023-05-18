@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-06 19:23:46
-/// LastEditTime: 2023-05-14 12:01:47
+/// LastEditTime: 2023-05-18 15:40:26
 /// FilePath: /lib/main.dart
 /// ===========================================================================
 
@@ -10,6 +10,7 @@ import 'dart:io';
 import 'package:srcat/application.dart';
 import 'package:srcat/libs/router/main.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:system_theme/system_theme.dart';
@@ -40,6 +41,7 @@ Future<void> main() async {
   WindowsDeviceInfo windows = await deviceInfo.windowsInfo;
   Application.buildNumber = windows.buildNumber;
   Application.productName = windows.productName;
+  Application.packageInfo = await PackageInfo.fromPlatform();
 
   if (Platform.isWindows) {
     sqfliteFfiInit();
