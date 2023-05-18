@@ -1,5 +1,5 @@
-<center><img src="github-assets/images/app_icon.png" width="80" height="80"></center>
-<h1 align="center">SRCat</h1>
+<div align="center"><img src="github-assets/images/app_icon.png" width="80" height="80"></div>
+<h1 align="center" size="80">SRCat</h1>
 <p align="center">崩坏：星穹铁道 - 工具箱 / 愿此行，有猫猫一直相伴</p>
 
 > **SRCat 开发中，并非完全体，可能存在许多奇怪的 BUG (￣﹃￣)**
