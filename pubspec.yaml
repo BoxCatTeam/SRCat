@@ -79,11 +79,6 @@ dependencies:
   sqflite: ^2.2.8+2
   sqflite_common_ffi: ^2.2.5
 
-  # UUID
-  # https://pub.dev/packages/uuid
-  # https://pub.flutter-io.cn/packages/uuid
-  uuid: ^4.0.0-beta3-1
-
   # Device Info
   # https://pub.dev/packages/device_info_plus
   # https://pub.flutter-io.cn/packages/device_info_plus
@@ -123,6 +118,8 @@ dependencies:
 
   flutter_widget_from_html_core: ^0.10.1
 
+  sentry_flutter: ^7.6.1
+
   cupertino_icons: ^1.0.2
 
 dependency_overrides:
@@ -130,6 +127,11 @@ dependency_overrides:
   # https://pub.dev/packages/win32
   # https://pub.flutter-io.cn/packages/win32
   win32: ^5.0.0
+
+  # UUID
+  # https://pub.dev/packages/uuid
+  # https://pub.flutter-io.cn/packages/uuid
+  uuid: ^4.0.0-beta3-1
 
 dev_dependencies:
   flutter_test:

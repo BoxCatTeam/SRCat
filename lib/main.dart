@@ -1,11 +1,13 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-06 19:23:46
-/// LastEditTime: 2023-05-18 15:40:26
+/// LastEditTime: 2023-05-19 11:36:49
 /// FilePath: /lib/main.dart
 /// ===========================================================================
 
 import 'dart:io';
+
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'package:srcat/application.dart';
 import 'package:srcat/libs/router/main.dart';
@@ -109,8 +111,15 @@ Future<void> main() async {
   final SRCatRouter router = SRCatRouter();
   router.configureRoutes();
   Application.router = router.goRouter(Application.rootNavigatorKey);
-  
-  runApp(const ProviderScope(child: SRCatAPP()));
+
+  /* Init Sentry */
+  await SentryFlutter.init(
+    (options) {
+      options.dsn = 'https://28b63ea28b5f4d1189ce8f7e1696d80a@o4505208485183488.ingest.sentry.io/4505208511791104';
+      options.tracesSampleRate = 1.0;
+    },
+    appRunner: () => runApp(const ProviderScope(child: SRCatAPP()))
+  );
 }
 
 class SRCatAPP extends ConsumerStatefulWidget {
