@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-07 00:33:35
-/// LastEditTime: 2023-05-20 22:28:11
+/// LastEditTime: 2023-05-20 23:17:31
 /// FilePath: /lib/pages/app/tools/warp.dart
 /// ===========================================================================
 
@@ -253,7 +253,7 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
     // 常驻
     Widget regular = WarpRecordPanel(
       title: "群星跃迁",
-      height: 260,
+      height: 220,
       data: _gachaLog[GachaWarpType.regular],
       type: GachaWarpType.regular,
       gachaPool: _gachaPool,
@@ -278,7 +278,7 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
     // 始发跃迁 / Starter
     Widget starter = WarpRecordPanel(
       title: "始发跃迁",
-      height: 240,
+      height: 200,
       disableInfoScroll: true,
       data: _gachaLog[GachaWarpType.starter],
       type: GachaWarpType.starter,

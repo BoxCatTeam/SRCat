@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-09 10:22:04
-/// LastEditTime: 2023-05-18 08:37:28
+/// LastEditTime: 2023-05-20 23:17:59
 /// FilePath: /lib/components/pages/app/tools/warp/record_panel.dart
 /// ===========================================================================
 
@@ -156,13 +156,14 @@ class _WarpRecordPanelState extends State<WarpRecordPanel> {
     );
 
     Widget cardTextItem(String start, String end) {
-      return Row(
+      Widget text = Row(
         children: [
           Text(start, style: const TextStyle(fontSize: 14)),
           Expanded(child: Container()),
           Text(end, style: const TextStyle(fontSize: 14)),
         ],
       );
+      return SizedBox(width: double.infinity, child: text);
     }
 
     List<Widget> cardChildItem = [];
@@ -226,8 +227,8 @@ class _WarpRecordPanelState extends State<WarpRecordPanel> {
         const SizedBox(height: 18),
         cardTextItem("总抽数", "${widget.data.length} 抽"),
         const SizedBox(height: 2),
-        cardTextItem("保底已垫", "${SRCatWarpUtilsLib.itemsFromLastStar5(resultData)} 抽"),
-        const SizedBox(height: 2),
+        widget.type == GachaWarpType.character || widget.type == GachaWarpType.lightCone ? cardTextItem("保底已垫", "${SRCatWarpUtilsLib.itemsFromLastStar5(resultData)} 抽") : Container(),
+        SizedBox(height: widget.type == GachaWarpType.character || widget.type == GachaWarpType.lightCone ? 2 : 0),
         widget.type == GachaWarpType.character || widget.type == GachaWarpType.lightCone ? cardTextItem("UP 平均抽数", "${SRCatWarpUtilsLib.upAverage(star5, 5)} 抽") : Container(),
         SizedBox(height: widget.type == GachaWarpType.character || widget.type == GachaWarpType.lightCone ? 2 : 0),
         cardTextItem("五星平均抽数", "${SRCatWarpUtilsLib.star5Average(resultData)} 抽"),
@@ -303,15 +304,22 @@ class _WarpRecordPanelState extends State<WarpRecordPanel> {
       height: widget.height,
       child: Row(
         children: <Widget>[
-          SizedBox(width: 200, child: Column(children: <Widget>[
-            Expanded(child: pieChart),
-            const SizedBox(height: 10),
-            Text(time, style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.bold,
-              color: (FluentTheme.of(context).brightness.isDark ? Colors.white : Colors.black).withOpacity(0.8)
-            ))
-          ])),
+          SizedBox(width: 200, child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                width: 160,
+                height: 160,
+                child: pieChart,
+              ),
+              const SizedBox(height: 15),
+              Text(time, style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: (FluentTheme.of(context).brightness.isDark ? Colors.white : Colors.black).withOpacity(0.8)
+              ))
+            ]
+          )),
           const SizedBox(width: 10),
           divider,
           const SizedBox(width: 10),
@@ -379,7 +387,7 @@ class _WarpRecordPanelState extends State<WarpRecordPanel> {
     }) {
       final isTouched = index == touchedIndex;
       final fontSize = isTouched ? 25.0 : 16.0;
-      final radius = isTouched ? 60.0 : 50.0;
+      final radius = isTouched ? 55.0 : 45.0;
       return PieChartSectionData(
         color: color,
         title: title,
