@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-07 00:33:35
-/// LastEditTime: 2023-05-18 10:56:18
+/// LastEditTime: 2023-05-20 22:28:11
 /// FilePath: /lib/pages/app/tools/warp.dart
 /// ===========================================================================
 
@@ -479,29 +479,7 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
     int uid = await SRCatWarpCacheUpdateLib.init(_stateKey.currentContext!);
     _warpUsers = await SRCatWarpDatabaseLib.allWarpUser();
     _loadStatus = true;
-    if (_warpUsers.isNotEmpty) {
-      _nowSelectedUID = _nowSelectedUID == 0 ? int.parse(_warpUsers[0]["uid"].toString()) : _nowSelectedUID;
-
-      _gachaLog[GachaWarpType.regular] = await SRCatWarpDatabaseLib.userGachaLog(
-        uid: _nowSelectedUID,
-        gachaType: gachaWarpTypeValue[GachaWarpType.regular]
-      );
-
-      _gachaLog[GachaWarpType.lightCone] = await SRCatWarpDatabaseLib.userGachaLog(
-        uid: _nowSelectedUID,
-        gachaType: gachaWarpTypeValue[GachaWarpType.lightCone]
-      );
-
-      _gachaLog[GachaWarpType.character] = await SRCatWarpDatabaseLib.userGachaLog(
-        uid: _nowSelectedUID,
-        gachaType: gachaWarpTypeValue[GachaWarpType.character]
-      );
-
-      _gachaLog[GachaWarpType.starter] = await SRCatWarpDatabaseLib.userGachaLog(
-        uid: _nowSelectedUID,
-        gachaType: gachaWarpTypeValue[GachaWarpType.starter]
-      );
-
+    if (_warpUsers.isNotEmpty && uid != 0) {
       await Future.delayed(const Duration(seconds: 1));
       Application.router.push("/tools/warp?uid=$uid");
     } else {
