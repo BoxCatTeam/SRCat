@@ -1,9 +1,11 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-07 03:42:37
-/// LastEditTime: 2023-05-18 16:23:36
+/// LastEditTime: 2023-05-22 11:53:16
 /// FilePath: /lib/pages/app/settings.dart
 /// ===========================================================================
+
+import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/gestures.dart';
@@ -17,6 +19,7 @@ import 'package:srcat/riverpod/global/dialog.dart';
 import 'package:srcat/riverpod/global/theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:srcat/riverpod/pages/settings.dart';
+import 'package:srcat/utils/file/main.dart';
 import 'package:srcat/utils/http/dio.dart';
 import 'package:srcat/utils/main.dart';
 
@@ -505,11 +508,14 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 ref.read(globalDialogRiverpod).clean();
               }, child: const Text("好的")),
               FilledButton(onPressed: () async {
-                SRCatUtils.openUrl(Uri.parse(data["download_link"] ?? "https://github.com/BoxCatTeam/SRCat"));
-                ref.read(globalDialogRiverpod).hidden();
-                await Future.delayed(const Duration(milliseconds: 200));
-                ref.read(globalDialogRiverpod).clean();
-              }, child: const Text("前往更新"))
+                Process.start(
+                  "${SRCatFileUtils.getExeDir()}/srcat-autoupdate.exe",
+                  ["-c", "stable"],
+                  runInShell: true,
+                  mode: ProcessStartMode.detached
+                );
+                await windowManager.destroy();
+              }, child: const Text("更新"))
             ]
           ).show();
         } else {
