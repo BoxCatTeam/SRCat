@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-18 04:24:54
-/// LastEditTime: 2023-05-18 04:30:30
+/// LastEditTime: 2023-05-23 00:46:26
 /// FilePath: /lib/libs/srcat/download/utils.dart
 /// ===========================================================================
 // ignore_for_file: use_build_context_synchronously
@@ -20,7 +20,7 @@ class SRCatDownloadPageUtilsLib {
 
   /// 请求成功时解析数据
   static Future<void> successParse(
-      BuildContext context, Map<String, dynamic> data) async {
+      BuildContext context, Map<String, dynamic> data, bool isUpdate) async {
     _baseUrl = data["base_url"].toString();
 
     /// 解析需下载的内容到列表
@@ -74,11 +74,11 @@ class SRCatDownloadPageUtilsLib {
     /// 加入到下载列队中
     context.read(downloadRiverpod).initList(parseResult);
 
-    await _downloadFile(context, downloadData, parseResult);
+    await _downloadFile(context, downloadData, parseResult, isUpdate);
   }
 
   static Future<void> _downloadFile(BuildContext context,
-      Map<String, dynamic> data, Map<String, dynamic> parseResult) async {
+      Map<String, dynamic> data, Map<String, dynamic> parseResult, bool isUpdate) async {
     /// 下载子元素内文件
     Future<void> downloadChildren(MapEntry item, List<dynamic> children) async {
       for (int index = 0; index < children.length; index++) {
@@ -109,21 +109,23 @@ class SRCatDownloadPageUtilsLib {
             });
 
         if (item.value["type"] == "images") {
-          SRCatMetadataDatabaseLib.saveImageInfo(
+          _imageInfo(
               id: children[index]["uuid"],
               name: children[index]["name"],
               parent: children[index]["parent"],
               hash: children[index]["hash"],
               path:
-                  "${item.value["real_path"]}${children[index]["uuid"]}");
+                  "${item.value["real_path"]}${children[index]["uuid"]}",
+              isUpdate: isUpdate);
         } else if (item.value["type"] == "file") {
-          SRCatMetadataDatabaseLib.saveFileInfo(
+          _fileInfo(
               id: children[index]["uuid"],
               name: children[index]["name"],
               parent: children[index]["parent"],
               hash: children[index]["hash"],
               path:
-                  "${item.value["real_path"]}${children[index]["uuid"]}");
+                  "${item.value["real_path"]}${children[index]["uuid"]}",
+              isUpdate: isUpdate);
         }
       }
       context.read(downloadRiverpod).changeDownloadState(item.key, true);
@@ -155,12 +157,13 @@ class SRCatDownloadPageUtilsLib {
                   progress: 100.0, progressText: "100%", hidden: true);
             }
           });
-      SRCatMetadataDatabaseLib.saveFileInfo(
+      _fileInfo(
           id: item.value["uuid"],
           name: item.value["name"],
           parent: "",
           hash: item.value["hash"],
-          path: item.value["real_file"]);
+          path: item.value["real_file"],
+          isUpdate: isUpdate);
       context.read(downloadRiverpod).changeDownloadState(item.key, true);
     }
 
@@ -176,6 +179,60 @@ class SRCatDownloadPageUtilsLib {
       } else {
         downloadSingle(item);
       }
+    }
+  }
+
+  static void _fileInfo({
+    required String id,
+    required String name,
+    required String parent,
+    required String hash,
+    required String path,
+    required bool isUpdate
+  }) {
+    if (!isUpdate) {
+      SRCatMetadataDatabaseLib.saveFileInfo(
+        id: id,
+        name: name,
+        parent: parent,
+        hash: hash,
+        path: path
+      );
+    } else {
+      SRCatMetadataDatabaseLib.updateFileInfo(
+        id: id,
+        name: name,
+        parent: parent,
+        hash: hash,
+        path: path
+      );
+    }
+  }
+
+  static void _imageInfo({
+    required String id,
+    required String name,
+    required String parent,
+    required String hash,
+    required String path,
+    required bool isUpdate
+  }) {
+    if (!isUpdate) {
+      SRCatMetadataDatabaseLib.saveImageInfo(
+        id: id,
+        name: name,
+        parent: parent,
+        hash: hash,
+        path: path
+      );
+    } else {
+      SRCatMetadataDatabaseLib.updateImageInfo(
+        id: id,
+        name: name,
+        parent: parent,
+        hash: hash,
+        path: path
+      );
     }
   }
 }

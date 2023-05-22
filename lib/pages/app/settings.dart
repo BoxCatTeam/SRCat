@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-07 03:42:37
-/// LastEditTime: 2023-05-22 14:44:01
+/// LastEditTime: 2023-05-22 23:18:58
 /// FilePath: /lib/pages/app/settings.dart
 /// ===========================================================================
 
@@ -514,7 +514,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
       method: Method.GET,
       uri: Uri.parse("${SRCatAPIConfig.checkUpdate}?version=${Application.packageInfo.version}"),
       success: (response, data) {
-        if (SRCatUtils.getVersionNumber(data["latest_version"]) > SRCatUtils.getVersionNumber(Application.packageInfo.version)) {
+        if (data["code"].toString() == "-1") {
+          _displayBar(title: "错误", text: "当前版本不在主分支中，或是开发版本。");
+        } else if (SRCatUtils.getVersionNumber(data["latest_version"]) > SRCatUtils.getVersionNumber(Application.packageInfo.version)) {
           ref.read(globalDialogRiverpod).set("发现新版本", child: SizedBox(
             height: 300,
             child: SRCatNormalScroll(child: Column(

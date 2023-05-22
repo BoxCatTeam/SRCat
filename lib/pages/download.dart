@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-08 22:46:58
-/// LastEditTime: 2023-05-18 04:33:17
+/// LastEditTime: 2023-05-23 01:01:00
 /// FilePath: /lib/pages/download.dart
 /// ===========================================================================
 
@@ -278,7 +278,7 @@ class _DownloadPageState extends ConsumerState<DownloadPage> with WindowListener
       uri: Uri.parse(SRCatAPIConfig.metadata),
       success: (response, data) async {
         if (data is Map<String, dynamic>) {
-          await SRCatDownloadPageUtilsLib.successParse(context, data);
+          await SRCatDownloadPageUtilsLib.successParse(context, data, false);
           
           _gameVersion = data["game_version"];
           _version = data["metadata_version"];
@@ -319,11 +319,10 @@ class _DownloadPageState extends ConsumerState<DownloadPage> with WindowListener
       uri: Uri.parse(SRCatAPIConfig.metadataCheckUpdate),
       success: (response, data) async {
         if (data is Map<String, dynamic>) {
-          if ((data["data"] as List<dynamic>).isEmpty) {
-            
+          if ((data["data"].cast<String, dynamic>() as Map<String, dynamic>).isEmpty) {
             Application.router.go("/home");
           } else {
-            await SRCatDownloadPageUtilsLib.successParse(context, data);
+            await SRCatDownloadPageUtilsLib.successParse(context, data, true);
           }
           
           _gameVersion = data["game_version"];
