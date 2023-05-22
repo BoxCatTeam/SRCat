@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-09 09:55:24
-/// LastEditTime: 2023-05-18 10:38:49
+/// LastEditTime: 2023-05-22 22:02:09
 /// FilePath: /lib/libs/srcat/warp/db.dart
 /// ===========================================================================
 
@@ -21,6 +21,28 @@ class SRCatWarpDatabaseLib {
     } catch (e) {
       return [];
     }
+  }
+
+  /// 查询用户是否存在
+  static Future<bool> hasUser({
+    required int uid
+  }) async {
+    bool hasUser = false;
+    Database database = await SRCatSQLiteUtils.userdata();
+
+    try {
+      List<Map<String, Object?>> result = await database.query(
+        SRCatDatabaseConfig.userdataWarpIndexTable,
+        where: "uid=?",
+        whereArgs: [uid]
+      );
+
+      hasUser = result.isNotEmpty ? true : false;
+    } catch (e) {
+      hasUser = false;
+    }
+
+    return hasUser;
   }
 
   /// 向数据库中写入用户

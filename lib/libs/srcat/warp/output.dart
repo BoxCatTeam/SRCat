@@ -1,23 +1,24 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-22 16:38:08
-/// LastEditTime: 2023-05-22 18:08:48
+/// LastEditTime: 2023-05-22 21:30:44
 /// FilePath: /lib/libs/srcat/warp/output.dart
 /// ===========================================================================
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
+import 'package:srcat/models/srgf/v1.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:file_selector/file_selector.dart';
-import 'package:flutter/foundation.dart';
-import 'package:srcat/libs/extensions/provider/context.dart';
-import 'package:srcat/models/srgf/v1.dart';
-import 'package:srcat/riverpod/global/dialog.dart';
-import 'package:srcat/utils/file/main.dart';
 
-import 'data.dart';
+import 'package:srcat/utils/file/main.dart';
+import 'package:file_selector/file_selector.dart';
+
+import 'package:srcat/riverpod/global/dialog.dart';
+import 'package:srcat/libs/extensions/provider/context.dart';
+
 import 'db.dart';
+import 'data.dart';
 
 /// 跃迁记录导出
 class SRCatWarpGachaLogOutput {
@@ -135,9 +136,9 @@ class SRCatWarpGachaLogOutput {
           String itemType = "";
 
           if (item["item_type"] == "character") {
-            itemType = "character";
+            itemType = "角色";
           } else if (item["item_type"] == "lightcone") {
-            itemType = "lightcone";
+            itemType = "光锥";
           }
 
           return itemType;
