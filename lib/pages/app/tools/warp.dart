@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-07 00:33:35
-/// LastEditTime: 2023-05-20 23:17:31
+/// LastEditTime: 2023-05-22 16:42:17
 /// FilePath: /lib/pages/app/tools/warp.dart
 /// ===========================================================================
 
@@ -14,6 +14,7 @@ import 'package:srcat/components/global/icon/main.dart';
 import 'package:srcat/components/global/scroll/page.dart';
 import 'package:srcat/components/pages/app/tools/warp/record_panel.dart';
 import 'package:srcat/libs/srcat/warp/data.dart';
+import 'package:srcat/libs/srcat/warp/output.dart';
 
 import 'package:srcat/riverpod/global/dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -163,28 +164,28 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
       ],
     );
 
-    /*Widget importOrOutputButton = dorpDownButton(
+    Widget importOrOutputButton = dorpDownButton(
       icon: FluentIcons.sharei_o_s,
       text: "导入/导出",
       items: <MenuFlyoutItemBase>[
-        MenuFlyoutItem(
+        /*MenuFlyoutItem(
           leading: const SRCatIcon(FluentIcons.save, size: 16, weight: FontWeight.w600),
           text: const Text("导入"),
           onPressed: () {}
-        ),
+        ),*/
         MenuFlyoutItem(
           leading: const SRCatIcon(FluentIcons.save_as, size: 16, weight: FontWeight.w600),
           text: const Text("导出"),
-          onPressed: () {}
+          onPressed: () => SRCatWarpGachaLogOutput.output(context, _nowSelectedUID)
         )
       ],
-    );*/
+    );
 
     Widget actions = Row(
       children: <Widget>[
         refreshBtn,
         divider,
-        //importOrOutputButton
+        importOrOutputButton
       ],
     );
 

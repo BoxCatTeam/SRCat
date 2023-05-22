@@ -16,7 +16,7 @@ dependencies:
   # https://pub.flutter-io.cn/packages/fluent_ui
   fluent_ui:
     git:
-      url: https://github.com/bdlukaa/fluent_ui.git
+      url: https://github.com/BakaLabs/fluent_ui.git
 
   # System Theme
   # https://pub.dev/packages/system_theme
@@ -119,6 +119,8 @@ dependencies:
   flutter_widget_from_html_core: ^0.10.1
 
   sentry_flutter: ^7.6.1
+
+  json_schema2: ^2.0.4+5
 
   cupertino_icons: ^1.0.2
 
