@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-07 03:42:37
-/// LastEditTime: 2023-05-22 11:53:16
+/// LastEditTime: 2023-05-22 14:44:01
 /// FilePath: /lib/pages/app/settings.dart
 /// ===========================================================================
 
@@ -31,6 +31,7 @@ import 'package:srcat/components/global/scroll/normal.dart';
 import 'package:srcat/utils/storage/main.dart';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart' as fluent_system_icons;
+import 'package:srcat/utils/storage/sqlite.dart';
 import 'package:window_manager/window_manager.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
@@ -397,6 +398,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
       title: "修改 用户数据 目录",
       description: "修改用户数据目录后将重启 SRCat，并且需要您手动将原目录下的文件复制到新目录",
       rightChild: const SRCatIcon(FluentIcons.chevron_right_small, size: 12),
+      margin: const EdgeInsets.only(bottom: 3),
       onTap: () async {
         _oldDataFolder = SRCatStorageUtils.read("data_path").toString();
         final String? directoryPath = await getDirectoryPath(
@@ -431,6 +433,33 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
       }
     );
 
+    Widget reDownloadMetadata = SRCatCard(
+      icon: fluent_system_icons.FluentIcons.arrow_reset_48_regular,
+      title: "重置元数据",
+      description: "元数据出现异常、不完整等情况时可以点此进行重新下载",
+      rightChild: const SRCatIcon(FluentIcons.chevron_right_small, size: 12),
+      onTap: () async {
+        ref.read(globalDialogRiverpod).set("元数据重置", child: const Text("请等待..."), cacheActions: false, actions: []).show();
+        await Future.delayed(const Duration(milliseconds: 200));
+        // 关闭数据库
+        await (await SRCatSQLiteUtils.metadata()).close();
+
+        // 删除元数据文件夹
+        Directory metadataDir = Directory("${await SRCatStorageUtils.read("data_path")}/metadata");
+        await metadataDir.delete(recursive: true);
+
+        // 删除元数据的数据库文件
+        File metadataDB = File("${await SRCatStorageUtils.read("data_path")}/database/metadata.db");
+        await metadataDB.delete(recursive: true);
+
+        ref.read(globalDialogRiverpod).hidden();
+        await Future.delayed(const Duration(milliseconds: 200));
+        ref.read(globalDialogRiverpod).clean();
+        await Future.delayed(const Duration(milliseconds: 10));
+        Application.router.go("/download");
+      }
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -438,7 +467,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
         title,
         const SizedBox(height: 10),
         openDataFolder,
-        changeDataFolder
+        changeDataFolder,
+        reDownloadMetadata
       ],
     );
   }
