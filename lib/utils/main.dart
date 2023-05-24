@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-08 00:24:09
-/// LastEditTime: 2023-05-13 17:03:12
+/// LastEditTime: 2023-05-24 18:08:47
 /// FilePath: /lib/utils/main.dart
 /// ===========================================================================
 // ignore_for_file: depend_on_referenced_packages
@@ -19,7 +19,10 @@ class SRCatUtils {
   /// 打开外部链接
   static void openUrl(Uri uri) => launchUrl(uri);
   /// 打开目录
-  static void openFolder(Uri folder) => openUrl(folder);
+  static void openFolder(Uri folder) => launchUrl(
+    folder,
+    mode: LaunchMode.externalApplication,
+  );
 
   /// 字符串转 10 位时间戳
   static strToUnixTime(String time) {
