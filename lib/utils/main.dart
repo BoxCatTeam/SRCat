@@ -1,12 +1,15 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-08 00:24:09
-/// LastEditTime: 2023-05-24 18:08:47
+/// LastEditTime: 2023-05-27 13:09:15
 /// FilePath: /lib/utils/main.dart
 /// ===========================================================================
 // ignore_for_file: depend_on_referenced_packages
 
+import 'dart:convert';
+
 import 'package:uuid/uuid.dart';
+import 'package:crypto/crypto.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// 常用工具类
@@ -56,5 +59,11 @@ class SRCatUtils {
     List versionCells = version.split('.');
     versionCells = versionCells.map((i) => int.parse(i)).toList();
     return versionCells[0] * 100000 + versionCells[1] * 1000 + versionCells[2];
+  }
+
+  /// 获取字符串的 MD5 计算结果
+  static String toMd5HexString(String source) {
+    final hash = md5.convert(utf8.encode(source));
+    return hash.toString();
   }
 }
