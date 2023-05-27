@@ -71,7 +71,9 @@ dependencies:
   # WebView 2
   # https://pub.dev/packages/desktop_webview_window
   # https://pub.flutter-io.cn/packages/desktop_webview_window
-  desktop_webview_window: ^0.2.0
+  desktop_webview_window:
+    git:
+      url: https://github.com/BakaLabs/desktop_webview_window.git
 
   # SQLite
   # https://pub.dev/packages/sqflite
