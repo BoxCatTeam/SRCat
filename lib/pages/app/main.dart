@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-07 00:24:49
-/// LastEditTime: 2023-05-14 10:24:01
+/// LastEditTime: 2023-05-24 19:11:31
 /// FilePath: /lib/pages/app/main.dart
 /// ===========================================================================
 
@@ -9,6 +9,7 @@ import 'package:srcat/application.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
+import 'package:srcat/components/pages/app/root/user.dart';
 import 'package:srcat/utils/storage/main.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -186,6 +187,12 @@ class _AppPageState extends ConsumerState<AppPage> with WindowListener {
 
   /// 导航栏底部列表
   final List<NavigationPaneItem> _footerNavItems = [
+    PaneItemSeparator(),
+    AppUserWidget(
+      key: const Key('users'),
+      icon: const SizedBox.shrink(),
+      body: const SizedBox.shrink(),
+    ),
     PaneItemSeparator(),
     PaneItem(
       key: const Key('/settings'),
