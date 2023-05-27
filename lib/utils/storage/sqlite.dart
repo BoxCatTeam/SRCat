@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-08 23:30:14
-/// LastEditTime: 2023-05-18 07:15:28
+/// LastEditTime: 2023-05-27 09:36:35
 /// FilePath: /lib/utils/storage/sqlite.dart
 /// ===========================================================================
 
@@ -54,12 +54,40 @@ class SRCatSQLiteUtils {
           '"time" int(10) NOT NULL default \'0\''                   // 创建时间
         ');'
       );
+      await db.execute(
+        'CREATE TABLE ${SRCatDatabaseConfig.userdataUserAccountsTable} ('
+          '"id" TEXT NOT NULL PRIMARY KEY,'                         // UUID
+          '"select" int(1) NOT NULL default \'0\','                 // 是否选中当前账号
+          '"aid" TEXT NOT NULL default \'\','                       // aid
+          '"mid" TEXT NOT NULL default \'\','                       // mid
+          '"uid" TEXT NOT NULL default \'\','                       // uid
+          '"ltoken" TEXT NOT NULL default \'\','                    // LToken
+          '"stoken" TEXT NOT NULL default \'\','                    // SToken
+          '"cookie_token" TEXT NOT NULL default \'\''               // Cookie Token
+        ');'
+      );
+    }
+
+    Future<void> onUpgrade(Database db, int oldVersion, int newVersion) async {
+      await db.execute(
+        'CREATE TABLE ${SRCatDatabaseConfig.userdataUserAccountsTable} ('
+          '"id" TEXT NOT NULL PRIMARY KEY,'                         // UUID
+          '"select" int(1) NOT NULL default \'0\','                 // 是否选中当前账号
+          '"aid" TEXT NOT NULL default \'\','                       // aid
+          '"mid" TEXT NOT NULL default \'\','                       // mid
+          '"uid" TEXT NOT NULL default \'\','                       // uid
+          '"ltoken" TEXT NOT NULL default \'\','                    // LToken
+          '"stoken" TEXT NOT NULL default \'\','                    // SToken
+          '"cookie_token" TEXT NOT NULL default \'\''               // Cookie Token
+        ');'
+      );
     }
 
     Database database = await openDatabase(
       "$_base/${SRCatDatabaseConfig.userdata}",
-      version: 1,
+      version: 2,
       onCreate: (Database db, int version) => onCreate(db, version),
+      onUpgrade: (Database db, int oldVersion, int newVersion) => onUpgrade(db, oldVersion, newVersion),
     );
 
     return database;

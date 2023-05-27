@@ -19,6 +19,8 @@ class SRCatDatabaseConfig {
   static String userdataWarpGachaLogTable = "warp_gacha_log";
   /// 游戏账号
   static String userdataGameAccountsTable = "game_accounts";
+  /// 用户账号
+  static String userdataUserAccountsTable = "user_accounts";
   
   /* ==================== 元数据数据库 - 表 ==================== */
   /// 版本历史
