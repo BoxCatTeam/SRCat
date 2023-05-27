@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-25 10:37:05
-/// LastEditTime: 2023-05-27 20:30:53
+/// LastEditTime: 2023-05-27 23:24:11
 /// FilePath: /lib/config/hoyolab.dart
 /// ===========================================================================
 
@@ -13,6 +13,7 @@ class HoYoLabConfig {
 
   static String takumiBaseApi = "https://api-takumi.mihoyo.com";
   static String takumiAuthApi = "$takumiBaseApi/auth/api";
+  static String takumiBindingApi = "$takumiBaseApi/binding/api";
 
   static String passportApi = "https://passport-api.mihoyo.com";
   static String passportAuthApi = "$passportApi/account/auth/api";
@@ -34,6 +35,10 @@ class HoYoLabConfig {
   static String verifyLtoken = "$passportApiV4/account/ma-cn-session/web/verifyLtoken";
   /// 创建 ActionTicket
   static String createActionTicket = "$passportApi/account/ma-cn-verifier/app/createActionTicketByToken";
+
+  /// 获取用户角色信息
+  static String stokenGetRoles = "$takumiBindingApi/getUserGameRolesByStoken";
+  static String actionTicketGetRoles = "$takumiBindingApi/getUserGameRoles?action_ticket=%actionTicket%&game_biz=hkrpg_cn";
 
   static String bbsBaseApi = "https://bbs-api.mihoyo.com";
   static String bbsUserApi = "$bbsBaseApi/user/wapi";

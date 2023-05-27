@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-06 22:33:34
-/// LastEditTime: 2023-05-27 21:02:20
+/// LastEditTime: 2023-05-28 00:17:10
 /// FilePath: /lib/pages/splash.dart
 /// ===========================================================================
 
@@ -9,6 +9,7 @@ import 'package:srcat/application.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:srcat/libs/hoyolab/bbs.dart';
 import 'package:srcat/libs/hoyolab/db.dart';
+import 'package:srcat/libs/hoyolab/role.dart';
 import 'package:srcat/libs/metadata/main.dart';
 import 'package:srcat/riverpod/global/user.dart';
 import 'package:srcat/utils/storage/main.dart';
@@ -63,8 +64,29 @@ class _SplashPageState extends State<SplashPage> {
         mid: user["mid"].toString(),
         deviceId: user["id"].toString(),
       );
+      Map<String, dynamic> roleList = {
+        "role": []
+      };
+      if (userinfo != null) {
+        List<Map<String, dynamic>>? roles = await HoYoLabGameRolesLib.stokenGetRoles(
+          stoken: user["stoken"].toString(),
+          uid: user["uid"].toString(),
+          mid: user["mid"].toString(),
+          deviceId: user["id"].toString(),
+          ltoken: user["ltoken"].toString(),
+        );
+        if (roles != null && roles.isNotEmpty) {
+          roleList = {
+            "role": roles
+          };
+          if (user["select"] == 1) {
+            Application.globalProviderScope.read(globalUserManagerRiverpod).changeRole(int.parse(roleList["role"][0]["game_uid"].toString()));
+          }
+        }
+      }
       users.add({
         ...user,
+        ...roleList,
         "avatar": (userinfo?["avatar"] ?? "").toString(),
         "nickname": (userinfo?["nickname"] ?? "").toString(),
       });

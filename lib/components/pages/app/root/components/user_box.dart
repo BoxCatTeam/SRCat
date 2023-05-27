@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-25 01:03:35
-/// LastEditTime: 2023-05-27 20:46:07
+/// LastEditTime: 2023-05-28 00:40:26
 /// FilePath: /lib/components/pages/app/root/components/user_box.dart
 /// ===========================================================================
 
@@ -35,7 +35,6 @@ class _AppUserBoxWidgetState extends ConsumerState<AppUserBoxWidget> {
   /// 用户列表
   Widget _userListWidget() {
     List<Widget> widget = [];
-    int roleUid = ref.watch(globalUserManagerRiverpod).nowRoleUid;
     String select = ref.watch(globalUserManagerRiverpod).nowSelectUser;
     List<Map<String, dynamic>> list = ref.watch(globalUserManagerRiverpod).userList;
 
@@ -46,9 +45,14 @@ class _AppUserBoxWidgetState extends ConsumerState<AppUserBoxWidget> {
           nickname: user["nickname"],
           avatar: user["avatar"],
           roleList: user["role"].cast<Map<String, dynamic>>(),
-          roleUid: roleUid,
           isSelect: user["id"] == select ? true : false,
           onPressed: (String id) {
+            if ((user["role"].cast<Map<String, dynamic>>() as List<Map<String, dynamic>>).isEmpty) {
+              return;
+            }
+            if (ref.read(globalUserManagerRiverpod).nowRoleUid != 0 && ref.read(globalUserManagerRiverpod).nowSelectUser != id) {
+              ref.read(globalUserManagerRiverpod).changeRole(int.parse(user["role"][0]["game_uid"].toString()));
+            }
             HoYoLabDatabaseLib.selectUser(id);
             ref.read(globalUserManagerRiverpod).changeUser(id);
           },

@@ -1,11 +1,14 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-27 16:20:11
-/// LastEditTime: 2023-05-27 20:52:30
+/// LastEditTime: 2023-05-28 00:45:45
 /// FilePath: /lib/components/pages/app/root/components/user_item.dart
 /// ===========================================================================
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:srcat/application.dart';
+
+import 'components/role.dart';
 
 class AppUserItemWidget extends StatefulWidget {
   const AppUserItemWidget({
@@ -14,7 +17,6 @@ class AppUserItemWidget extends StatefulWidget {
     required this.nickname,
     required this.avatar,
     required this.roleList,
-    required this.roleUid,
     required this.isSelect,
     required this.onPressed,
     required this.onDelete,
@@ -33,9 +35,6 @@ class AppUserItemWidget extends StatefulWidget {
   /// 角色信息
   final List<Map<String, dynamic>> roleList;
 
-  /// 当前选中角色 uid
-  final int roleUid;
-
   /// 当前是否选中
   final bool isSelect;
 
@@ -53,7 +52,9 @@ class AppUserItemWidget extends StatefulWidget {
 }
 
 class _AppUserBoxWidgetState extends State<AppUserItemWidget> {
+  final contextAttachKey = GlobalKey();
   final menuController = FlyoutController();
+  
   @override
   void initState() {
     super.initState();
@@ -144,11 +145,46 @@ class _AppUserBoxWidgetState extends State<AppUserItemWidget> {
     )
   );
 
+  Widget _rolePanel() {
+    Widget title = const Padding(
+      padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 5),
+      child: Text("角色"),
+    );
+
+    Widget panel = Container(
+      width: 260,
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(6))
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          title,
+          AppUserItemRoleWidget(roleList: widget.roleList),
+          const SizedBox(height: 5)
+        ]
+      )
+    );
+
+    return Mica(
+      borderRadius: const BorderRadius.all(Radius.circular(6)),
+      child: panel
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return HoverButton(
+    Widget hoverButton = HoverButton(
       onPressed: () {
         widget.onPressed(widget.id);
+        menuController.showFlyout(
+          navigatorKey: Application.rootNavigatorKey.currentState,
+          placementMode: FlyoutPlacementMode.right,
+          builder: (context) {
+            return _rolePanel();
+          }
+        );
       },
       cursor: SystemMouseCursors.click,
       builder: (context, states) {
@@ -177,6 +213,12 @@ class _AppUserBoxWidgetState extends State<AppUserItemWidget> {
           )
         );
       }
+    );
+
+    return FlyoutTarget(
+      key: contextAttachKey,
+      controller: menuController,
+      child: hoverButton,
     );
   }
 }

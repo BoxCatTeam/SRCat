@@ -45,7 +45,7 @@ class GlobalUserManagerRiverpod extends ChangeNotifier {
         "avatar": (item["avatar"] ?? "").toString(),
         "isExpired": false,
         "nickname": (item["nickname"] ?? "").toString(),
-        "role": []
+        "role": (item["role"] ?? [])
       });
     }
     notifyListeners();
