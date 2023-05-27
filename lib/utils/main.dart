@@ -1,11 +1,12 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-08 00:24:09
-/// LastEditTime: 2023-05-27 13:09:15
+/// LastEditTime: 2023-05-27 21:40:36
 /// FilePath: /lib/utils/main.dart
 /// ===========================================================================
 // ignore_for_file: depend_on_referenced_packages
 
+import 'dart:io';
 import 'dart:convert';
 
 import 'package:uuid/uuid.dart';
@@ -22,10 +23,13 @@ class SRCatUtils {
   /// 打开外部链接
   static void openUrl(Uri uri) => launchUrl(uri);
   /// 打开目录
-  static void openFolder(Uri folder) => launchUrl(
-    folder,
-    mode: LaunchMode.externalApplication,
-  );
+  static void openFolder(String folder) {
+    Process.run(
+      'explorer.exe',
+      [folder],
+      runInShell: true
+    );
+  }
 
   /// 字符串转 10 位时间戳
   static strToUnixTime(String time) {

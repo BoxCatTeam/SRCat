@@ -390,7 +390,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
       description: "用户数据、元数据、缓存文件 均在此目录",
       rightChild: const SRCatIcon(FluentIcons.chevron_right_small, size: 12),
       margin: const EdgeInsets.only(bottom: 3),
-      onTap: () => SRCatUtils.openFolder(Uri.parse(SRCatStorageUtils.read("data_path").toString()))
+      onTap: () => SRCatUtils.openFolder(SRCatStorageUtils.read("data_path").toString())
     );
 
     Widget changeDataFolder = SRCatCard(
@@ -424,7 +424,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             }, child: const Text("退出 SRCat")),
             FilledButton(
               onPressed: () {
-                SRCatUtils.openFolder(Uri.parse(_oldDataFolder));
+                SRCatUtils.openFolder(_oldDataFolder);
               },
               child: const Text("打开旧数据目录"),
             ),
