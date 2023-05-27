@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-07 03:31:28
-/// LastEditTime: 2023-05-18 07:18:33
+/// LastEditTime: 2023-05-24 19:31:19
 /// FilePath: /lib/components/global/card/item.dart
 /// ===========================================================================
 
@@ -20,6 +20,8 @@ class SRCatCard extends StatefulWidget {
     this.rightChild,
     this.margin,
     this.onTap,
+    this.small = false,
+    this.backgroundClear = false,
   }) : super(key: key);
 
   /// 图标
@@ -46,6 +48,12 @@ class SRCatCard extends StatefulWidget {
   /// 点击回调
   final void Function()? onTap;
 
+  /// mini
+  final bool small;
+
+  /// 背景颜色是否透明
+  final bool backgroundClear;
+
   @override
   State<SRCatCard> createState() => _SRCatCardState();
 }
@@ -62,8 +70,8 @@ class _SRCatCardState extends State<SRCatCard> {
   Widget _text() {
     Widget title = Text(
       widget.title,
-      style: const TextStyle(
-        fontSize: 15,
+      style: TextStyle(
+        fontSize: widget.small ? 13 : 15,
       ),
       overflow: TextOverflow.ellipsis,
       maxLines: 1,
@@ -71,8 +79,8 @@ class _SRCatCardState extends State<SRCatCard> {
 
     Widget description = widget.description != null ? Text(
       widget.description!,
-      style: const TextStyle(
-        fontSize: 12,
+      style: TextStyle(
+        fontSize: widget.small ? 10 : 12,
       ),
     ) : Container();
 
@@ -88,7 +96,7 @@ class _SRCatCardState extends State<SRCatCard> {
     Widget child = Row(
       children: <Widget>[
         if (widget.icon != null) _icon(),
-        if (widget.icon != null) const SizedBox(width: 18),
+        if (widget.icon != null) SizedBox(width: widget.small ? 10 : 18),
         _text(),
         if (widget.rightChild != null) const SizedBox(width: 5),
         if (widget.rightChild != null) widget.rightChild!
@@ -101,7 +109,10 @@ class _SRCatCardState extends State<SRCatCard> {
       builder: (context, states) {
         Widget ac = AnimatedContainer(
           duration: FluentTheme.of(context).fasterAnimationDuration,
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+          padding: EdgeInsets.symmetric(
+            vertical: widget.small ? 8 : 10,
+            horizontal: widget.small ? 10 : 15
+          ),
           decoration: BoxDecoration(
             color: ButtonThemeData.uncheckedInputColor(
               FluentTheme.of(context),
@@ -119,6 +130,8 @@ class _SRCatCardState extends State<SRCatCard> {
           child: RepaintBoundary(
             child: Card(
               padding: EdgeInsets.zero,
+              backgroundColor: widget.backgroundClear ? Colors.transparent : null,
+              borderColor: widget.backgroundClear ? Colors.transparent : null,
               margin: widget.margin,
               child: ac
             )

@@ -7,6 +7,7 @@
 
 import 'main.dart';
 import 'package:srcat/utils/storage/main.dart';
+import 'package:srcat/utils/webview2/main.dart';
 
 /// 文件初始化类
 class SRCatFileInitUtils {
@@ -15,6 +16,7 @@ class SRCatFileInitUtils {
     await _createDataDir();
     await _createMetaDir();
     await _createCacheDir();
+    await _createWebView2CacheDir();
   }
 
   /// 创建数据库存放目录
@@ -31,4 +33,7 @@ class SRCatFileInitUtils {
   static Future<void> _createCacheDir() async => await SRCatFileUtils.createDir(
     "${await SRCatStorageUtils.read("data_path") as String}/cache"
   );
+
+  /// 创建 WebView2 缓存目录
+  static Future<void> _createWebView2CacheDir() async => await SRCatFileUtils.createDir(SRCatWebView2HelperUtils.cacheDir);
 }
