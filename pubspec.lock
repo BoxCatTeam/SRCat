@@ -271,10 +271,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: ba0489f20cf7c5e85064071d66d868ffed541ad3
-      url: "https://github.com/BakaLabs/fluent_ui.git"
+      resolved-ref: "4ee40a581b1f19dd6a8d0b6e76765fdd5e5d4bc3"
+      url: "https://github.com/bdlukaa/fluent_ui.git"
     source: git
-    version: "4.6.1"
+    version: "4.6.2"
   fluentui_system_icons:
     dependency: "direct main"
     description:
@@ -363,10 +363,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "80e37516b8d452d982fc32bd7bb22adbd20e422612ef2b3e1df8b8350cbf199b"
+      sha256: "00d1b67d6e9fa443331da229084dd3eb04407f5a2dff22940bd7bba6af5722c3"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "7.0.1"
+    version: "7.1.1"
   html:
     dependency: transitive
     description:

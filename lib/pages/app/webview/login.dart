@@ -1,16 +1,19 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-06-07 02:17:05
-/// LastEditTime: 2023-06-07 03:08:45
+/// LastEditTime: 2023-06-07 21:14:33
 /// FilePath: /lib/pages/app/webview/login.dart
 /// ===========================================================================
 
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:srcat/application.dart';
+import 'package:srcat/components/global/icon/main.dart';
 import 'package:srcat/config/hoyolab.dart';
+import 'package:srcat/libs/user/main.dart';
 
 import 'package:srcat/riverpod/global/dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,7 +28,7 @@ class AppLoginWebview extends ConsumerStatefulWidget {
 }
 
 class _AppLoginWebviewState extends ConsumerState<AppLoginWebview> {
-  final _controller = WebviewController();
+  late WebviewController _controller;
   
   @override
   void initState() {
@@ -40,8 +43,12 @@ class _AppLoginWebviewState extends ConsumerState<AppLoginWebview> {
   }
 
   void initWebView() async {
+    _controller = WebviewController();
     try {
       await _controller.initialize();
+      
+      await _controller.clearCache();
+      await _controller.clearCookies();
 
       await _controller.setBackgroundColor(Colors.transparent);
       await _controller.setPopupWindowPolicy(WebviewPopupWindowPolicy.deny);
@@ -75,25 +82,38 @@ class _AppLoginWebviewState extends ConsumerState<AppLoginWebview> {
   }
 
   Widget _bar() {
-    Widget cancel = Button(onPressed: () {
-      _controller.dispose();
-      Application.router.push("/home");
-    }, child: const Text("取消操作"));
+    Widget title = const Text("在下方登录后点「我已登录」", style: TextStyle(
+      fontSize: 16,
+    ));
 
-    Widget submit = FilledButton(onPressed: () {
-
+    Widget submit = FilledButton(onPressed: () async {
+      SRCatMHYUserLib.startWebLogin(_controller);
     }, child: const Text("我已登录"));
+
+    Widget devtool = Button(
+      onPressed: () {
+        _controller.openDevTools();
+      },
+      child: const Row(
+        children: <Widget>[
+          SRCatIcon(FluentIcons.developer_tools),
+          SizedBox(width: 5),
+          Text("开发者工具")
+        ],
+      ),
+    );
 
     return SizedBox(
       height: 60,
       child: Card(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Row(
           children: <Widget>[
+            title,
             Expanded(child: Container()),
             submit,
-            const SizedBox(width: 8),
-            cancel,
+            if (kDebugMode) const SizedBox(width: 8),
+            if (kDebugMode) devtool
           ]
         )
       ),

@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-07 00:24:49
-/// LastEditTime: 2023-06-07 19:43:28
+/// LastEditTime: 2023-06-07 20:58:36
 /// FilePath: /lib/pages/app/main.dart
 /// ===========================================================================
 
@@ -59,7 +59,7 @@ class _AppPageState extends ConsumerState<AppPage> with WindowListener {
   int _selectedIndex() {
     final location = Application.router.location.split("?")[0];
     
-    int index = _navItems
+    int index = _navItems()
       .where((element) => element.key != null)
       .toList()
       .indexWhere((element) => element.key == Key(location));
@@ -71,7 +71,7 @@ class _AppPageState extends ConsumerState<AppPage> with WindowListener {
         .indexWhere((element) => element.key == Key(location));
       if (footerIndex == -1) return 0;
 
-      return _navItems
+      return _navItems()
         .where((element) => element.key != null)
         .toList()
         .length + footerIndex;
@@ -119,72 +119,74 @@ class _AppPageState extends ConsumerState<AppPage> with WindowListener {
   }
 
   /// 导航栏列表
-  final List<NavigationPaneItem> _navItems = [
-    PaneItem(
-      key: const Key('/home'),
-      icon: const Icon(FluentIcons.home),
-      title: Text(
-        FlutterI18n.translate(
-          Application.rootNavigatorKey.currentContext!,
-          "app.root.nav.title.home"
-        )
-      ),
-      body: const SizedBox.shrink(),
-      onTap: () {
-        if (Application.router.location != "/home") {
-          Application.router.push("/home");
+  List<NavigationPaneItem> _navItems() {
+    return [
+      PaneItem(
+        key: const Key('/home'),
+        icon: const Icon(FluentIcons.home),
+        title: Text(
+          FlutterI18n.translate(
+            Application.rootNavigatorKey.currentContext!,
+            "app.root.nav.title.home"
+          )
+        ),
+        body: const SizedBox.shrink(),
+        onTap: () {
+          if (Application.router.location != "/home") {
+            Application.router.push("/home");
+          }
         }
-      }
-    ),
-    PaneItem(
-      key: const Key('/tools/game/launch'),
-      icon: const Icon(FluentIcons.game),
-      title: Text(
-        FlutterI18n.translate(
-          Application.rootNavigatorKey.currentContext!,
-          "app.root.nav.title.gameLaunch"
-        )
       ),
-      body: const SizedBox.shrink(),
-      onTap: () {
-        if (Application.router.location != "/tools/game/launch") {
-          Application.router.push("/tools/game/launch");
+      PaneItem(
+        key: const Key('/tools/game/launch'),
+        icon: const Icon(FluentIcons.game),
+        title: Text(
+          FlutterI18n.translate(
+            Application.rootNavigatorKey.currentContext!,
+            "app.root.nav.title.gameLaunch"
+          )
+        ),
+        body: const SizedBox.shrink(),
+        onTap: () {
+          if (Application.router.location != "/tools/game/launch") {
+            Application.router.push("/tools/game/launch");
+          }
         }
-      }
-    ),
-    /*PaneItem(
-      key: const Key('/tools/game/photo'),
-      icon: const Icon(FluentIcons.photo_collection),
-      title: Text(
-        FlutterI18n.translate(
-          Application.rootNavigatorKey.currentContext!,
-          "app.root.nav.title.gamePhoto"
-        )
       ),
-      body: const SizedBox.shrink(),
-      onTap: () {
-        if (Application.router.location != "/tools/game/photo") {
-          Application.router.push("/tools/game/photo");
+      /*PaneItem(
+        key: const Key('/tools/game/photo'),
+        icon: const Icon(FluentIcons.photo_collection),
+        title: Text(
+          FlutterI18n.translate(
+            Application.rootNavigatorKey.currentContext!,
+            "app.root.nav.title.gamePhoto"
+          )
+        ),
+        body: const SizedBox.shrink(),
+        onTap: () {
+          if (Application.router.location != "/tools/game/photo") {
+            Application.router.push("/tools/game/photo");
+          }
         }
-      }
-    ),*/
-    PaneItem(
-      key: const Key('/tools/warp'),
-      icon: const Icon(FluentIcons.six_point_star),
-      title: Text(
-        FlutterI18n.translate(
-          Application.rootNavigatorKey.currentContext!,
-          "app.root.nav.title.warp"
-        )
+      ),*/
+      PaneItem(
+        key: const Key('/tools/warp'),
+        icon: const Icon(FluentIcons.six_point_star),
+        title: Text(
+          FlutterI18n.translate(
+            Application.rootNavigatorKey.currentContext!,
+            "app.root.nav.title.warp"
+          )
+        ),
+        body: const SizedBox.shrink(),
+        onTap: () {
+          if (Application.router.location.split("?")[0] != "/tools/warp") {
+            Application.router.push("/tools/warp");
+          }
+        }
       ),
-      body: const SizedBox.shrink(),
-      onTap: () {
-        if (Application.router.location.split("?")[0] != "/tools/warp") {
-          Application.router.push("/tools/warp");
-        }
-      }
-    ),
-  ];
+    ];
+  }
 
   /// 导航栏底部列表
   List<NavigationPaneItem> _footerNavItems() {
@@ -212,7 +214,23 @@ class _AppPageState extends ConsumerState<AppPage> with WindowListener {
       }
     }
 
+    List<NavigationPaneItem> webviewItem = [];
+    final location = Application.router.location.split("?")[0];
+    if (location == "/webview/hoyolab/login") {
+      webviewItem = [
+        PaneItemSeparator(),
+        PaneItem(
+          key: const Key('/webview/hoyolab/login'),
+          icon: const Icon(FluentIcons.globe),
+          title: const Text("米游社登录"),
+          body: const SizedBox.shrink(),
+          onTap: () {}
+        )
+      ];
+    }
+
     return [
+      ...webviewItem,
       PaneItemSeparator(),
       AppUserWidget(
         key: const Key('users'),
@@ -246,7 +264,7 @@ class _AppPageState extends ConsumerState<AppPage> with WindowListener {
   NavigationPane _navs() {
     return NavigationPane(
       selected: _selectedIndex(),
-      items: _navItems,
+      items: _navItems(),
       footerItems: _footerNavItems(),
       size: const NavigationPaneSize(
         openMaxWidth: 200
@@ -307,18 +325,6 @@ class _AppPageState extends ConsumerState<AppPage> with WindowListener {
   void onWindowClose() async {
     bool isPreventClose = await windowManager.isPreventClose();
     if (isPreventClose) windowManager.destroy();
-  }
-
-  @override
-  void onWindowFocus() {
-    windowManager.focus();
-    setState(() {});
-  }
-
-  @override
-  void onWindowBlur() {
-    windowManager.blur();
-    setState(() {});
   }
 
   @override

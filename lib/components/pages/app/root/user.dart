@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-24 11:31:38
-/// LastEditTime: 2023-06-07 19:46:41
+/// LastEditTime: 2023-06-07 21:30:08
 /// FilePath: /lib/components/pages/app/root/user.dart
 /// ===========================================================================
 
@@ -121,7 +121,7 @@ class AppUserWidget extends PaneItem {
           iconSize: 15,
           title: "网页登录",
           onTap: () async {
-            Application.router.go("/webview/hoyolab/login");
+            Application.router.push("/webview/hoyolab/login");
             await Future.delayed(const Duration(milliseconds: 1));
             Application.router.pop();
           },
@@ -134,6 +134,15 @@ class AppUserWidget extends PaneItem {
           iconSize: 15,
           title: "Cookie 登录",
           onTap: () => SRCatMHYUserLib.cookieLogin(),
+          rightChild: const SRCatIcon(FluentIcons.chevron_right_small, size: 10),
+        ),
+        SRCatCard(
+          small: true,
+          backgroundClear: true,
+          icon: FluentIcons.refresh,
+          iconSize: 15,
+          title: "刷新当前账号",
+          onTap: () => SRCatMHYUserLib.refreshCurrentAcc(),
           rightChild: const SRCatIcon(FluentIcons.chevron_right_small, size: 10),
         ),
       ],

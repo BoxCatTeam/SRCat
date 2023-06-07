@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-07 00:33:35
-/// LastEditTime: 2023-06-07 02:23:44
+/// LastEditTime: 2023-06-07 20:53:46
 /// FilePath: /lib/pages/app/tools/warp.dart
 /// ===========================================================================
 
@@ -13,7 +13,7 @@ import 'package:srcat/components/global/card/item.dart';
 import 'package:srcat/components/global/icon/main.dart';
 import 'package:srcat/components/global/scroll/page.dart';
 import 'package:srcat/components/pages/app/tools/warp/record_panel.dart';
-import 'package:srcat/libs/hoyolab/authkey.dart';
+//import 'package:srcat/libs/hoyolab/authkey.dart';
 import 'package:srcat/libs/srcat/warp/data.dart';
 import 'package:srcat/libs/srcat/warp/import.dart';
 import 'package:srcat/libs/srcat/warp/output.dart';
@@ -114,6 +114,11 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
     });
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   Widget _bar() {
     Widget dorpDownButton({
       required IconData icon,
@@ -145,11 +150,11 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
       icon: FluentIcons.refresh,
       text: "刷新",
       items: <MenuFlyoutItemBase>[
-        MenuFlyoutItem(
+       /* MenuFlyoutItem(
           leading: const SRCatIcon(FluentIcons.globe, size: 16, weight: FontWeight.w600),
           text: const Text("SToken 刷新"),
           onPressed: () => _refreshGachaLogBySToken(),
-        ),
+        ),*/
         /*MenuFlyoutItem(
           leading: const SCIcon(FluentIcons.globe, size: 16, weight: FontWeight.w600),
           text: const Text("代理刷新"),
@@ -502,7 +507,7 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
   }
 
   /// SToken 刷新数据
-  void _refreshGachaLogBySToken() async {
+  /*void _refreshGachaLogBySToken() async {
     List<Map<String, dynamic>> list = ref.read(globalUserManagerRiverpod).userList;
     String nowSelect = ref.read(globalUserManagerRiverpod).nowSelectUser;
     int nowRoleUid = ref.read(globalUserManagerRiverpod).nowRoleUid;
@@ -619,5 +624,5 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
         ]
       ).show();
     }*/
-  }
+  }*/
 }

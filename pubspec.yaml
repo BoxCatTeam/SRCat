@@ -16,7 +16,7 @@ dependencies:
   # https://pub.flutter-io.cn/packages/fluent_ui
   fluent_ui:
     git:
-      url: https://github.com/BakaLabs/fluent_ui.git
+      url: https://github.com/bdlukaa/fluent_ui.git
 
   # System Theme
   # https://pub.dev/packages/system_theme
@@ -41,7 +41,7 @@ dependencies:
   # Go Router
   # https://pub.dev/packages/go_router
   # https://pub.flutter-io.cn/packages/go_router
-  go_router: ^7.0.1
+  go_router: ^7.1.1
 
   # Url Launcher
   # https://pub.dev/packages/url_launcher

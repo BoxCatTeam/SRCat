@@ -1,74 +1,23 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-25 01:23:45
-/// LastEditTime: 2023-05-27 20:24:35
+/// LastEditTime: 2023-06-07 21:43:39
 /// FilePath: /lib/libs/user/main.dart
 /// ===========================================================================
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:srcat/application.dart';
-//import 'package:srcat/libs/hoyolab/bbs.dart';
-//import 'package:srcat/libs/hoyolab/db.dart';
-//import 'package:srcat/libs/hoyolab/main.dart';
-//import 'package:srcat/riverpod/global/user.dart';
-//import 'package:srcat/utils/webview2/main.dart';
+import 'package:srcat/libs/hoyolab/bbs.dart';
+import 'package:srcat/libs/hoyolab/db.dart';
+import 'package:srcat/libs/hoyolab/main.dart';
+import 'package:srcat/libs/hoyolab/role.dart';
+import 'package:srcat/riverpod/global/user.dart';
+import 'package:srcat/utils/webview2/main.dart';
 import 'package:srcat/riverpod/global/dialog.dart';
+import 'package:webview_windows/webview_windows.dart';
 
 class SRCatMHYUserLib {
-  /// 以网页方式登录
-  /*static Future<void> openLoginWebView() async {
-    WebviewWindow.clearAll(
-      userDataFolderWindows: SRCatWebView2HelperUtils.cacheDir
-    );
-
-    final webview = await WebviewWindow.create(
-      configuration: CreateConfiguration(
-        title: "米哈游通行证",
-        userDataFolderWindows: SRCatWebView2HelperUtils.cacheDir
-      )
-    );
-
-    webview.launch("https://user.mihoyo.com/#/login/password");
-
-    String title = "网页登录";
-    Widget child = const Text("请在弹出的网页窗口中登录米哈游通行证，登录完成后请勿关闭弹出的窗口，然后返回此处点击下方的「我已登录」。");
-    Widget cancel = Button(onPressed: () async {
-      webview.close();
-      Application.globalProviderScope.read(globalDialogRiverpod).hidden();
-      await Future.delayed(const Duration(milliseconds: 200));
-      Application.globalProviderScope.read(globalDialogRiverpod).clean();
-    }, child: const Text("取消"));
-
-    List<Widget> actions = [
-      FilledButton(onPressed: () async {
-        Application.globalProviderScope.read(globalDialogRiverpod).set(title, child: child, actions: [
-          const FilledButton(
-            onPressed: null,
-            child: Text("登录中...")
-          ),
-          cancel
-        ]);
-        String? cookies = await webview.getAllCookies();
-        Map<String, String> parseCookies = SRCatWebView2HelperUtils.strCookieToMap(cookies);
-        await _webLogin(parseCookies["login_ticket"] ?? "", parseCookies["login_uid"] ?? "");
-        webview.close();
-      }, child: const Text("我已登录")),
-      cancel
-    ];
-
-    Application.globalProviderScope.read(globalDialogRiverpod).set(
-      title,
-      child: child,
-      actions: actions
-    ).show();
-
-    webview.onClose.whenComplete(() async {
-      Application.globalProviderScope.read(globalDialogRiverpod).hidden();
-      await Future.delayed(const Duration(milliseconds: 200));
-      Application.globalProviderScope.read(globalDialogRiverpod).clean();
-    });
-  }*/
-
   /// 以 Cookie 方式登录
   static Future<void> cookieLogin() async {
     Application.globalProviderScope.read(globalDialogRiverpod).set(
@@ -98,8 +47,105 @@ class SRCatMHYUserLib {
     ).show();
   }
 
+  /// Web 登录
+  static Future<void> startWebLogin(WebviewController controller) async {
+    Widget cancel = FilledButton(onPressed: () async {
+      Application.globalProviderScope.read(globalDialogRiverpod).hidden();
+      await Future.delayed(const Duration(milliseconds: 200));
+      Application.globalProviderScope.read(globalDialogRiverpod).clean();
+    }, child: const Text("好的"));
+    
+    String? rawCookies = await controller.getCookies();
+    if (rawCookies == null || rawCookies == "") {
+      Application.globalProviderScope.read(globalDialogRiverpod).set(
+        "提示",
+        child: const Text("未检测到 Cookie，请确认是否登录。"),
+        actions: [cancel]
+      ).show();
+      return;
+    }
+
+    Map<String, String> cookies = SRCatWebView2HelperUtils.strCookieToMap(rawCookies);
+
+    if (cookies["login_ticket"] == "" || cookies["login_uid"] == "") {
+      Application.globalProviderScope.read(globalDialogRiverpod).set(
+        "提示",
+        child: const Text("未检测到 Cookie，请确认是否登录。"),
+        actions: [cancel]
+      ).show();
+      return;
+    }
+
+    bool result = await _webLogin((cookies["login_ticket"] ?? "").toString(), (cookies["login_uid"] ?? "").toString(), controller);
+    if (result) {
+      try {
+        await controller.dispose();
+      } catch (e) {
+        if (kDebugMode) print("销毁 WebView 时遇到错误：$e");
+      }
+      Application.router.push("/home");
+    }
+  }
+
+  /// 刷新当前账号
+  static Future<void> refreshCurrentAcc() async {
+    String deviceId = Application.globalProviderScope.read(globalUserManagerRiverpod).nowSelectUser;
+
+    if (deviceId == "") return;
+
+    Map<String, dynamic>? user = await HoYoLabDatabaseLib.user(deviceId: deviceId);
+    if (user == null) return;
+
+    Map<String, dynamic>? userinfo = await HoYoLabBBSLib.selfInfo(
+      stoken: user["stoken"].toString(),
+      uid: user["uid"].toString(),
+      mid: user["mid"].toString(),
+      deviceId: user["id"].toString(),
+    );
+
+    Map<String, dynamic> roleList = {
+      "role": []
+    };
+
+    if (userinfo != null) {
+      List<Map<String, dynamic>>? roles = await HoYoLabGameRolesLib.stokenGetRoles(
+        stoken: user["stoken"].toString(),
+        uid: user["uid"].toString(),
+        mid: user["mid"].toString(),
+        deviceId: user["id"].toString(),
+        ltoken: user["ltoken"].toString(),
+      );
+      if (roles != null && roles.isNotEmpty) {
+        roleList = {
+          "role": roles
+        };
+      }
+    }
+
+    Map<String, dynamic> userInfoMap = {
+      ...user,
+      ...roleList,
+      "avatar": (userinfo?["avatar"] ?? "").toString(),
+      "nickname": (userinfo?["nickname"] ?? "").toString(),
+    };
+
+    Application.globalProviderScope.read(globalUserManagerRiverpod).editUser(
+      deviceId,
+      aid: userInfoMap["aid"].toString(),
+      uid: userInfoMap["uid"].toString(),
+      mid: userInfoMap["mid"].toString(),
+      ltoken: userInfoMap["ltoken"].toString(),
+      stoken: userInfoMap["stoken"].toString(),
+      cookieToken: userInfoMap["cookie_token"].toString(),
+      avatar: userInfoMap["avatar"].toString(),
+      isExpired: false,
+      nickname: userInfoMap["nickname"].toString(),
+      role: userInfoMap["role"]
+    );
+  }
+
   /// 登录流程
-  /*static Future<void> _webLogin(String loginTicket, String loginUid) async {
+  static Future<bool> _webLogin(String loginTicket, String loginUid, WebviewController controller) async {
     void errDialog({
       String? title,
       String? desc
@@ -112,20 +158,26 @@ class SRCatMHYUserLib {
             Application.globalProviderScope.read(globalDialogRiverpod).hidden();
             await Future.delayed(const Duration(milliseconds: 200));
             Application.globalProviderScope.read(globalDialogRiverpod).clean();
-            openLoginWebView();
+            Application.router.push("/webview/hoyolab/login");
           }, child: const Text("重试")),
           Button(onPressed: () async {
             Application.globalProviderScope.read(globalDialogRiverpod).hidden();
             await Future.delayed(const Duration(milliseconds: 200));
             Application.globalProviderScope.read(globalDialogRiverpod).clean();
+            Application.router.push("/home");
+            try {
+              await controller.dispose();
+            } catch (e) {
+              if (kDebugMode) print("销毁 WebView 时遇到错误：$e");
+            }
           }, child: const Text("取消"))
         ]
-      );
+      ).show();
     }
     
     if (loginTicket.isEmpty || loginUid.isEmpty) {
       errDialog(title: "操作取消", desc: "未检测到登录状态，操作已被取消");
-      return;
+      return false;
     }
 
     Map<String, String>? muiltToken;
@@ -133,14 +185,14 @@ class SRCatMHYUserLib {
 
     if (muiltToken == null) {
       errDialog();
-      return;
+      return false;
     }
 
     Map<String, String>? v2Stoken = await HoYoLabLib.getV2StokenBySToekn(v1Stoken: muiltToken["stoken"].toString(), v1Uid: loginUid);
     
     if (v2Stoken == null) {
       errDialog();
-      return;
+      return false;
     }
 
     String? cookieToken = await HoYoLabLib.getCookieToken(
@@ -206,7 +258,7 @@ class SRCatMHYUserLib {
       deviceId: v2Stoken["deviceId"].toString()
     ).then((userinfo) {
       if (userinfo == null) {
-        return;
+        return false;
       }
 
       Application.globalProviderScope.read(globalUserManagerRiverpod).editUser(
@@ -214,10 +266,28 @@ class SRCatMHYUserLib {
         nickname: userinfo["nickname"].toString(),
         avatar: userinfo["avatar"].toString()
       );
+
+      // 异步获取角色信息
+      HoYoLabGameRolesLib.stokenGetRoles(
+        stoken: v2Stoken["token"].toString(),
+        uid: loginUid,
+        mid: v2Stoken["mid"].toString(),
+        deviceId: v2Stoken["deviceId"].toString(),
+        ltoken: muiltToken!["ltoken"].toString(),
+      ).then((roles) {
+        if (roles != null && roles.isNotEmpty) {
+          Application.globalProviderScope.read(globalUserManagerRiverpod).editUser(
+            v2Stoken["deviceId"].toString(),
+            role: roles
+          );
+        }
+      });
     });
 
     Application.globalProviderScope.read(globalDialogRiverpod).hidden();
     await Future.delayed(const Duration(milliseconds: 200));
     Application.globalProviderScope.read(globalDialogRiverpod).clean();
-  }*/
+
+    return true;
+  }
 }

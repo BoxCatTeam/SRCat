@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-27 14:22:36
-/// LastEditTime: 2023-05-28 03:40:44
+/// LastEditTime: 2023-06-07 21:35:27
 /// FilePath: /lib/libs/hoyolab/db.dart
 /// ===========================================================================
 
@@ -42,6 +42,24 @@ class HoYoLabDatabaseLib {
       return result;
     } catch (e) {
       return [];
+    }
+  }
+
+  /// 根据 deviceId 查找用户
+  static Future<Map<String, dynamic>?> user({
+    required String deviceId
+  }) async {
+    Database database = await SRCatSQLiteUtils.userdata();
+
+    try {
+      List<Map<String, dynamic>> result = await database.query(_userTable,
+        where: "id=?",
+        whereArgs: [deviceId]
+      );
+
+      return result[0];
+    } catch (e) {
+      return null;
     }
   }
 
