@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-27 14:22:36
-/// LastEditTime: 2023-05-27 20:56:55
+/// LastEditTime: 2023-05-28 03:40:44
 /// FilePath: /lib/libs/hoyolab/db.dart
 /// ===========================================================================
 
@@ -109,7 +109,7 @@ class HoYoLabDatabaseLib {
     
     if (cookieToken != null) {
       updateMap.addEntries({
-        "cookieToken": cookieToken
+        "cookie_token": cookieToken
       }.entries);
     }
 

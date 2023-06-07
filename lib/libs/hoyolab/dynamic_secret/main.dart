@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-27 12:03:32
-/// LastEditTime: 2023-05-27 13:42:53
+/// LastEditTime: 2023-05-28 04:43:33
 /// FilePath: /lib/libs/hoyolab/dynamic_secret/main.dart
 /// ===========================================================================
 
@@ -74,6 +74,6 @@ class HoYoLabDynamicSecretLib {
 
     String check = SRCatUtils.toMd5HexString(dsContent).toString();
 
-    return "$timestamp,$randStr,$check";
+    return "$timestamp,$randString,$check";
   }
 }

@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-27 22:47:26
-/// LastEditTime: 2023-05-28 00:44:47
+/// LastEditTime: 2023-05-28 04:49:02
 /// FilePath: /lib/libs/hoyolab/role.dart
 /// ===========================================================================
 
@@ -84,7 +84,10 @@ class HoYoLabGameRolesLib {
               "game_uid": int.parse(role["game_uid"].toString()),
               "nickname": role["nickname"].toString(),
               "region_name": role["region_name"].toString(),
-              "level": int.parse(role["level"].toString())
+              "level": int.parse(role["level"].toString()),
+              "game_biz": role["game_biz"].toString(),
+              "region": role["region"].toString(),
+              "is_official": role["is_official"] as bool
             });
           }
         }

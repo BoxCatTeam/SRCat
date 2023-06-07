@@ -7,17 +7,16 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:srcat/application.dart';
-import 'package:srcat/libs/hoyolab/bbs.dart';
-import 'package:srcat/libs/hoyolab/db.dart';
-import 'package:srcat/libs/hoyolab/main.dart';
-import 'package:srcat/riverpod/global/user.dart';
-import 'package:srcat/utils/webview2/main.dart';
+//import 'package:srcat/libs/hoyolab/bbs.dart';
+//import 'package:srcat/libs/hoyolab/db.dart';
+//import 'package:srcat/libs/hoyolab/main.dart';
+//import 'package:srcat/riverpod/global/user.dart';
+//import 'package:srcat/utils/webview2/main.dart';
 import 'package:srcat/riverpod/global/dialog.dart';
-import 'package:desktop_webview_window/desktop_webview_window.dart';
 
 class SRCatMHYUserLib {
   /// 以网页方式登录
-  static Future<void> openLoginWebView() async {
+  /*static Future<void> openLoginWebView() async {
     WebviewWindow.clearAll(
       userDataFolderWindows: SRCatWebView2HelperUtils.cacheDir
     );
@@ -68,7 +67,7 @@ class SRCatMHYUserLib {
       await Future.delayed(const Duration(milliseconds: 200));
       Application.globalProviderScope.read(globalDialogRiverpod).clean();
     });
-  }
+  }*/
 
   /// 以 Cookie 方式登录
   static Future<void> cookieLogin() async {
@@ -100,7 +99,7 @@ class SRCatMHYUserLib {
   }
 
   /// 登录流程
-  static Future<void> _webLogin(String loginTicket, String loginUid) async {
+  /*static Future<void> _webLogin(String loginTicket, String loginUid) async {
     void errDialog({
       String? title,
       String? desc
@@ -220,5 +219,5 @@ class SRCatMHYUserLib {
     Application.globalProviderScope.read(globalDialogRiverpod).hidden();
     await Future.delayed(const Duration(milliseconds: 200));
     Application.globalProviderScope.read(globalDialogRiverpod).clean();
-  }
+  }*/
 }

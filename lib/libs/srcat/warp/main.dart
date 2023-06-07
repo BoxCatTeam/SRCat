@@ -1,15 +1,16 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-09 09:43:45
-/// LastEditTime: 2023-05-09 09:49:10
+/// LastEditTime: 2023-06-07 02:23:32
 /// FilePath: /lib/libs/srcat/warp/main.dart
 /// ===========================================================================
 
+//import 'package:srcat/config/hoyolab.dart';
 import 'package:srcat/utils/http/dio.dart';
 
 import 'cache.dart';
 
-enum GachaGetType { proxy, cache, url }
+enum GachaGetType { stoken, proxy, cache, url }
 enum GachaWarpType { regular, character, lightCone, starter }
 const gachaWarpTypeValue = {
   GachaWarpType.regular: 1,
@@ -36,10 +37,11 @@ class SRCatWarpLib {
     int size = 5,
     int endId = 0,
     GachaWarpType warpType = GachaWarpType.regular,
+    Map<String, dynamic>? stokenData
   }) async {
     String apiUrl = "https://api-takumi.mihoyo.com/common/gacha_record/api/getGachaLog?"
-      "authkey_ver=1"                           "&"
-      "sign_type=2"                             "&"
+      "authkey_ver=%authkey_ver%"               "&"
+      "sign_type=%sign_type%"                   "&"
       "auth_appid=webview_gacha"                "&"
       "win_mod=fullscreen"                      "&"
       "gacha_id=%gacha_id%"                     "&"
@@ -48,7 +50,7 @@ class SRCatWarpLib {
       "default_gacha_type=%default_gacha_type%" "&"
       "lang=zh-cn"                              "&"
       "authkey=%authkey%"                       "&"
-      "game_biz=hkrpg_cn"                       "&"
+      "game_biz=%game_biz%"                     "&"
       "os_system=%os_system%"                   "&"
       "device_model=%device_model%"             "&"
       "plat_type=pc"                            "&"
@@ -58,6 +60,18 @@ class SRCatWarpLib {
       "end_id=%end_id%"                         "";
 
     switch (type) {
+      case GachaGetType.stoken:
+        await _getDataFromSToken(
+          success: success,
+          fail: fail,
+          page: page,
+          apiUrl: apiUrl,
+          size: size,
+          endId: endId,
+          warpType: warpType,
+          stokenData: stokenData
+        );
+        break;
       case GachaGetType.proxy:
         break;
       case GachaGetType.cache:
@@ -93,12 +107,15 @@ class SRCatWarpLib {
 
     Map<String, String> params = cache.queryParameters;
     String api = apiUrl.replaceAll("%gacha_id%", params["gacha_id"]!)
+      .replaceAll("%sign_type%", params["sign_type"]!)
+      .replaceAll("%authkey_ver%", params["authkey_ver"]!)
       .replaceAll("%timestamp%", params["timestamp"]!)
       .replaceAll("%region%", params["region"]!)
       .replaceAll("%default_gacha_type%", gachaWarpTypeValue[warpType].toString())
       .replaceAll("%authkey%", params["authkey"]!.replaceAll("+", "%2B"))
       .replaceAll("%os_system%", params["os_system"]!)
       .replaceAll("%device_model%", params["device_model"]!)
+      .replaceAll("%game_biz%", params["game_biz"] ?? "hkrpg_cn")
       .replaceAll("%page%", page.toString())
       .replaceAll("%size%", size.toString())
       .replaceAll("%gacha_type%", gachaWarpTypeValue[warpType].toString())
@@ -110,5 +127,59 @@ class SRCatWarpLib {
       success: success,
       fail: fail
     );
+  }
+
+  static Future<void> _getDataFromSToken({
+    required Success success,
+    required Fail fail,
+    int page = 1,
+    int size = 5,
+    int endId = 0,
+    required String apiUrl,
+    GachaWarpType warpType = GachaWarpType.regular,
+    Map<String, dynamic>? stokenData
+  }) async {
+    if (stokenData == null) {
+      fail(statusCode[Status.warpCacheEmpty]!, "获取 AuthKey 失败", FailType.mhu, null);
+      return;
+    }
+
+    /*String api = apiUrl.replaceAll("%timestamp%", stokenData["timestamp"].toString())
+      .replaceAll("%sign_type%", stokenData["sign_type"]!)
+      .replaceAll("%authkey_ver%", stokenData["authkey_ver"]!)
+      .replaceAll("%authkey%", stokenData["authkey"].toString().replaceAll("+", "%2B").replaceAll("/", "%2F").replaceAll("=", "%3D"))
+      .replaceAll("%region%", stokenData["region"])
+      .replaceAll("%game_biz%", stokenData["game_biz"])
+      .replaceAll("%default_gacha_type%", gachaWarpTypeValue[warpType].toString())
+      .replaceAll("%page%", page.toString())
+      .replaceAll("%size%", size.toString())
+      .replaceAll("%gacha_type%", gachaWarpTypeValue[warpType].toString())
+      .replaceAll("%end_id%", endId.toString())
+      // 非必要参数
+      .replaceAll("%os_system%", stokenData["os_system"])
+      .replaceAll("%device_model%", stokenData["device_model"])
+      .replaceAll("%gacha_id%", "0");*/
+
+    //String api = "${HoYoLabConfig.authKeyGetGachaLogApi}?"
+    //  "timestamp=${stokenData["timestamp"].toString()}"
+    //  "&sign_type=${stokenData["sign_type"]}"
+    //  "&authkey=${stokenData["authkey"].toString().replaceAll("+", "%2B")}"
+    //  "&region=${stokenData["region"]}"
+    //  "&game_biz=${stokenData["game_biz"]}"
+    //  "&page=$page"
+    //  "&size=$size"
+    //  "&gacha_type=${gachaWarpTypeValue[warpType].toString()}"
+    //  "&end_id=${endId.toString()}"
+    //  "&os_system=${stokenData["os_system"]}"
+    //  "&device_model=${stokenData["device_model"]}"
+    //  "&default_gacha_type=${gachaWarpTypeValue[warpType].toString()}";
+    //print(api);
+
+    //await SCDioUtils.request(
+    //  method: Method.GET,
+    //  uri: Uri.parse(api),
+    //  success: success,
+    //  fail: fail
+    //);
   }
 }

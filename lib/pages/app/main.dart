@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-07 00:24:49
-/// LastEditTime: 2023-05-24 19:11:31
+/// LastEditTime: 2023-06-07 19:43:28
 /// FilePath: /lib/pages/app/main.dart
 /// ===========================================================================
 
@@ -10,6 +10,7 @@ import 'package:srcat/application.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:srcat/components/pages/app/root/user.dart';
+import 'package:srcat/riverpod/global/user.dart';
 import 'package:srcat/utils/storage/main.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -64,7 +65,7 @@ class _AppPageState extends ConsumerState<AppPage> with WindowListener {
       .indexWhere((element) => element.key == Key(location));
 
     if (index == -1) {
-      int footerIndex = _footerNavItems
+      int footerIndex = _footerNavItems()
         .where((element) => element.key != null)
         .toList()
         .indexWhere((element) => element.key == Key(location));
@@ -186,38 +187,67 @@ class _AppPageState extends ConsumerState<AppPage> with WindowListener {
   ];
 
   /// 导航栏底部列表
-  final List<NavigationPaneItem> _footerNavItems = [
-    PaneItemSeparator(),
-    AppUserWidget(
-      key: const Key('users'),
-      icon: const SizedBox.shrink(),
-      body: const SizedBox.shrink(),
-    ),
-    PaneItemSeparator(),
-    PaneItem(
-      key: const Key('/settings'),
-      icon: const Icon(FluentIcons.settings),
-      title: Text(
-        FlutterI18n.translate(
-          Application.rootNavigatorKey.currentContext!,
-          "app.root.nav.title.settings"
-        )
-      ),
-      body: const SizedBox.shrink(),
-      onTap: () {
-        if (Application.router.location != "/settings") {
-          Application.router.push("/settings");
+  List<NavigationPaneItem> _footerNavItems() {
+    String nickname = "";
+    String roleUid = "";
+    String avatar = "";
+    String nowSelectUser = ref.watch(globalUserManagerRiverpod).nowSelectUser;
+    List<Map<String, dynamic>> userList =ref.watch(globalUserManagerRiverpod).userList;
+    int nowRoleUid = ref.watch(globalUserManagerRiverpod).nowRoleUid;
+    for (Map<String, dynamic> user in userList) {
+      if(user["id"] == nowSelectUser) {
+        nickname = user["nickname"].toString();
+        if (user["avatar"] != null) {
+          avatar = user["avatar"].toString();
         }
+        if (user["role"] != null) {
+          for (Map<String, dynamic> role in user["role"].cast<Map<String, dynamic>>()) {
+            if (nowRoleUid.toString() == role["game_uid"].toString()) {
+              roleUid = role["game_uid"].toString();
+              break;
+            }
+          }
+        }
+        break;
       }
-    )
-  ];
+    }
+
+    return [
+      PaneItemSeparator(),
+      AppUserWidget(
+        key: const Key('users'),
+        icon: const SizedBox.shrink(),
+        body: const SizedBox.shrink(),
+        nickname: nickname,
+        roleUid: roleUid,
+        avatar: avatar,
+      ),
+      PaneItemSeparator(),
+      PaneItem(
+        key: const Key('/settings'),
+        icon: const Icon(FluentIcons.settings),
+        title: Text(
+          FlutterI18n.translate(
+            Application.rootNavigatorKey.currentContext!,
+            "app.root.nav.title.settings"
+          )
+        ),
+        body: const SizedBox.shrink(),
+        onTap: () {
+          if (Application.router.location != "/settings") {
+            Application.router.push("/settings");
+          }
+        }
+      )
+    ];
+  }
 
   /// 左侧导航栏
   NavigationPane _navs() {
     return NavigationPane(
       selected: _selectedIndex(),
       items: _navItems,
-      footerItems: _footerNavItems,
+      footerItems: _footerNavItems(),
       size: const NavigationPaneSize(
         openMaxWidth: 200
       )

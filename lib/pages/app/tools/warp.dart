@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-07 00:33:35
-/// LastEditTime: 2023-05-22 18:55:52
+/// LastEditTime: 2023-06-07 02:23:44
 /// FilePath: /lib/pages/app/tools/warp.dart
 /// ===========================================================================
 
@@ -13,6 +13,7 @@ import 'package:srcat/components/global/card/item.dart';
 import 'package:srcat/components/global/icon/main.dart';
 import 'package:srcat/components/global/scroll/page.dart';
 import 'package:srcat/components/pages/app/tools/warp/record_panel.dart';
+import 'package:srcat/libs/hoyolab/authkey.dart';
 import 'package:srcat/libs/srcat/warp/data.dart';
 import 'package:srcat/libs/srcat/warp/import.dart';
 import 'package:srcat/libs/srcat/warp/output.dart';
@@ -22,9 +23,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:srcat/libs/srcat/warp/db.dart';
 import 'package:srcat/libs/srcat/warp/main.dart';
-import 'package:srcat/libs/srcat/warp/cache_update.dart';
+import 'package:srcat/libs/srcat/warp/update.dart';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart' as fluent_system_icons;
+import 'package:srcat/riverpod/global/user.dart';
+//import 'package:srcat/utils/main.dart';
 
 /// 工具 - 跃迁记录页面
 class ToolsWarpPage extends ConsumerStatefulWidget {
@@ -142,11 +145,11 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
       icon: FluentIcons.refresh,
       text: "刷新",
       items: <MenuFlyoutItemBase>[
-        /*MenuFlyoutItem(
-          leading: const SCIcon(FluentIcons.globe, size: 16, weight: FontWeight.w600),
+        MenuFlyoutItem(
+          leading: const SRCatIcon(FluentIcons.globe, size: 16, weight: FontWeight.w600),
           text: const Text("SToken 刷新"),
-          onPressed: null
-        ),*/
+          onPressed: () => _refreshGachaLogBySToken(),
+        ),
         /*MenuFlyoutItem(
           leading: const SCIcon(FluentIcons.globe, size: 16, weight: FontWeight.w600),
           text: const Text("代理刷新"),
@@ -478,7 +481,7 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
 
   /// 刷新数据
   void _refreshGachaLog() async {
-    int uid = await SRCatWarpCacheUpdateLib.init(_stateKey.currentContext!);
+    int uid = await SRCatWarpUpdateLib.init(GachaGetType.cache);
     _warpUsers = await SRCatWarpDatabaseLib.allWarpUser();
     _loadStatus = true;
     if (_warpUsers.isNotEmpty && uid != 0) {
@@ -496,5 +499,125 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
         ]
       ).show();
     }
+  }
+
+  /// SToken 刷新数据
+  void _refreshGachaLogBySToken() async {
+    List<Map<String, dynamic>> list = ref.read(globalUserManagerRiverpod).userList;
+    String nowSelect = ref.read(globalUserManagerRiverpod).nowSelectUser;
+    int nowRoleUid = ref.read(globalUserManagerRiverpod).nowRoleUid;
+    Map<String, dynamic> nowInfo = {};
+    Map<String, dynamic> nowRoleInfo = {};
+
+    if (list.isEmpty) {
+      ref.read(globalDialogRiverpod).set("提示", titleSize: 20,
+        child: const Text("请登录后再使用 SToken 刷新"),
+        actions: <Widget>[
+          FilledButton(child: const Text("好的"), onPressed: () async {
+            ref.read(globalDialogRiverpod).hidden();
+            await Future.delayed(const Duration(milliseconds: 200));
+            ref.read(globalDialogRiverpod).clean();
+          })
+        ]
+      ).show();
+      return;
+    }
+
+    if (nowSelect == "" || nowRoleUid == 0) {
+      ref.read(globalDialogRiverpod).set("提示", titleSize: 20,
+        child: const Text("请选择账号与游戏角色"),
+        actions: <Widget>[
+          FilledButton(child: const Text("好的"), onPressed: () async {
+            ref.read(globalDialogRiverpod).hidden();
+            await Future.delayed(const Duration(milliseconds: 200));
+            ref.read(globalDialogRiverpod).clean();
+          })
+        ]
+      ).show();
+      return;
+    }
+
+    for (Map<String, dynamic> user in list) {
+      if (user["id"] == nowSelect) {
+        nowInfo = user;
+        break;
+      }
+    }
+
+    for (Map<String, dynamic> role in nowInfo["role"]) {
+      if (role["game_uid"] != null && int.parse(role["game_uid"].toString()) == nowRoleUid) {
+        nowRoleInfo = role;
+        break;
+      }
+    }
+
+    if (nowInfo.isEmpty) {
+      ref.read(globalDialogRiverpod).set("提示", titleSize: 20,
+        child: const Text("账号/角色信息不存在，请重新选择"),
+        actions: <Widget>[
+          FilledButton(child: const Text("好的"), onPressed: () async {
+            ref.read(globalDialogRiverpod).hidden();
+            await Future.delayed(const Duration(milliseconds: 200));
+            ref.read(globalDialogRiverpod).clean();
+          })
+        ]
+      ).show();
+      return;
+    }
+
+    //ref.read(globalDialogRiverpod).set("提示", titleSize: 20,
+    //  child: const Text("获取数据中..."),
+    //  actions: null,
+    //  cacheActions: false
+    //).show();
+    
+    Map<String, String>? authKey = await HoYoLabAuthKeyLib.generateAuthKey(
+      stoken: nowInfo["stoken"],
+      mid: nowInfo["mid"],
+      uid: nowInfo["uid"],
+      deviceId: nowInfo["id"],
+      gameUid: nowRoleUid
+    );
+    //print(authKey.toString().replaceAll("+", "%2B").replaceAll("/", "%2F").replaceAll("=", "%3D"));
+    
+    /*if (authKey == null) {
+      ref.read(globalDialogRiverpod).set("错误", titleSize: 20,
+        child: const Text("authKey 获取失败，可能是 SToken 失效，请尝试重新登录。"),
+        actions: <Widget>[
+          FilledButton(child: const Text("好的"), onPressed: () async {
+            ref.read(globalDialogRiverpod).hidden();
+            await Future.delayed(const Duration(milliseconds: 200));
+            ref.read(globalDialogRiverpod).clean();
+          })
+        ]
+      ).show();
+      return;
+    }
+
+    int uid = await SRCatWarpUpdateLib.init(GachaGetType.stoken, stokenData: {
+      ...authKey,
+      "timestamp": SRCatUtils.getUnixTime(),
+      "region": nowRoleInfo["region"],
+      "game_biz": nowRoleInfo["game_biz"],
+      "os_system": "Windows",
+      "device_model": "BakaSRCat"
+    });
+    _warpUsers = await SRCatWarpDatabaseLib.allWarpUser();
+    _loadStatus = true;
+    if (_warpUsers.isNotEmpty && uid != 0) {
+      await Future.delayed(const Duration(seconds: 1));
+      Application.router.push("/tools/warp?uid=$uid");
+    } else {
+      ref.read(globalDialogRiverpod).set("提示", titleSize: 20,
+        child: const Text("跃迁数据刷新失败，可能是 SToken 失效，请尝试重新登录。"),
+        actions: <Widget>[
+          FilledButton(child: const Text("好的"), onPressed: () async {
+            ref.read(globalDialogRiverpod).hidden();
+            await Future.delayed(const Duration(milliseconds: 200));
+            ref.read(globalDialogRiverpod).clean();
+          })
+        ]
+      ).show();
+    }*/
   }
 }

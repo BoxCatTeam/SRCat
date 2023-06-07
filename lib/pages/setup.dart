@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-08 00:45:39
-/// LastEditTime: 2023-05-18 08:12:43
+/// LastEditTime: 2023-06-07 02:14:45
 /// FilePath: /lib/pages/setup.dart
 /// ===========================================================================
 
@@ -17,6 +17,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:srcat/utils/storage/main.dart';
 import 'package:srcat/utils/storage/sqlite.dart';
+import 'package:webview_windows/webview_windows.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 
@@ -28,8 +29,6 @@ import 'package:srcat/riverpod/global/theme.dart';
 import 'package:srcat/components/global/card/item.dart';
 import 'package:srcat/components/global/icon/main.dart';
 import 'package:srcat/components/global/base/app_title.dart';
-
-import 'package:desktop_webview_window/desktop_webview_window.dart';
 
 /// 引导页面
 class SetupPage extends ConsumerStatefulWidget {
@@ -264,7 +263,7 @@ class _SetupPageState extends ConsumerState<SetupPage> with WindowListener {
           children: <Widget>[
             Button(child: const Text("检查安装情况"), onPressed: () async {
               ref.read(setupPageRiverpod).setCheckedWebView2();
-              if (await WebviewWindow.isWebviewAvailable()) {
+              if (await WebviewController.getWebViewVersion() != null) {
                 ref.read(setupPageRiverpod).changeHasWebView2(true);
                 ref.read(setupPageRiverpod).changeSetup3CanNext(true);
               } else {

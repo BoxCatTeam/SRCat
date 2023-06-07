@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-06 22:30:03
-/// LastEditTime: 2023-05-17 23:35:39
+/// LastEditTime: 2023-06-07 02:20:58
 /// FilePath: /lib/pages/routes.dart
 /// ===========================================================================
 
@@ -21,6 +21,7 @@ import 'app/tools/game/launch.dart';
 import 'app/tools/game/photo.dart';
 /* ========== Other ========== */
 import 'app/settings.dart';
+import 'app/webview/login.dart';
 
 class PageRoutes implements SRCatRouteInterface {
   final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -61,6 +62,11 @@ class PageRoutes implements SRCatRouteInterface {
           path: "/settings",
           name: "Settings",
           builder: (context, state) => const SettingsPage()
+        ),
+        GoRoute(
+          path: "/webview/hoyolab/login",
+          name: "HoYoLabLogin",
+          builder: (context, state) => const AppLoginWebview()
         ),
       ]
     );

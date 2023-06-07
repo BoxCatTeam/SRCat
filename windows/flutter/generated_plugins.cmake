@@ -4,13 +4,13 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   connectivity_plus
-  desktop_webview_window
   file_selector_windows
   flutter_acrylic
   screen_retriever
   sentry_flutter
   system_theme
   url_launcher_windows
+  webview_windows
   window_manager
 )
 

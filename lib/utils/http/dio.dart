@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-09 09:45:53
-/// LastEditTime: 2023-05-15 07:31:18
+/// LastEditTime: 2023-05-28 05:00:45
 /// FilePath: /lib/utils/http/dio.dart
 /// ===========================================================================
 
@@ -60,7 +60,7 @@ class SCDioUtils {
     required Method method,
     required Uri uri,
     Map<String, dynamic>? headers,
-    Map<String, dynamic>? params,
+    Object? params,
     required Success success,
     required Fail fail
   }) async {

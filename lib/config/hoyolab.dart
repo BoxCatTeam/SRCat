@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-25 10:37:05
-/// LastEditTime: 2023-05-27 23:24:11
+/// LastEditTime: 2023-05-29 19:23:47
 /// FilePath: /lib/config/hoyolab.dart
 /// ===========================================================================
 
@@ -14,6 +14,7 @@ class HoYoLabConfig {
   static String takumiBaseApi = "https://api-takumi.mihoyo.com";
   static String takumiAuthApi = "$takumiBaseApi/auth/api";
   static String takumiBindingApi = "$takumiBaseApi/binding/api";
+  static String takumiAccountApi = "$takumiBaseApi/account/auth/api";
 
   static String passportApi = "https://passport-api.mihoyo.com";
   static String passportAuthApi = "$passportApi/account/auth/api";
@@ -35,6 +36,10 @@ class HoYoLabConfig {
   static String verifyLtoken = "$passportApiV4/account/ma-cn-session/web/verifyLtoken";
   /// 创建 ActionTicket
   static String createActionTicket = "$passportApi/account/ma-cn-verifier/app/createActionTicketByToken";
+  /// 创建 AuthKey
+  static String generateAuthKey = "$takumiAuthApi/genAuthKey";
+  static String generateBindingAuthKey = "$takumiBindingApi/genAuthKey";
+  static String generateAccountAuthKey = "$takumiAccountApi/genAuthKey";
 
   /// 获取用户角色信息
   static String stokenGetRoles = "$takumiBindingApi/getUserGameRolesByStoken";
@@ -45,9 +50,15 @@ class HoYoLabConfig {
   static String getSelfInfo = "$bbsUserApi/getUserFullInfo?gids=2";
   static String bbsReferer = "https://bbs.mihoyo.com/";
 
+  static String appReferer = "https://app.mihoyo.com/";
+
   static String webStaticWarpIndex = "https://webstatic.mihoyo.com/hkrpg/event/e20211215gacha-v2/index.html";
 
   static String hkrpgApi = "https://hkrpg-api.mihoyo.com";
+  static String hkrpgGachaInfoApi = "$hkrpgApi/event/gacha_info/api";
+  static String authKeyGetGachaLogApi = "$hkrpgGachaInfoApi/getGachaLog";
+
+  static String hoyolabLoginPageUrl = "https://user.mihoyo.com/#/login/password";
 
   /// ====================================================================================================
   static String xrpcVersion = "2.50.1";
