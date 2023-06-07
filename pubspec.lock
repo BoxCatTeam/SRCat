@@ -137,15 +137,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.7.8"
-  desktop_webview_window:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: dd33d1ae2dc4b4d5417bd2d5601a04774a846bfa
-      url: "https://github.com/BakaLabs/desktop_webview_window.git"
-    source: git
-    version: "0.2.1"
   device_info_plus:
     dependency: "direct main"
     description:
@@ -957,6 +948,15 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.4"
+  webview_windows:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "2ca47fca737773ee8d210368da80b8af08b86f8c"
+      url: "https://github.com/BakaLabs/flutter-webview-windows.git"
+    source: git
+    version: "0.2.4"
   win32:
     dependency: "direct overridden"
     description:

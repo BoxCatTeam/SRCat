@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-06 19:23:46
-/// LastEditTime: 2023-05-23 15:01:33
+/// LastEditTime: 2023-06-07 02:13:23
 /// FilePath: /lib/main.dart
 /// ===========================================================================
 
@@ -37,13 +37,7 @@ import 'package:flutter_i18n/loaders/decoders/toml_decode_strategy.dart';
 
 import 'package:srcat/components/global/base/dialog.dart';
 
-import 'package:desktop_webview_window/desktop_webview_window.dart';
-
 Future<void> main(List<String> args) async {
-  if (runWebViewTitleBarWidget(args)) {
-    return;
-  }
-
   WidgetsFlutterBinding.ensureInitialized();
 
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();

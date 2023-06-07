@@ -69,11 +69,11 @@ dependencies:
   path_provider: ^2.0.15
 
   # WebView 2
-  # https://pub.dev/packages/desktop_webview_window
-  # https://pub.flutter-io.cn/packages/desktop_webview_window
-  desktop_webview_window:
+  # https://pub.dev/packages/webview_windows
+  # https://pub.flutter-io.cn/packages/webview_windows
+  webview_windows:
     git:
-      url: https://github.com/BakaLabs/desktop_webview_window.git
+      url: https://github.com/BakaLabs/flutter-webview-windows.git
 
   # SQLite
   # https://pub.dev/packages/sqflite

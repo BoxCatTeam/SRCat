@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-24 11:31:38
-/// LastEditTime: 2023-05-27 20:51:37
+/// LastEditTime: 2023-06-07 19:46:41
 /// FilePath: /lib/components/pages/app/root/user.dart
 /// ===========================================================================
 
@@ -18,6 +18,9 @@ class AppUserWidget extends PaneItem {
     Key? key,
     required this.icon,
     required this.body,
+    required this.nickname,
+    required this.roleUid,
+    required this.avatar
   }) : super(
     key: key,
     icon: icon,
@@ -32,36 +35,50 @@ class AppUserWidget extends PaneItem {
   // ignore: overridden_fields
   final Widget body;
 
+  final String nickname;
+  final String roleUid;
+  final String avatar;
+
   final contextAttachKey = GlobalKey();
   final contextController = FlyoutController();
 
   /// 头像
   Widget _avatar({ bool isMini = false }) {
+    DecorationImage image;
+    if (avatar != "") {
+      image = DecorationImage(
+        image: NetworkImage(avatar),
+        fit: BoxFit.contain
+      );
+    } else {
+      image = const DecorationImage(
+        image: AssetImage("assets/images/srcat/wuwu.png"),
+        fit: BoxFit.contain
+      );
+    }
+
     return Container(
       width: isMini ? 40 : 40,
       height: isMini ? 40 : 40,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(100.0),
-        image: const DecorationImage(
-          image: AssetImage("assets/images/srcat/wuwu.png"),
-          fit: BoxFit.contain
-        )
+        image: image
       )
     );
   }
 
   /// 昵称与 UID
   Widget _nicknameAndUid() {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Text("咕咕欧",
+        Text(nickname,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        Text("100888058",
-          style: TextStyle(fontSize: 12),
+        Text(roleUid,
+          style: const TextStyle(fontSize: 12),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         )
@@ -103,7 +120,11 @@ class AppUserWidget extends PaneItem {
           icon: FluentIcons.globe,
           iconSize: 15,
           title: "网页登录",
-          onTap: () => SRCatMHYUserLib.openLoginWebView(),
+          onTap: () async {
+            Application.router.go("/webview/hoyolab/login");
+            await Future.delayed(const Duration(milliseconds: 1));
+            Application.router.pop();
+          },
           rightChild: const SRCatIcon(FluentIcons.chevron_right_small, size: 10),
         ),
         SRCatCard(
@@ -150,6 +171,8 @@ class AppUserWidget extends PaneItem {
     int? itemIndex,
     bool? autofocus
   }) {
+    
+
     final maybeBody = InheritedNavigationView.maybeOf(context);
     final mode = displayMode ??
         maybeBody?.displayMode ??
