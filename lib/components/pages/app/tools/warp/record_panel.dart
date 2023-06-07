@@ -227,7 +227,7 @@ class _WarpRecordPanelState extends State<WarpRecordPanel> {
         const SizedBox(height: 18),
         cardTextItem("总抽数", "${widget.data.length} 抽"),
         const SizedBox(height: 2),
-        widget.type == GachaWarpType.character || widget.type == GachaWarpType.lightCone ? cardTextItem("保底已垫", "${SRCatWarpUtilsLib.itemsFromLastStar5(resultData)} 抽") : Container(),
+        widget.type != GachaWarpType.starter ? cardTextItem("保底已垫", "${SRCatWarpUtilsLib.itemsFromLastStar5(resultData)} 抽") : Container(),
         SizedBox(height: widget.type == GachaWarpType.character || widget.type == GachaWarpType.lightCone ? 2 : 0),
         widget.type == GachaWarpType.character || widget.type == GachaWarpType.lightCone ? cardTextItem("UP 平均抽数", "${SRCatWarpUtilsLib.upAverage(star5, 5)} 抽") : Container(),
         SizedBox(height: widget.type == GachaWarpType.character || widget.type == GachaWarpType.lightCone ? 2 : 0),
