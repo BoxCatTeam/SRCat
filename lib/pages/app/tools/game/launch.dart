@@ -1,11 +1,12 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-07 02:33:24
-/// LastEditTime: 2023-06-07 22:02:25
+/// LastEditTime: 2023-06-07 22:10:18
 /// FilePath: /lib/pages/app/tools/game/launch.dart
 /// ===========================================================================
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:srcat/riverpod/global/dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,6 +47,32 @@ class _GameLaunchToolPageState extends ConsumerState<GameLaunchToolPage> {
   void initState() {
     super.initState();
 
+    try {
+      _initSetting();
+    } catch (e) {
+      if (kDebugMode) print("游戏启动器初始化设置发生错误：$e");
+    }
+
+    SRCatGameAccountsLib.getAll().then((List<Map<String, dynamic>> value) async {
+      if (value.isEmpty) {
+        _hasAccounts = false;
+      } else {
+        _accountsList = value;
+        _hasAccounts = true;
+      }
+
+      _loaded = true;
+      setState(() {});
+    });
+
+    if (ref.read(gameLaunchPageRiverpod).processId != null) {
+      _canStart = false;
+    } else {
+      _canStart = true;
+    }
+  }
+
+  void _initSetting() {
     if (SRCatStorageUtils.read("hsr_game_popupwindow") == null) {
       SRCatStorageUtils.write("hsr_game_popupwindow", false);
     }
@@ -70,24 +97,6 @@ class _GameLaunchToolPageState extends ConsumerState<GameLaunchToolPage> {
 
     if (SRCatStorageUtils.read("hsr_game_height") == null) {
       SRCatStorageUtils.write("hsr_game_height", (windowSize != null && windowSize[1] != 0 ? windowSize[1] : 1080));
-    }
-
-    SRCatGameAccountsLib.getAll().then((List<Map<String, dynamic>> value) async {
-      if (value.isEmpty) {
-        _hasAccounts = false;
-      } else {
-        _accountsList = value;
-        _hasAccounts = true;
-      }
-
-      _loaded = true;
-      setState(() {});
-    });
-
-    if (ref.read(gameLaunchPageRiverpod).processId != null) {
-      _canStart = false;
-    } else {
-      _canStart = true;
     }
   }
 
