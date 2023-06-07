@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-07 02:33:24
-/// LastEditTime: 2023-05-16 04:51:42
+/// LastEditTime: 2023-06-07 22:02:25
 /// FilePath: /lib/pages/app/tools/game/launch.dart
 /// ===========================================================================
 
@@ -295,31 +295,39 @@ class _GameLaunchToolPageState extends ConsumerState<GameLaunchToolPage> {
 
     Widget card = SRCatCard(
       title: "帧率解锁",
-      description: "直接修改注册表中的帧率设置，以此突破 60 帧限制",
+      description: "直接修改注册表中的帧率设置，以此突破 60 帧限制（需要关闭垂直同步）",
       icon: FluentIcons.unlock,
-      rightChild: ToggleSwitch(
-        checked: SRCatStorageUtils.read("hsr_game_fps_unlocked") ?? false,
-        onChanged: (value) async {
-          await SRCatStorageUtils.write("hsr_game_fps_unlocked", value);
-          setState(() {});
-        }
-      )
-    );
-
-    Widget slider = Card(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      child: Slider(
-        value: (SRCatStorageUtils.read("hsr_game_fps") is int ? SRCatStorageUtils.read("hsr_game_fps") : 60).toDouble(),
-        min: 60,
-        max: 240,
-        label: "${(SRCatStorageUtils.read("hsr_game_fps") is int ? SRCatStorageUtils.read("hsr_game_fps") : 60).toString()} FPS",
-        onChanged: SRCatStorageUtils.read("hsr_game_fps_unlocked") ? (value) async {
-          await SRCatStorageUtils.write("hsr_game_fps", value.toInt());
-          setState(() {});
-        } : null,
-        style: SliderThemeData(
-          labelBackgroundColor: FluentTheme.of(context).brightness.isDark ? const Color(0xff212121) : const Color(0xfffafafa),
-        )
+      rightChild: Row(
+        children: <Widget>[
+          SizedBox(
+            width: 140,
+            child: NumberBox(
+              min: 30,
+              max: 1024,
+              clearButton: false,
+              value: int.parse((SRCatStorageUtils.read("hsr_game_fps") is int ? SRCatStorageUtils.read("hsr_game_fps") : 60).toString()),
+              mode: SpinButtonPlacementMode.none,
+              onChanged: (SRCatStorageUtils.read("hsr_game_fps_unlocked") == true) ? (int? value) {
+                if (value != null && value <= 0) {
+                  SRCatStorageUtils.write("hsr_game_fps", 60);
+                } else if (value != null) {
+                  SRCatStorageUtils.write("hsr_game_fps", value.toInt());
+                } else {
+                  SRCatStorageUtils.write("hsr_game_fps", 60);
+                }
+                setState(() {});
+              } : null
+            )
+          ),
+          const SizedBox(width: 20),
+          ToggleSwitch(
+            checked: SRCatStorageUtils.read("hsr_game_fps_unlocked") ?? false,
+            onChanged: (value) async {
+              await SRCatStorageUtils.write("hsr_game_fps_unlocked", value);
+              setState(() {});
+            }
+          )
+        ]
       )
     );
 
@@ -329,8 +337,7 @@ class _GameLaunchToolPageState extends ConsumerState<GameLaunchToolPage> {
       children: <Widget>[
         SizedBox(width: double.infinity, child: infoBar),
         const SizedBox(height: 5),
-        card,
-        slider
+        card
       ],
     );
   }

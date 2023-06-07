@@ -26,7 +26,7 @@ import 'package:srcat/libs/srcat/warp/main.dart';
 import 'package:srcat/libs/srcat/warp/update.dart';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart' as fluent_system_icons;
-import 'package:srcat/riverpod/global/user.dart';
+//import 'package:srcat/riverpod/global/user.dart';
 //import 'package:srcat/utils/main.dart';
 
 /// 工具 - 跃迁记录页面

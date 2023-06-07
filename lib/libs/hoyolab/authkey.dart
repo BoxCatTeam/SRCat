@@ -53,7 +53,6 @@ class HoYoLabAuthKeyLib {
       headers: headers,
       params: body,
       success: (response, data) {
-        print(data);
         if (data["retcode"] != null && data["retcode"] != 0) {
           return null;
         } else if (data["data"] is Map<String, dynamic>) {
