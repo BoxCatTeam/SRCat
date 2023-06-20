@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-08 17:46:03
-/// LastEditTime: 2023-05-09 05:22:31
+/// LastEditTime: 2023-06-07 22:38:28
 /// FilePath: /lib/utils/storage/main.dart
 /// ===========================================================================
 
@@ -73,5 +73,24 @@ class SRCatStorageUtils {
       if (kDebugMode) print("[Storage Utils] 未初始化，无法读取。");
       return null;
     }
+  }
+
+  static Future<dynamic> asyncRead(String key) async {
+    if (!_loaded) return null;
+
+    String config = await SRCatFileUtils.readFile(_defaultConfigPath);
+    Map<String, dynamic> configMap = {};
+    if (config.isNotEmpty) {
+      try {
+        /// 将字符串转换为 Map
+        configMap = json.decode(config);
+      } catch (e) {
+        if (kDebugMode) print("[Storage Utils] 解析出错：$e");
+      }
+
+      return configMap[key];
+    }
+
+    return null;
   }
 }

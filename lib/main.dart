@@ -52,7 +52,7 @@ Future<void> main(List<String> args) async {
   }
 
   await SRCatStorageUtils.init();
-  if (SRCatStorageUtils.read("data_path") != null) {
+  if (await SRCatStorageUtils.asyncRead("data_path") != null) {
     await SRCatFileInitUtils.init();
     await SRCatSQLiteUtils.init();
   }
