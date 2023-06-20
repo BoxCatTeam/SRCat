@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-06 22:33:34
-/// LastEditTime: 2023-05-28 00:17:10
+/// LastEditTime: 2023-06-20 23:54:53
 /// FilePath: /lib/pages/splash.dart
 /// ===========================================================================
 
@@ -29,12 +29,15 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void initSRCat() async {
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(milliseconds: 100));
     if (await SRCatStorageUtils.read("installed") != null) {
+      await Future.delayed(const Duration(milliseconds: 100));
       bool metadataStatus = await checkMetadata();
 
       // load user - async
       _loadUsers();
+
+      await Future.delayed(const Duration(milliseconds: 500));
 
       if (metadataStatus == false) {
         Application.router.go("/home");
@@ -42,6 +45,7 @@ class _SplashPageState extends State<SplashPage> {
         Application.router.go("/download?isUpdate=true");
       }
     } else {
+      await Future.delayed(const Duration(milliseconds: 100));
       Application.router.go("/setup");
     }
   }
