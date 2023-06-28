@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-09 10:23:21
-/// LastEditTime: 2023-05-18 12:37:40
+/// LastEditTime: 2023-06-28 17:00:49
 /// FilePath: /lib/libs/srcat/warp/utils.dart
 /// ===========================================================================
 
@@ -151,7 +151,7 @@ class SRCatWarpUtilsLib {
             } else {
               if (gacha["start5_up_items"].contains(item["item_id"])) {
                 temp["isUP"] = true;
-                if (star5[star5.length - 1]["isUP"] is bool && star5[star5.length - 1]["isUP"] == true) {
+                if (star5[0]["isUP"] is bool && star5[0]["isUP"] == true) {
                   temp["isGuaranteed"] = false;
                 } else {
                   temp["isGuaranteed"] = true;
