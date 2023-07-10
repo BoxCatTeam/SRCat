@@ -1,13 +1,13 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-22 15:36:07
-/// LastEditTime: 2023-05-22 17:33:48
+/// LastEditTime: 2023-07-11 04:34:44
 /// FilePath: /lib/models/srgf/v1.dart
 /// ===========================================================================
 
 import 'package:srcat/application.dart';
 import 'package:srcat/utils/main.dart';
-import 'package:json_schema2/json_schema2.dart';
+import 'package:json_schema2/json_schema.dart';
 
 import 'package:srcat/libs/srcat/warp/main.dart';
 export 'package:srcat/libs/srcat/warp/main.dart';
@@ -68,11 +68,11 @@ class SRGFVer1Model {
     "required": ["info", "list"]
   };
 
-  static JsonSchema schema = JsonSchema.createSchema(schemaMap);
+  static JsonSchema schema = JsonSchema.create(schemaMap);
 
   /// 校验数据是否正确
   static bool validate(dynamic data) {
-    return schema.validate(data);
+    return schema.validate(data).isValid;
   }
 
   /// 生成 SRGF Map

@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-09 09:45:53
-/// LastEditTime: 2023-05-28 05:00:45
+/// LastEditTime: 2023-07-11 04:27:58
 /// FilePath: /lib/utils/http/dio.dart
 /// ===========================================================================
 
@@ -32,7 +32,7 @@ const statusCode = {
 };
 
 typedef Success<T> = Function(Response response, T data);
-typedef Fail = Function(int code, String message, FailType failType, DioError? dioError);
+typedef Fail = Function(int code, String message, FailType failType, DioException? dioError);
 
 class SCDioUtils {
   static Dio? _dio;
@@ -77,7 +77,7 @@ class SCDioUtils {
           data: method == Method.POST ? params : uri.queryParameters,
           options: Options(method: methodValues[method], headers: headers));
       success(response, response.data);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (e.response != null) {
          fail(e.response?.statusCode ?? statusCode[Status.responseError]!,
             e.response?.statusMessage ?? "未知错误", FailType.dio, e);
@@ -114,7 +114,7 @@ class SCDioUtils {
       );
 
       success(response, response.data);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (CancelToken.isCancel(e)) {
         fail(statusCode[Status.cancelDownload]!, "下载已取消", FailType.dio, e);
       } else {

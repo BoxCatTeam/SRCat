@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-22 16:38:08
-/// LastEditTime: 2023-05-22 21:30:44
+/// LastEditTime: 2023-07-11 04:12:27
 /// FilePath: /lib/libs/srcat/warp/output.dart
 /// ===========================================================================
 // ignore_for_file: use_build_context_synchronously
@@ -33,7 +33,7 @@ class SRCatWarpGachaLogOutput {
       )
     ];
 
-    final String? path = await getSavePath(
+    final FileSaveLocation? path = await getSaveLocation(
       suggestedName: fileName,
       confirmButtonText: "导出跃迁记录",
       acceptedTypeGroups: acceptedTypeGroups
@@ -74,7 +74,7 @@ class SRCatWarpGachaLogOutput {
 
     JsonEncoder encoder = const JsonEncoder.withIndent('  ');
     String prettyprint = encoder.convert(result);
-    await SRCatFileUtils.writeStringFile(path, prettyprint);
+    await SRCatFileUtils.writeStringFile(path.path, prettyprint);
   }
 
   /// 获取所有抽卡数据
