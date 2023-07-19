@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-22 18:38:54
-/// LastEditTime: 2023-05-22 22:06:41
+/// LastEditTime: 2023-07-20 04:10:59
 /// FilePath: /lib/libs/srcat/warp/import.dart
 /// ===========================================================================
 // ignore_for_file: use_build_context_synchronously
@@ -87,20 +87,6 @@ class SRCatWarpGachaLogImport {
     } else {
       context.read(globalDialogRiverpod).set("导入失败",
         child: Text("导入数据的 SRGF 版本为 ${importMap["info"]["srgf_version"].toString()}，而目前 SRCat 支持的 SRGF 版本为 v1.0"),
-        actions: errActions
-      ).show();
-      return;
-    }
-
-    if (
-      importMap["info"]["lang"] != null &&
-      (
-        importMap["info"]["lang"].toString().toLowerCase() != "zh-cn" &&
-        importMap["info"]["lang"].toString().toLowerCase() != "chs"
-      )
-    ) {
-      context.read(globalDialogRiverpod).set("导入失败",
-        child: Text("不支持的语言项，将导入的数据语言为：${importMap["info"]["lang"]}"),
         actions: errActions
       ).show();
       return;
