@@ -10,10 +10,8 @@ import 'dart:convert';
 
 import 'package:srcat/application.dart';
 import 'package:srcat/models/srgf/v1.dart';
-import 'package:srcat/components/global/icon/main.dart';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart' as fluent_system_icons;
 
 import 'package:srcat/utils/file/main.dart';
 import 'package:file_selector/file_selector.dart';
@@ -109,7 +107,6 @@ class SRCatWarpGachaLogImport {
     }
 
     Widget info({
-      required IconData icon,
       required String title,
       required String value
     }) {
@@ -117,8 +114,6 @@ class SRCatWarpGachaLogImport {
         height: 40,
         child: Row(
           children: <Widget>[
-            SRCatIcon(icon),
-            const SizedBox(width: 5),
             Expanded(child: Text(title)),
             Text(value)
           ],
@@ -130,15 +125,15 @@ class SRCatWarpGachaLogImport {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          info(icon: fluent_system_icons.FluentIcons.person_available_24_regular, title: "UID", value: importMap["info"]["uid"]),
-          info(icon: fluent_system_icons.FluentIcons.poll_24_regular, title: "记录数量", value: (importMap["list"]).length.toString()),
-          info(icon: FluentIcons.clock, title: "导出时间", value: SRCatUtils.unixTimeToStr(
+          info(title: "UID", value: importMap["info"]["uid"]),
+          info(title: "记录数量", value: (importMap["list"]).length.toString()),
+          info(title: "导出时间", value: SRCatUtils.unixTimeToStr(
             int.parse(importMap["info"]["export_timestamp"].toString()),
             format: "yyyy-MM-dd HH:mm:ss"
           )),
-          info(icon: fluent_system_icons.FluentIcons.apps_48_regular, title: "导出 APP", value: importMap["info"]["export_app"]),
-          info(icon: fluent_system_icons.FluentIcons.apps_add_in_28_regular, title: "导出 APP 版本", value: importMap["info"]["export_app_version"]),
-          info(icon: fluent_system_icons.FluentIcons.app_generic_48_regular, title: "SRGF 版本", value: importMap["info"]["srgf_version"]),
+          info(title: "导出 APP", value: importMap["info"]["export_app"]),
+          info(title: "导出 APP 版本", value: importMap["info"]["export_app_version"]),
+          info(title: "SRGF 版本", value: importMap["info"]["srgf_version"]),
         ],
       ),
       actions: [
