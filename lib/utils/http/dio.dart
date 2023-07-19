@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-09 09:45:53
-/// LastEditTime: 2023-07-11 04:27:58
+/// LastEditTime: 2023-07-20 03:32:53
 /// FilePath: /lib/utils/http/dio.dart
 /// ===========================================================================
 
@@ -10,7 +10,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 
 // ignore: constant_identifier_names
 enum Method { GET, POST, PUT, DELETE, OPTIONS, HEAD, PATCH }
-enum Status { networkError, responseError, unkownError, warpCacheEmpty, cancelDownload }
+enum Status { networkError, responseError, unkownError, warpUserInputError, warpCacheEmpty, cancelDownload }
 enum FailType { mhu, srcat, dio }
 
 const methodValues = {
@@ -28,6 +28,7 @@ const statusCode = {
   Status.responseError: 10002,
   Status.unkownError: 10003,
   Status.warpCacheEmpty: 10010,
+  Status.warpUserInputError: 10012,
   Status.cancelDownload: 20001
 };
 

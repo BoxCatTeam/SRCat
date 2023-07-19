@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-07 00:33:35
-/// LastEditTime: 2023-06-07 20:53:46
+/// LastEditTime: 2023-07-20 03:54:36
 /// FilePath: /lib/pages/app/tools/warp.dart
 /// ===========================================================================
 
@@ -52,6 +52,7 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
   late final Map<GachaWarpType, dynamic> _gachaLog = {};
   final _stateKey = GlobalKey<NavigatorState>();
   bool _hasOldDatabase = false;
+  String _userGachaLogLink = "";
 
   @override
   void initState() {
@@ -165,11 +166,11 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
           text: const Text("网页缓存刷新"),
           onPressed: () async => _refreshGachaLog()
         ),
-        /*MenuFlyoutItem(
-          leading: const SCIcon(FluentIcons.link12, size: 16, weight: FontWeight.w600),
+        MenuFlyoutItem(
+          leading: const SRCatIcon(FluentIcons.link12, size: 16, weight: FontWeight.w600),
           text: const Text("手动输入链接刷新"),
-          onPressed: () {}
-        ),*/
+          onPressed: () async => _refreshGachaLogFromLink()
+        ),
       ],
     );
 
@@ -272,6 +273,7 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
     // 角色 UP / Character UP
     Widget characterUP = WarpRecordPanel(
       title: "角色活动",
+      height: 220,
       data: _gachaLog[GachaWarpType.character],
       type: GachaWarpType.character,
       gachaPool: _gachaPool,
@@ -486,12 +488,12 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
 
   /// 刷新数据
   void _refreshGachaLog() async {
-    int uid = await SRCatWarpUpdateLib.init(GachaGetType.cache);
+    Map<String, dynamic> udata = await SRCatWarpUpdateLib.init(GachaGetType.cache);
     _warpUsers = await SRCatWarpDatabaseLib.allWarpUser();
     _loadStatus = true;
-    if (_warpUsers.isNotEmpty && uid != 0) {
+    if (_warpUsers.isNotEmpty && udata["refreshUID"] != 0) {
       await Future.delayed(const Duration(seconds: 1));
-      Application.router.push("/tools/warp?uid=$uid");
+      Application.router.push("/tools/warp?uid=${udata["refreshUID"]}");
     } else {
       ref.read(globalDialogRiverpod).set("提示", titleSize: 20,
         child: const Text("跃迁数据刷新失败，可能是链接已失效，请尝试进入游戏内重新获取。"),
@@ -504,6 +506,63 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
         ]
       ).show();
     }
+  }
+
+  // 从用户输入的链接获取跃迁数据
+  void _refreshGachaLogFromLink() async {
+    _userGachaLogLink = "";
+
+    void showErr(String? message) {
+      ref.read(globalDialogRiverpod).set("出现错误", titleSize: 20,
+        child: Text(message ?? ""),
+        actions: <Widget>[
+          FilledButton(child: const Text("重新输入链接"), onPressed: () async {
+            ref.read(globalDialogRiverpod).hidden();
+            await Future.delayed(const Duration(milliseconds: 200));
+            ref.read(globalDialogRiverpod).clean();
+            await Future.delayed(const Duration(milliseconds: 10));
+            _refreshGachaLogFromLink();
+          })
+        ]
+      ).show();
+    }
+    
+    ref.read(globalDialogRiverpod).set("输入链接",
+      titleSize: 20,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextBox(
+            minLines: 1,
+            maxLines: 10,
+            placeholder: "请输入跃迁记录 Url",
+            onChanged: (value) {
+              _userGachaLogLink = value;
+              setState(() {});
+            }
+          )
+        ],
+      ),
+      actions: <Widget>[
+        FilledButton(child: const Text("确定"), onPressed: () async {
+          ref.read(globalDialogRiverpod).hidden();
+          Map<String, dynamic> udata = await SRCatWarpUpdateLib.init(GachaGetType.url, userInptLink: _userGachaLogLink);
+          if (udata["hasError"] == true) {
+            showErr(udata["errorMsg"]);
+          } else {
+            await Future.delayed(const Duration(seconds: 1));
+            Application.router.push("/tools/warp?uid=${udata["refreshUID"]}");
+          }
+        }),
+        Button(child: const Text("取消"), onPressed: () async {
+          _userGachaLogLink = "";
+          ref.read(globalDialogRiverpod).hidden();
+          await Future.delayed(const Duration(milliseconds: 200));
+          ref.read(globalDialogRiverpod).clean();
+        })
+      ]
+    ).show();
   }
 
   /// SToken 刷新数据

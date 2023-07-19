@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-09 10:13:07
-/// LastEditTime: 2023-05-28 05:12:15
+/// LastEditTime: 2023-07-20 03:58:44
 /// FilePath: /lib/libs/srcat/warp/update.dart
 /// ===========================================================================
 // ignore_for_file: use_build_context_synchronously
@@ -20,14 +20,18 @@ import 'main.dart';
 
 class SRCatWarpUpdateLib {
   static int _refreshUID = 0;
+  static bool _hasError = false;
+  static String _errorMsg = "";
   static late GachaGetType gachaGetType;
   static ProviderContainer provider = Application.globalProviderScope;
   static Map<String, dynamic>? _stokenData = {};
+  static String _userInptLink = "";
 
   /// 入口
-  static Future<int> init(GachaGetType type, { Map<String, dynamic>? stokenData }) async {
+  static Future<Map<String, dynamic>> init(GachaGetType type, { Map<String, dynamic>? stokenData, String? userInptLink }) async {
     gachaGetType = type;
     _stokenData = stokenData;
+    _userInptLink = userInptLink ?? "";
     provider.read(globalDialogRiverpod).set("提示", child: const Text("获取数据中..."), cacheActions: false, actions: null).show();
     await Future.delayed(const Duration(milliseconds: 100));
     await _character();
@@ -42,7 +46,11 @@ class SRCatWarpUpdateLib {
     await Future.delayed(const Duration(milliseconds: 200));
     provider.read(globalDialogRiverpod).clean();
 
-    return _refreshUID;
+    return {
+      "refreshUID": _refreshUID,
+      "hasError": _hasError,
+      "errorMsg": _errorMsg,
+    };
   }
 
   /// 判断数据库中是否包含相同抽卡记录
@@ -79,12 +87,15 @@ class SRCatWarpUpdateLib {
     GachaWarpType warpType = GachaWarpType.character
   }) async {
     int page = 1;
-    int size = 10;
+    int size = 20;
     bool isEnd = false;
     int uid = 0;
     int endId = 0;
     List<dynamic> firstData = [];
     bool firstSame = false;
+
+    /// 有错误直接终止
+    if (_hasError) return;
 
     /// 从数据库中获取所有用户
     List<Map<String, dynamic>> allUser = await SRCatWarpDatabaseLib.allWarpUser();
@@ -93,6 +104,7 @@ class SRCatWarpUpdateLib {
     await SRCatWarpLib.getGachaData(
       type: gachaGetType,
       stokenData: _stokenData,
+      userInptLink: _userInptLink,
       success: (response, data) async {
         if (data is Map<String, dynamic>) {
           if (data["retcode"] != 0) {
@@ -111,7 +123,10 @@ class SRCatWarpUpdateLib {
           isEnd = true;
         }
       },
-      fail: (code, message, failType, dioError) {},
+      fail: (code, message, failType, dioError) {
+        _hasError = true;
+        _errorMsg = message;
+      },
       page: page,
       size: size,
       endId: endId,
@@ -180,6 +195,7 @@ class SRCatWarpUpdateLib {
       await SRCatWarpLib.getGachaData(
         type: gachaGetType,
         stokenData: _stokenData,
+        userInptLink: _userInptLink,
         success: (response, data) async {
           if (data is Map<String, dynamic>) {
             if (data["data"].isEmpty) return;
