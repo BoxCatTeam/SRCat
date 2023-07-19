@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-07-20 00:59:14
-/// LastEditTime: 2023-07-20 01:25:14
+/// LastEditTime: 2023-07-20 05:36:56
 /// FilePath: /lib/libs/hoyolab/qrcode.dart
 /// ===========================================================================
 
@@ -13,6 +13,7 @@ import 'package:srcat/application.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:srcat/config/hoyolab.dart';
 import 'package:srcat/riverpod/global/dialog.dart';
+import 'package:srcat/riverpod/global/theme.dart';
 import 'package:srcat/utils/http/dio.dart';
 
 class HoYoLabQRCodeLib {
@@ -131,6 +132,20 @@ class HoYoLabQRCodeLib {
       }
     ));
 
+    final String theme = Application.globalProviderScope.read(themeRiverpod)["theme"];
+    bool isDark = false;
+    if (theme == "auto") {
+      isDark = MediaQuery.of(Application.rootNavigatorKey.currentContext!).platformBrightness == Brightness.dark;
+    } else if (theme == "dark") {
+      isDark = true;
+    } else {
+      isDark = false;
+    }
+    
+    Color color = isDark ?
+      Colors.white.withOpacity(0.8)
+      : Colors.black.withOpacity(0.8);
+
     Application.globalProviderScope.read(globalDialogRiverpod).set(
       "二维码登录",
       child: ConstrainedBox(
@@ -144,8 +159,8 @@ class HoYoLabQRCodeLib {
               QrImageView(
                 data: url,
                 version: QrVersions.auto,
-                eyeStyle: QrEyeStyle(color: Colors.white.withOpacity(0.8)),
-                dataModuleStyle: QrDataModuleStyle(dataModuleShape: QrDataModuleShape.circle, color: Colors.white.withOpacity(0.8)),
+                eyeStyle: QrEyeStyle(color: color),
+                dataModuleStyle: QrDataModuleStyle(dataModuleShape: QrDataModuleShape.circle, color: color),
                 size: 200.0,
               ),
               (scanned || expired) ? Positioned(
@@ -158,13 +173,13 @@ class HoYoLabQRCodeLib {
                   child: Container(
                     width: double.infinity,
                     height: double.infinity,
-                    color: Colors.white.withOpacity(0.6),
+                    color: isDark ? Colors.white.withOpacity(0.6) : Colors.black.withOpacity(0.6),
                     child: Center(
                       child: Text((() {
                         if (scanned) return "已扫描";
                         if (expired) return "已过期";
                         return "";
-                      })(), style: const TextStyle(color: Colors.black, fontSize: 40)),
+                      })(), style: TextStyle(color: isDark ? Colors.black : Colors.white, fontSize: 40)),
                     ),
                   )
                 )
