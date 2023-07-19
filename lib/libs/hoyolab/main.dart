@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-25 12:59:12
-/// LastEditTime: 2023-07-20 02:58:14
+/// LastEditTime: 2023-07-20 03:17:48
 /// FilePath: /lib/libs/hoyolab/main.dart
 /// ===========================================================================
 
@@ -58,7 +58,7 @@ class HoYoLabLib {
   }
 
   /// 通过 uid 与 stoken 获取 v2 Stoken
-  static Future<Map<String, String>?> getV2StokenBySToekn({
+  static Future<Map<String, String>?> getV2StokenBySToken({
     required String v1Stoken,
     required String v1Uid
   }) async {

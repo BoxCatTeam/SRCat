@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-25 01:23:45
-/// LastEditTime: 2023-07-20 03:05:50
+/// LastEditTime: 2023-07-20 03:17:58
 /// FilePath: /lib/libs/user/main.dart
 /// ===========================================================================
 
@@ -192,7 +192,7 @@ class SRCatMHYUserLib {
       return false;
     }
 
-    Map<String, String>? v2Stoken = await HoYoLabLib.getV2StokenBySToekn(v1Stoken: muiltToken["stoken"].toString(), v1Uid: loginUid);
+    Map<String, String>? v2Stoken = await HoYoLabLib.getV2StokenBySToken(v1Stoken: muiltToken["stoken"].toString(), v1Uid: loginUid);
     
     if (v2Stoken == null) {
       errDialog();
