@@ -189,7 +189,7 @@ class SRCatDownloadPageUtilsLib {
     required String hash,
     required String path,
     required bool isUpdate
-  }) {
+  }) async {
     if (!isUpdate) {
       SRCatMetadataDatabaseLib.saveFileInfo(
         id: id,
@@ -199,13 +199,24 @@ class SRCatDownloadPageUtilsLib {
         path: path
       );
     } else {
-      SRCatMetadataDatabaseLib.updateFileInfo(
-        id: id,
-        name: name,
-        parent: parent,
-        hash: hash,
-        path: path
-      );
+      List<Map<String, dynamic>> fileInfo = await SRCatMetadataDatabaseLib.getFileInfo(id: id);
+      if (fileInfo.isEmpty) {
+        SRCatMetadataDatabaseLib.saveFileInfo(
+          id: id,
+          name: name,
+          parent: parent,
+          hash: hash,
+          path: path
+        );
+      } else {
+        SRCatMetadataDatabaseLib.updateFileInfo(
+          id: id,
+          name: name,
+          parent: parent,
+          hash: hash,
+          path: path
+        );
+      }
     }
   }
 
@@ -216,7 +227,7 @@ class SRCatDownloadPageUtilsLib {
     required String hash,
     required String path,
     required bool isUpdate
-  }) {
+  }) async {
     if (!isUpdate) {
       SRCatMetadataDatabaseLib.saveImageInfo(
         id: id,
@@ -226,13 +237,24 @@ class SRCatDownloadPageUtilsLib {
         path: path
       );
     } else {
-      SRCatMetadataDatabaseLib.updateImageInfo(
-        id: id,
-        name: name,
-        parent: parent,
-        hash: hash,
-        path: path
-      );
+      List<Map<String, dynamic>> imageInfo = await SRCatMetadataDatabaseLib.getImageInfo(id: id);
+      if (imageInfo.isEmpty) {
+        SRCatMetadataDatabaseLib.saveImageInfo(
+          id: id,
+          name: name,
+          parent: parent,
+          hash: hash,
+          path: path
+        );
+      } else {
+        SRCatMetadataDatabaseLib.updateImageInfo(
+          id: id,
+          name: name,
+          parent: parent,
+          hash: hash,
+          path: path
+        );
+      }
     }
   }
 }
