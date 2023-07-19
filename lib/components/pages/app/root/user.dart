@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-24 11:31:38
-/// LastEditTime: 2023-06-07 21:30:08
+/// LastEditTime: 2023-07-11 04:45:56
 /// FilePath: /lib/components/pages/app/root/user.dart
 /// ===========================================================================
 
@@ -112,9 +112,9 @@ class AppUserWidget extends PaneItem {
       children: <Widget>[
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: Text("登录"),
+          child: Text("登录 | 米游社[CN]"),
         ),
-        SRCatCard(
+        /*SRCatCard(
           small: true,
           backgroundClear: true,
           icon: FluentIcons.globe,
@@ -126,8 +126,18 @@ class AppUserWidget extends PaneItem {
             Application.router.pop();
           },
           rightChild: const SRCatIcon(FluentIcons.chevron_right_small, size: 10),
-        ),
+        ),*/
         SRCatCard(
+          small: true,
+          backgroundClear: true,
+          icon: FluentIcons.q_r_code,
+          iconSize: 15,
+          iconWeight: FontWeight.w400,
+          title: "二维码登录",
+          onTap: () => SRCatMHYUserLib.qrcodeLogin(),
+          rightChild: const SRCatIcon(FluentIcons.chevron_right_small, size: 10),
+        ),
+        /*SRCatCard(
           small: true,
           backgroundClear: true,
           icon: FluentIcons.edit,
@@ -135,7 +145,7 @@ class AppUserWidget extends PaneItem {
           title: "Cookie 登录",
           onTap: () => SRCatMHYUserLib.cookieLogin(),
           rightChild: const SRCatIcon(FluentIcons.chevron_right_small, size: 10),
-        ),
+        ),*/
         SRCatCard(
           small: true,
           backgroundClear: true,

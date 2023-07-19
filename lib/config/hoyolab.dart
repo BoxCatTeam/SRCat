@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-25 10:37:05
-/// LastEditTime: 2023-05-29 19:23:47
+/// LastEditTime: 2023-07-20 01:43:00
 /// FilePath: /lib/config/hoyolab.dart
 /// ===========================================================================
 
@@ -40,6 +40,8 @@ class HoYoLabConfig {
   static String generateAuthKey = "$takumiAuthApi/genAuthKey";
   static String generateBindingAuthKey = "$takumiBindingApi/genAuthKey";
   static String generateAccountAuthKey = "$takumiAccountApi/genAuthKey";
+  /// 使用 GameToken 获取 SToken
+  static String getSTokenByGameToken = "$takumiBaseApi/account/ma-cn-session/app/getTokenByGameToken";
 
   /// 获取用户角色信息
   static String stokenGetRoles = "$takumiBindingApi/getUserGameRolesByStoken";
@@ -59,6 +61,9 @@ class HoYoLabConfig {
   static String authKeyGetGachaLogApi = "$hkrpgGachaInfoApi/getGachaLog";
 
   static String hoyolabLoginPageUrl = "https://user.mihoyo.com/#/login/password";
+
+  static String hk4eSdkQRCodeFetch = "https://hk4e-sdk.mihoyo.com/hk4e_cn/combo/panda/qrcode/fetch";
+  static String hk4eSdkQRCodeQuery = "https://hk4e-sdk.mihoyo.com/hk4e_cn/combo/panda/qrcode/query";
 
   /// ====================================================================================================
   static String xrpcVersion = "2.50.1";

@@ -58,6 +58,12 @@ class SRCatUtils {
     return uuid.v5(Uuid.NAMESPACE_URL, value);
   }
 
+  /// 生成 UUID v4
+  static String getUUIDv4() {
+    Uuid uuid = const Uuid();
+    return uuid.v4();
+  }
+
   /// 字符串版本号转为数字版本号
   static int getVersionNumber(String version) {
     List versionCells = version.split('.');

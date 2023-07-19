@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-25 12:59:12
-/// LastEditTime: 2023-05-28 04:55:30
+/// LastEditTime: 2023-07-20 02:58:14
 /// FilePath: /lib/libs/hoyolab/main.dart
 /// ===========================================================================
 
@@ -161,5 +161,103 @@ class HoYoLabLib {
     }
 
     return cookieToken;
+  }
+
+  /// 使用 GameToken 获取 SToken
+  static Future<Map<String, String>?> getStokenByGameToken({
+    required String aid,
+    required String gameToken,
+    required String deviceId
+  }) async {
+    String api = HoYoLabConfig.getSTokenByGameToken;
+
+    String newDeviceId = SRCatUtils.getUUIDv5(aid);
+    Map<String, dynamic> headers = {
+      "x-rpc-app_id": HoYoLabConfig.xrpc2Headers(newDeviceId)["x-rpc-app_id"]
+    };
+
+    Map<String, dynamic> jsonData = {
+      "account_id": int.parse(aid),
+      "game_token": gameToken
+    };
+
+    String v2SToken = "";
+    String mid = "";
+
+    await SCDioUtils.request(
+      uri: Uri.parse(api),
+      method: Method.POST,
+      headers: headers,
+      params: jsonData,
+      success: (response, data) {
+        if (data["retcode"] != null && data["retcode"] != 0) {
+          return null;
+        } else if (data["data"] is Map<String, dynamic>) {
+          v2SToken = data["data"]["token"]["token"].toString();
+          mid = data["data"]["user_info"]["mid"].toString();
+        }
+      },
+      fail: (code, message, failType, dioError) {
+        return null;
+      }
+    );
+
+    if (v2SToken.isEmpty || aid.isEmpty || mid.isEmpty) {
+      return null;
+    }
+
+    return {
+      "token": v2SToken,
+      "aid": aid,
+      "mid": mid,
+      "deviceId": newDeviceId
+    };
+  }
+
+  /// 使用 SToken 获取 LToken
+  static Future<String?> getLtokenByStoken({
+    required String v2Stoken,
+    required String uid,
+    required String mid,
+    required String deviceId,
+  }) async {
+    String api = HoYoLabConfig.getLtokenByStoken;
+
+    HoYoLabDynamicSecretLib ds = HoYoLabDynamicSecretLib(
+      version: HoYoLabDynamicSecretVersion.v2,
+      saltType: HoYoLabDynamicSecretSaltType.prod,
+      includeChars: true
+    );
+
+    Map<String, dynamic> headers = {
+      "Cookie": "stuid=$uid;stoken=$v2Stoken;mid=$mid",
+      "DS": ds.generated(url: api, content: "stuid=$uid;stoken=$v2Stoken;mid=$mid")
+    };
+
+    headers.addAll(HoYoLabConfig.xrpc2Headers(deviceId));
+
+    String ltoken = "";
+
+    await SCDioUtils.request(
+      method: Method.GET,
+      uri: Uri.parse(api),
+      headers: headers,
+      success: (response, data) {
+        if (data["retcode"] != null && data["retcode"] != 0) {
+          return null;
+        } else if (data["data"] is Map<String, dynamic>) {
+          ltoken = data["data"]["ltoken"].toString();
+        }
+      },
+      fail: (code, message, failType, dioError) {
+        return null;
+      }
+    );
+
+    if (ltoken.isEmpty) {
+      return null;
+    }
+
+    return ltoken;
   }
 }

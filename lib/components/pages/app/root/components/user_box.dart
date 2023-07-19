@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-25 01:03:35
-/// LastEditTime: 2023-05-28 00:40:26
+/// LastEditTime: 2023-07-20 03:08:19
 /// FilePath: /lib/components/pages/app/root/components/user_box.dart
 /// ===========================================================================
 
@@ -65,12 +65,12 @@ class _AppUserBoxWidgetState extends ConsumerState<AppUserBoxWidget> {
       );
     }
 
-    return list.isEmpty ? const Text("暂无用户") : Padding(
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: widget,
+        children: list.isEmpty ? [const Text("暂无用户")] : widget,
       )
     );
   }
