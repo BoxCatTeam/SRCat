@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-09 09:51:27
-/// LastEditTime: 2023-05-09 09:53:40
+/// LastEditTime: 2023-07-19 23:32:54
 /// FilePath: /lib/libs/srcat/warp/cache.dart
 /// ===========================================================================
 
@@ -24,11 +24,61 @@ class SRCatWarpCacheFileLib {
   /// 获取缓存目录
   static Future<String?> cacheFolder() async {
     String base = baseFolder();
-    String cache = "${base}StarRail_Data/webCaches/Cache/Cache_Data";
-    Directory dir = Directory(cache);
+    String baseCache = "${base}StarRail_Data/webCaches";
+    Directory baseCacheDir = Directory(baseCache);
+    // 获取 webCaches 下的所有文件夹（不包括文件）
+    Iterable<Directory> subDirectories = baseCacheDir.listSync().whereType<Directory>();
+
+    // 版本号缓存
+    List<String> versions = [];
+    for (Directory subDirectory in subDirectories) {
+      String subDirName = subDirectory.path.split('\\').last;
+
+      // 正则获取版本号
+      RegExp verRegExp = RegExp(r'([\d.]+)$');
+      RegExpMatch? match = verRegExp.firstMatch(subDirName);
+      if (match != null) {
+        versions.add(match.group(1).toString());
+      }
+    }
+
+    // 如果版本号为空则返回默认目录
+    if (versions.isEmpty) {
+      Directory defaultDir = Directory("$baseCache/Cache/Cache_Data");
+      try {
+        if (!await defaultDir.exists()) {
+          throw Exception("Not Found HSR cache folder");
+        }
+      } catch (e) {
+        if (kDebugMode) print("[MHoYFile Utils] 寻找缓存目录失败 | 错误原因: $e");
+        return null;
+      }
+
+      return defaultDir.path.toString();
+    }
+
+    String latestVersion = versions.first;
+
+    for (var i = 1; i < versions.length; i++) {
+      var version = versions[i];
+
+      var list1 = latestVersion.split('.').map(int.parse).toList();
+      var list2 = version.split('.').map(int.parse).toList();
+
+      for (var i = 0; i < list1.length; i++) {
+        if (list1[i] > list2[i]) {
+          break;
+        } else if (list1[i] < list2[i]) {
+          latestVersion = version;
+          break;
+        }
+      }
+    }
+
+    Directory currentDir = Directory("$baseCache/$latestVersion/Cache/Cache_Data");
 
     try {
-      if (!await dir.exists()) {
+      if (!await currentDir.exists()) {
         throw Exception("Not Found HSR cache folder");
       }
     } catch (e) {
@@ -36,7 +86,7 @@ class SRCatWarpCacheFileLib {
       return null;
     }
 
-    return cache;
+    return currentDir.path.toString();
   }
 
   /// 读取缓存文件
