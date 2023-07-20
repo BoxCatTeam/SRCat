@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-07 00:33:35
-/// LastEditTime: 2023-07-21 01:27:53
+/// LastEditTime: 2023-07-21 02:53:44
 /// FilePath: /lib/pages/app/tools/warp.dart
 /// ===========================================================================
 
@@ -244,54 +244,57 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
       )
     );
 
-    Widget warpSettings = dorpDownButton(
-      icon: FluentIcons.settings,
-      items: [
-        MenuFlyoutItem(
-          leading: _fullRefreshGachaLog == "false" ? const SizedBox(
-            width: 16,
-            height: 16,
-          ) : const SRCatIcon(
-            FluentIcons.accept_medium,
-            size: 16,
-            weight: FontWeight.w600
-          ),
-          text: const Text("全量刷新跃迁数据"),
-          onPressed: () async {
-            if (_fullRefreshGachaLog == "false") {
-              await SRCatSettingsDatabaseLib.save(option: SRCatSettingsDatabaseKey.fullRefreshGachaLog, value: "true");
-              _fullRefreshGachaLog = "true";
-            } else if (_fullRefreshGachaLog == "true") {
-              await SRCatSettingsDatabaseLib.save(option: SRCatSettingsDatabaseKey.fullRefreshGachaLog, value: "false");
-              _fullRefreshGachaLog = "false";
-            }
+    Widget warpSettings = Tooltip(
+      message: "设置项",
+      child: dorpDownButton(
+        icon: FluentIcons.settings,
+        items: [
+          MenuFlyoutItem(
+            leading: _fullRefreshGachaLog == "false" ? const SizedBox(
+              width: 12,
+              height: 12,
+            ) : const SRCatIcon(
+              FluentIcons.accept_medium,
+              size: 12,
+              weight: FontWeight.w600
+            ),
+            text: const Text("全量刷新跃迁数据"),
+            onPressed: () async {
+              if (_fullRefreshGachaLog == "false") {
+                await SRCatSettingsDatabaseLib.save(option: SRCatSettingsDatabaseKey.fullRefreshGachaLog, value: "true");
+                _fullRefreshGachaLog = "true";
+              } else if (_fullRefreshGachaLog == "true") {
+                await SRCatSettingsDatabaseLib.save(option: SRCatSettingsDatabaseKey.fullRefreshGachaLog, value: "false");
+                _fullRefreshGachaLog = "false";
+              }
 
-            setState(() {});
-          }
-        ),
-        MenuFlyoutItem(
-          leading: _showStarterGachaLog == "false" ? const SizedBox(
-            width: 16,
-            height: 16,
-          ) : const SRCatIcon(
-            FluentIcons.accept_medium,
-            size: 16,
-            weight: FontWeight.w600
-          ),
-          text: const Text("显示始发跃迁数据"),
-          onPressed: () async {
-            if (_showStarterGachaLog == "false") {
-              await SRCatSettingsDatabaseLib.save(option: SRCatSettingsDatabaseKey.showStarterGachaLog, value: "true");
-              _showStarterGachaLog = "true";
-            } else if (_showStarterGachaLog == "true") {
-              await SRCatSettingsDatabaseLib.save(option: SRCatSettingsDatabaseKey.showStarterGachaLog, value: "false");
-              _showStarterGachaLog = "false";
+              setState(() {});
             }
+          ),
+          MenuFlyoutItem(
+            leading: _showStarterGachaLog == "false" ? const SizedBox(
+              width: 12,
+              height: 12,
+            ) : const SRCatIcon(
+              FluentIcons.accept_medium,
+              size: 12,
+              weight: FontWeight.w600
+            ),
+            text: const Text("显示始发跃迁数据"),
+            onPressed: () async {
+              if (_showStarterGachaLog == "false") {
+                await SRCatSettingsDatabaseLib.save(option: SRCatSettingsDatabaseKey.showStarterGachaLog, value: "true");
+                _showStarterGachaLog = "true";
+              } else if (_showStarterGachaLog == "true") {
+                await SRCatSettingsDatabaseLib.save(option: SRCatSettingsDatabaseKey.showStarterGachaLog, value: "false");
+                _showStarterGachaLog = "false";
+              }
 
-            setState(() {});
-          }
-        ),
-      ]
+              setState(() {});
+            }
+          ),
+        ]
+      )
     );
 
     return SizedBox(
