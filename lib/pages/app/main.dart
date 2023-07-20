@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-07 00:24:49
-/// LastEditTime: 2023-06-07 20:58:36
+/// LastEditTime: 2023-07-21 02:20:26
 /// FilePath: /lib/pages/app/main.dart
 /// ===========================================================================
 
@@ -196,22 +196,27 @@ class _AppPageState extends ConsumerState<AppPage> with WindowListener {
     String nowSelectUser = ref.watch(globalUserManagerRiverpod).nowSelectUser;
     List<Map<String, dynamic>> userList =ref.watch(globalUserManagerRiverpod).userList;
     int nowRoleUid = ref.watch(globalUserManagerRiverpod).nowRoleUid;
-    for (Map<String, dynamic> user in userList) {
-      if(user["id"] == nowSelectUser) {
-        nickname = user["nickname"].toString();
-        if (user["avatar"] != null) {
-          avatar = user["avatar"].toString();
-        }
-        if (user["role"] != null) {
-          for (Map<String, dynamic> role in user["role"].cast<Map<String, dynamic>>()) {
-            if (nowRoleUid.toString() == role["game_uid"].toString()) {
-              roleUid = role["game_uid"].toString();
-              break;
+    if (userList.isNotEmpty) {
+      for (Map<String, dynamic> user in userList) {
+        if(user["id"] == nowSelectUser) {
+          nickname = user["nickname"].toString();
+          if (user["avatar"] != null) {
+            avatar = user["avatar"].toString();
+          }
+          if (user["role"] != null) {
+            for (Map<String, dynamic> role in user["role"].cast<Map<String, dynamic>>()) {
+              if (nowRoleUid.toString() == role["game_uid"].toString()) {
+                roleUid = role["game_uid"].toString();
+                break;
+              }
             }
           }
+          break;
         }
-        break;
       }
+    } else {
+      nickname = "暂无用户";
+      roleUid = "(´･ω･`)?";
     }
 
     List<NavigationPaneItem> webviewItem = [];
