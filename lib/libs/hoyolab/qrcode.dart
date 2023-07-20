@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-07-20 00:59:14
-/// LastEditTime: 2023-07-20 05:36:56
+/// LastEditTime: 2023-07-21 02:14:23
 /// FilePath: /lib/libs/hoyolab/qrcode.dart
 /// ===========================================================================
 
@@ -90,10 +90,25 @@ class HoYoLabQRCodeLib {
               } else if (status == "confirmed") {
                 timer.cancel();
                 if (onConfirmed != null) {
+                  String extData;
                   Map<String, dynamic> rawData = json.decode(data["data"]["payload"]["raw"]);
+                  if (data["data"]["payload"]["ext"] != "") {
+                    extData = data["data"]["payload"]["ext"].toString().replaceAll("\"dispatch\":", "\"dispatch\":null");
+                  } else {
+                    extData = "{}";
+                  }
+                  Map<String, dynamic> rawExtData = json.decode(extData);
+                  String? uid, gameToken;
+                  if (data["data"]["payload"]["ext"] == "") {
+                    uid = rawData["uid"].toString();
+                    gameToken = rawData["token"].toString();
+                  } else if (rawExtData["data"] != null) {
+                    uid = rawExtData["data"]["accountID"].toString();
+                    gameToken = rawData["open_token"].toString();
+                  }
                   onConfirmed!(
-                    rawData["uid"].toString(),
-                    rawData["token"].toString()
+                    uid!,
+                    gameToken!
                   );
                 }
               }
