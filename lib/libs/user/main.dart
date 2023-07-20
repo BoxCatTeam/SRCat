@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-25 01:23:45
-/// LastEditTime: 2023-07-20 03:17:58
+/// LastEditTime: 2023-07-21 01:43:21
 /// FilePath: /lib/libs/user/main.dart
 /// ===========================================================================
 
@@ -297,8 +297,6 @@ class SRCatMHYUserLib {
 
   // 二维码方式登录
   static Future<void> qrcodeLogin() async {
-    
-
     String deviceId = SRCatUtils.getUUIDv4();
     HoYoLabQRCodeLib qrcodeLib = HoYoLabQRCodeLib();
     qrcodeLib.setDeviceId(deviceId);
@@ -315,7 +313,7 @@ class SRCatMHYUserLib {
       ).show();
 
       // 将 GameToken 转换为 SToken
-      Map<String, String>? stoken = await HoYoLabLib.getStokenByGameToken(aid: "284769672", gameToken: "f3juSnanjHcF3eaOZRKbg1LaC5HDr8Gr", deviceId: deviceId);
+      Map<String, String>? stoken = await HoYoLabLib.getStokenByGameToken(aid: uid, gameToken: gameToken, deviceId: deviceId);
       if (stoken == null) {
         return;
       }
