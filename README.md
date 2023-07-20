@@ -1,3 +1,9 @@
+<!--
+ * Copyright (c) 2020-2023, BoxCat. All rights reserved.
+ * @Date: 2023-05-18 11:14:49
+ * @LastEditTime: 2023-07-21 03:01:33
+ * @FilePath: /README.md
+-->
 <div align="center"><img src="github-assets/images/app_icon.png" width="80" height="80"></div>
 <h1 align="center" size="80">SRCat</h1>
 <p align="center">崩坏：星穹铁道 - 工具箱 / 愿此行，有猫猫一直相伴</p>
@@ -20,10 +26,9 @@
 - [x] 游戏启动器
     - [x] 帧率解锁
     - [x] 多账号切换
-- [ ] 跃迁记录
+- [x] 跃迁记录
     - [x] 多账号支持
     - [x] 数据导入/导出 (请注意：导入的数据需要严格遵循 [SRGF](https://uigf.org/zh/standards/SRGF.html) 才能正常导入)
-    - [ ] 以 `代理模式`、`SToken` 刷新跃迁记录
     - [x] 保底计算
     - [x] 光锥基本数据补全
 - [ ] 自助查询/游戏数据统计
@@ -35,7 +40,7 @@
     - [ ] 开拓力获取/消耗记录 (四星或以上)
 - [ ] 游戏公告
 - [ ] 游戏截图查看
-- [ ] 用户登录/角色获取
+- [x] 用户登录/角色获取
 - [ ] 设置
     - [x] 主题
     - [ ] 多语言支持
