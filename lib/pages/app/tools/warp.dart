@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-07 00:33:35
-/// LastEditTime: 2023-07-20 03:54:36
+/// LastEditTime: 2023-07-21 01:03:36
 /// FilePath: /lib/pages/app/tools/warp.dart
 /// ===========================================================================
 
@@ -13,6 +13,7 @@ import 'package:srcat/components/global/card/item.dart';
 import 'package:srcat/components/global/icon/main.dart';
 import 'package:srcat/components/global/scroll/page.dart';
 import 'package:srcat/components/pages/app/tools/warp/record_panel.dart';
+import 'package:srcat/libs/srcat/settings/main.dart';
 //import 'package:srcat/libs/hoyolab/authkey.dart';
 import 'package:srcat/libs/srcat/warp/data.dart';
 import 'package:srcat/libs/srcat/warp/import.dart';
@@ -53,6 +54,8 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
   final _stateKey = GlobalKey<NavigatorState>();
   bool _hasOldDatabase = false;
   String _userGachaLogLink = "";
+  String _fullRefreshGachaLog = "false";
+  String _showStarterGachaLog = "false";
 
   @override
   void initState() {
@@ -108,6 +111,9 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
       if (gachaPool != null) {
         _gachaPool = gachaPool;
       }
+
+      _fullRefreshGachaLog = (await SRCatSettingsDatabaseLib.get(option: SRCatSettingsDatabaseKey.fullRefreshGachaLog, defaultValue: "false"))!;
+      _showStarterGachaLog = (await SRCatSettingsDatabaseLib.get(option: SRCatSettingsDatabaseKey.showStarterGachaLog, defaultValue: "false"))!;
 
       await Future.delayed(const Duration(milliseconds: 500));
       _loadGachaLog = true;
@@ -238,6 +244,56 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
       )
     );
 
+    Widget warpSettings = dorpDownButton(
+      icon: FluentIcons.settings,
+      items: [
+        MenuFlyoutItem(
+          leading: _fullRefreshGachaLog == "false" ? const SizedBox(
+            width: 16,
+            height: 16,
+          ) : const SRCatIcon(
+            FluentIcons.accept_medium,
+            size: 16,
+            weight: FontWeight.w600
+          ),
+          text: const Text("全量刷新跃迁数据"),
+          onPressed: () async {
+            if (_fullRefreshGachaLog == "false") {
+              await SRCatSettingsDatabaseLib.save(option: SRCatSettingsDatabaseKey.fullRefreshGachaLog, value: "true");
+              _fullRefreshGachaLog = "true";
+            } else if (_fullRefreshGachaLog == "true") {
+              await SRCatSettingsDatabaseLib.save(option: SRCatSettingsDatabaseKey.fullRefreshGachaLog, value: "false");
+              _fullRefreshGachaLog = "false";
+            }
+
+            setState(() {});
+          }
+        ),
+        MenuFlyoutItem(
+          leading: _showStarterGachaLog == "false" ? const SizedBox(
+            width: 16,
+            height: 16,
+          ) : const SRCatIcon(
+            FluentIcons.accept_medium,
+            size: 16,
+            weight: FontWeight.w600
+          ),
+          text: const Text("显示始发跃迁数据"),
+          onPressed: () async {
+            if (_showStarterGachaLog == "false") {
+              await SRCatSettingsDatabaseLib.save(option: SRCatSettingsDatabaseKey.showStarterGachaLog, value: "true");
+              _showStarterGachaLog = "true";
+            } else if (_showStarterGachaLog == "true") {
+              await SRCatSettingsDatabaseLib.save(option: SRCatSettingsDatabaseKey.showStarterGachaLog, value: "false");
+              _showStarterGachaLog = "false";
+            }
+
+            setState(() {});
+          }
+        ),
+      ]
+    );
+
     return SizedBox(
       height: 50,
       child: Card(
@@ -253,7 +309,9 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
             const SizedBox(width: 8),
             divider,
             const SizedBox(width: 2),
-            deleteButton
+            deleteButton,
+            const SizedBox(width: 2),
+            warpSettings
           ],
         ),
       )
@@ -308,7 +366,7 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
           const SizedBox(height: 15),
           regular,
           const SizedBox(height: 15),
-          starter
+          _showStarterGachaLog == "true" ? starter : Container()
         ],
       )
     );
@@ -488,7 +546,10 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
 
   /// 刷新数据
   void _refreshGachaLog() async {
-    Map<String, dynamic> udata = await SRCatWarpUpdateLib.init(GachaGetType.cache);
+    Map<String, dynamic> udata = await SRCatWarpUpdateLib.init(
+      GachaGetType.cache,
+      fullRefreshGachaLog: _fullRefreshGachaLog == "true" ? true : false
+    );
     _warpUsers = await SRCatWarpDatabaseLib.allWarpUser();
     _loadStatus = true;
     if (_warpUsers.isNotEmpty && udata["refreshUID"] != 0) {
@@ -547,7 +608,11 @@ class _ToolsWarpPageState extends ConsumerState<ToolsWarpPage> {
       actions: <Widget>[
         FilledButton(child: const Text("确定"), onPressed: () async {
           ref.read(globalDialogRiverpod).hidden();
-          Map<String, dynamic> udata = await SRCatWarpUpdateLib.init(GachaGetType.url, userInptLink: _userGachaLogLink);
+          Map<String, dynamic> udata = await SRCatWarpUpdateLib.init(
+            GachaGetType.url,
+            userInptLink: _userGachaLogLink,
+            fullRefreshGachaLog: _fullRefreshGachaLog == "true" ? true : false
+          );
           if (udata["hasError"] == true) {
             showErr(udata["errorMsg"]);
           } else {

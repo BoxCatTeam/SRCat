@@ -21,6 +21,8 @@ class SRCatDatabaseConfig {
   static String userdataGameAccountsTable = "game_accounts";
   /// 用户账号
   static String userdataUserAccountsTable = "user_accounts";
+  /// 用户设置项
+  static String userdataSettingsTable = "settings";
   
   /* ==================== 元数据数据库 - 表 ==================== */
   /// 版本历史

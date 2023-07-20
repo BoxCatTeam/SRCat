@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-08 23:30:14
-/// LastEditTime: 2023-05-27 19:08:52
+/// LastEditTime: 2023-07-21 00:40:29
 /// FilePath: /lib/utils/storage/sqlite.dart
 /// ===========================================================================
 
@@ -66,6 +66,12 @@ class SRCatSQLiteUtils {
           '"cookie_token" TEXT NOT NULL default \'\''               // Cookie Token
         ');'
       );
+      await db.execute(
+        'CREATE TABLE ${SRCatDatabaseConfig.userdataSettingsTable} ('
+          '"option" TEXT NOT NULL PRIMARY KEY,'                     // 设置项键名
+          '"value" TEXT default \'\''                               // 设置项值
+        ');'
+      );
     }
 
     Future<void> onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -83,11 +89,19 @@ class SRCatSQLiteUtils {
           ');'
         );
       }
+      if ((await db.rawQuery("select * from Sqlite_master where type = 'table' and name = '${SRCatDatabaseConfig.userdataSettingsTable}'")).isEmpty) {
+        await db.execute(
+          'CREATE TABLE ${SRCatDatabaseConfig.userdataSettingsTable} ('
+            '"option" TEXT NOT NULL PRIMARY KEY,'                     // 设置项键名
+            '"value" TEXT default \'\''                               // 设置项值
+          ');'
+        );
+      }
     }
 
     Database database = await openDatabase(
       "$_base/${SRCatDatabaseConfig.userdata}",
-      version: 2,
+      version: 3,
       onCreate: (Database db, int version) => onCreate(db, version),
       onUpgrade: (Database db, int oldVersion, int newVersion) => onUpgrade(db, oldVersion, newVersion),
     );

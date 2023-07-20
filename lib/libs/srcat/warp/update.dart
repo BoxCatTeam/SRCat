@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-09 10:13:07
-/// LastEditTime: 2023-07-20 03:58:44
+/// LastEditTime: 2023-07-21 01:20:44
 /// FilePath: /lib/libs/srcat/warp/update.dart
 /// ===========================================================================
 // ignore_for_file: use_build_context_synchronously
@@ -26,12 +26,18 @@ class SRCatWarpUpdateLib {
   static ProviderContainer provider = Application.globalProviderScope;
   static Map<String, dynamic>? _stokenData = {};
   static String _userInptLink = "";
+  static bool _fullRefreshGachaLog = false;
 
   /// 入口
-  static Future<Map<String, dynamic>> init(GachaGetType type, { Map<String, dynamic>? stokenData, String? userInptLink }) async {
+  static Future<Map<String, dynamic>> init(GachaGetType type, {
+    Map<String, dynamic>? stokenData,
+    String? userInptLink,
+    bool fullRefreshGachaLog = false
+  }) async {
     gachaGetType = type;
     _stokenData = stokenData;
     _userInptLink = userInptLink ?? "";
+    _fullRefreshGachaLog = fullRefreshGachaLog;
     provider.read(globalDialogRiverpod).set("提示", child: const Text("获取数据中..."), cacheActions: false, actions: null).show();
     await Future.delayed(const Duration(milliseconds: 100));
     await _character();
@@ -176,7 +182,12 @@ class SRCatWarpUpdateLib {
       );
     }
 
-    if (firstSame) return;
+    if (firstSame) {
+      /// 如果非全量更新则跳出循环
+      if (!_fullRefreshGachaLog) {
+        return;
+      }
+    }
 
     /// 如果当前数据条数少于每页条数，则已到末页
     /// 不用继续请求
@@ -204,7 +215,13 @@ class SRCatWarpUpdateLib {
             /// 遍历列表
             for (var log in list) {
               if (await _isSameData(uid, warpType, int.parse(log["id"]))) {
-                if (kDebugMode) print("while:存在相同的记录，跳过插入。");
+                if (_fullRefreshGachaLog) {
+                  if (kDebugMode) print("while:存在相同的记录，跳过插入。");
+                } else {
+                  isEnd = true;
+                  if (kDebugMode) print("while:存在相同的记录，不再继续获取记录（增量更新）。");
+                  return;
+                }
                 break;
               }
 
