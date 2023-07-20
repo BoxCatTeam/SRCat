@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-25 01:23:45
-/// LastEditTime: 2023-07-21 01:43:21
+/// LastEditTime: 2023-07-21 02:38:59
 /// FilePath: /lib/libs/user/main.dart
 /// ===========================================================================
 
@@ -385,7 +385,7 @@ class SRCatMHYUserLib {
         uid: stoken["aid"].toString(),
         mid: stoken["mid"].toString(),
         deviceId: stoken["deviceId"].toString()
-      ).then((userinfo) {
+      ).then((userinfo) async {
         if (userinfo == null) {
           return false;
         }
@@ -396,19 +396,25 @@ class SRCatMHYUserLib {
           avatar: userinfo["avatar"].toString()
         );
 
-        // 异步获取角色信息
-        HoYoLabGameRolesLib.stokenGetRoles(
+        // 获取角色信息
+        await HoYoLabGameRolesLib.stokenGetRoles(
           stoken: stoken["token"].toString(),
           uid: stoken["aid"].toString(),
           mid: stoken["mid"].toString(),
           deviceId: stoken["deviceId"].toString(),
           ltoken: ltoken.toString(),
-        ).then((roles) {
+        ).then((roles) async {
           if (roles != null && roles.isNotEmpty) {
             Application.globalProviderScope.read(globalUserManagerRiverpod).editUser(
               stoken["deviceId"].toString(),
               role: roles
             );
+          }
+          if (roles != null && roles.isNotEmpty) {
+            Application.globalProviderScope.read(globalUserManagerRiverpod).changeUser(stoken["deviceId"].toString());
+            await HoYoLabDatabaseLib.selectUser(stoken["deviceId"].toString());
+            await Future.delayed(const Duration(milliseconds: 50));
+            Application.globalProviderScope.read(globalUserManagerRiverpod).changeRole(int.parse(roles[0]["game_uid"].toString()));
           }
         });
       });
