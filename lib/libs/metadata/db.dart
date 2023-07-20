@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-16 12:25:48
-/// LastEditTime: 2023-05-18 05:03:45
+/// LastEditTime: 2023-07-21 03:47:21
 /// FilePath: /lib/libs/metadata/db.dart
 /// ===========================================================================
 
@@ -237,6 +237,29 @@ class SRCatMetadataDatabaseLib {
       return result;
     } catch (e) {
       return [];
+    }
+  }
+
+  /// 更新指定版本信息
+  static Future<void> updateVersion({
+    required String version,
+    required String lang,
+    required String gameVersion,
+  }) async {
+    Database database = await SRCatSQLiteUtils.metadata();
+
+    try {
+      List<Map<String, Object?>> result = await database.query(_versionTable,
+        where: "version=? and lang=? and game_version=?",
+        whereArgs: [version, lang, gameVersion]
+      );
+      if (result.isNotEmpty) {
+        await database.update(_versionTable, {
+          "last_updated": SRCatUtils.getUnixTime(),
+        }, where: "id=?", whereArgs: [result[0]["id"]]);
+      }
+    } catch (e) {
+      return;
     }
   }
 

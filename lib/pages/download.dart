@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-08 22:46:58
-/// LastEditTime: 2023-05-23 01:01:00
+/// LastEditTime: 2023-07-21 03:48:54
 /// FilePath: /lib/pages/download.dart
 /// ===========================================================================
 
@@ -14,6 +14,7 @@ import 'package:srcat/libs/srcat/download/utils.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:srcat/components/pages/download/box.dart';
 import 'package:srcat/components/pages/download/item.dart';
+import 'package:srcat/libs/srcat/splash/main.dart';
 
 import 'package:srcat/riverpod/global/theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,6 +41,8 @@ class _DownloadPageState extends ConsumerState<DownloadPage> with WindowListener
   String _gameVersion = "";
   String _lang = "";
   String _version = "";
+
+  String? _customTitle, _customSubTitle;
 
   @override
   void initState() {
@@ -145,13 +148,16 @@ class _DownloadPageState extends ConsumerState<DownloadPage> with WindowListener
       children: [
         Text(allCompleted() ?
           "下载完成" :
-          "下载列表",
+          (_customTitle != null) ? _customTitle! : "下载列表",
           style: const TextStyle(fontSize: 23)
         ),
         const SizedBox(height: 3),
         Text(allCompleted() ?
           "所有元数据已下载完成，可以开始使用啦！" :
-          widget.isUpdate != "true" ? "正在下载基本的元数据文件，请勿关闭 SRCat" : "正在更新元数据文件，请勿关闭 SRCat",
+          (() {
+            if (widget.isUpdate == "true") return "正在更新元数据文件，请勿关闭 SRCat";
+            return (_customSubTitle != null) ? _customSubTitle! : "正在下载基本的元数据文件，请勿关闭 SRCat"; 
+          })(),
           style: const TextStyle(fontSize: 16)
         ),
         const SizedBox(height: 15),
@@ -272,36 +278,64 @@ class _DownloadPageState extends ConsumerState<DownloadPage> with WindowListener
 
   /// 下载初始化
   void _initDownload() async {
-    /// 从元数据 API 中获取所有数据的索引
-    await SCDioUtils.request(
-      method: Method.GET,
-      uri: Uri.parse(SRCatAPIConfig.metadata),
-      success: (response, data) async {
-        if (data is Map<String, dynamic>) {
-          await SRCatDownloadPageUtilsLib.successParse(context, data, false);
-          
-          _gameVersion = data["game_version"];
-          _version = data["metadata_version"];
-          _lang = data["lang"];
+    /// 从数据库获取现有版本
+    List<Map<String, dynamic>> allVersion = await SRCatMetadataDatabaseLib.getVersionInfo(lang: "chs");
+    /// 为空则直接下载
+    if (allVersion.isEmpty) {
+      /// 从元数据 API 中获取所有数据的索引
+      await SCDioUtils.request(
+        method: Method.GET,
+        uri: Uri.parse(SRCatAPIConfig.metadata),
+        success: (response, data) async {
+          if (data is Map<String, dynamic>) {
+            await SRCatDownloadPageUtilsLib.successParse(context, data, false);
 
-          SRCatMetadataDatabaseLib.insertVersion(
-            version: _version,
-            lang: _lang,
-            gameVersion: _gameVersion
-          );
-        }
-      },
-      fail: (code, message, failType, dioError) {}
-    );
+            _gameVersion = data["game_version"];
+            _version = data["metadata_version"];
+            _lang = data["lang"];
+
+            SRCatMetadataDatabaseLib.insertVersion(
+              version: _version,
+              lang: _lang,
+              gameVersion: _gameVersion
+            );
+          }
+        },
+        fail: (code, message, failType, dioError) {}
+      );
+    } else {
+      _customSubTitle = "检测到元数据，正在检查差异内容并更新，请勿关闭 SRCat";
+      setState(() {});
+      await _initMetadataUpdateDownload(allVersionDB: allVersion);
+      SRCatSplashLib.loadUsers();
+    }
   }
 
   /// 更新元数据
-  void _initMetadataUpdateDownload() async {
+  Future<void> _initMetadataUpdateDownload({
+    List<Map<String, dynamic>>? allVersionDB
+  }) async {
     /// 从数据库中取出所有文件的 uuid 与 hash
     List<Map<String, dynamic>> files = await SRCatMetadataDatabaseLib.getAllFileInfo();
     List<Map<String, dynamic>> images = await SRCatMetadataDatabaseLib.getAllImagesInfo();
     List<Map<String, dynamic>> allList = [];
     allList..addAll(files)..addAll(images);
+
+    Map<String, dynamic> params = {};
+    List<Map<String, dynamic>> allVersion;
+
+    if (allVersionDB == null) {
+      allVersion = await SRCatMetadataDatabaseLib.getVersionInfo(lang: "chs");
+    } else {
+      allVersion = allVersionDB;
+    }
+    
+    if (allVersion.isNotEmpty) {
+      params.addEntries({
+        "version": allVersion[0]["version"],
+        "lang": allVersion[0]["lang"],
+      }.entries);
+    }
 
     Map<String, String> result = {};
 
@@ -311,29 +345,46 @@ class _DownloadPageState extends ConsumerState<DownloadPage> with WindowListener
       }.entries);
     }
 
+    params.addEntries({ "uuids": result }.entries);
+
     await SCDioUtils.request(
       method: Method.POST,
-      params: {
-        "uuids": result,
-      },
+      params: params,
       uri: Uri.parse(SRCatAPIConfig.metadataCheckUpdate),
       success: (response, data) async {
         if (data is Map<String, dynamic>) {
           if ((data["data"].cast<String, dynamic>() as Map<String, dynamic>).isEmpty) {
             Application.router.go("/home");
-          } else {
-            await SRCatDownloadPageUtilsLib.successParse(context, data, true);
+            return;
           }
           
           _gameVersion = data["game_version"];
           _version = data["metadata_version"];
           _lang = data["lang"];
 
-          SRCatMetadataDatabaseLib.insertVersion(
-            version: _version,
-            lang: _lang,
-            gameVersion: _gameVersion
-          );
+          if (allVersion.isNotEmpty) {
+            if (allVersion[0]["version"] != _version) {
+              SRCatMetadataDatabaseLib.insertVersion(
+                version: _version,
+                lang: _lang,
+                gameVersion: _gameVersion
+              );
+            } else {
+              SRCatMetadataDatabaseLib.updateVersion(
+                version: _version,
+                lang: _lang,
+                gameVersion: _gameVersion
+              );
+            }
+          } else {
+            SRCatMetadataDatabaseLib.insertVersion(
+              version: _version,
+              lang: _lang,
+              gameVersion: _gameVersion
+            );
+          }
+
+          await SRCatDownloadPageUtilsLib.successParse(context, data, true);
         }
       },
       fail: (code, message, failType, dioError) {}
