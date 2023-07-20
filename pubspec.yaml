@@ -2,7 +2,7 @@ name: srcat
 description: "Honkai: Star Rail Toolbox on Windows"
 publish_to: none
 
-version: 0.2.0+12
+version: 0.2.2+14
 
 environment:
   sdk: '>=2.18.0 <4.0.0'
