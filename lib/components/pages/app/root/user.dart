@@ -1,9 +1,10 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-24 11:31:38
-/// LastEditTime: 2023-07-11 04:45:56
+/// LastEditTime: 2023-08-12 10:11:07
 /// FilePath: /lib/components/pages/app/root/user.dart
 /// ===========================================================================
+// ignore_for_file: unused_element
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:srcat/application.dart';
@@ -192,7 +193,7 @@ class AppUserWidget extends PaneItem {
   }) {
     
 
-    final maybeBody = InheritedNavigationView.maybeOf(context);
+    final maybeBody = _InheritedNavigationView.maybeOf(context);
     final mode = displayMode ??
         maybeBody?.displayMode ??
         maybeBody?.pane?.displayMode ??
@@ -261,5 +262,87 @@ class AppUserWidget extends PaneItem {
         );
       }
     );
+  }
+}
+
+class _InheritedNavigationView extends InheritedWidget {
+  /// Creates an inherited navigation view.
+  const _InheritedNavigationView({
+    super.key,
+    required super.child,
+    required this.displayMode,
+    this.minimalPaneOpen = false,
+    this.pane,
+    this.previousItemIndex = 0,
+    this.currentItemIndex = -1,
+    this.isTransitioning = false,
+  });
+
+  /// The current pane display mode according to the current state.
+  final PaneDisplayMode displayMode;
+
+  /// Whether the minimal pane is open or not
+  final bool minimalPaneOpen;
+
+  /// The current navigation pane, if any
+  final NavigationPane? pane;
+
+  /// The previous index selected index.
+  ///
+  /// Usually used by a [NavigationIndicator]s to display the animation from the
+  /// old item to the new one.
+  final int previousItemIndex;
+
+  /// Used by [NavigationIndicator] to know what's the current index of the
+  /// item
+  final int currentItemIndex;
+
+  /// Whether the navigation panes are transitioning or not.
+  final bool isTransitioning;
+
+  static _InheritedNavigationView? maybeOf(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<_InheritedNavigationView>();
+  }
+
+  static _InheritedNavigationView of(BuildContext context) {
+    return maybeOf(context)!;
+  }
+
+  static Widget merge({
+    Key? key,
+    required Widget child,
+    int? currentItemIndex,
+    NavigationPane? pane,
+    PaneDisplayMode? displayMode,
+    bool? minimalPaneOpen,
+    int? previousItemIndex,
+    bool? currentItemSelected,
+    bool? isTransitioning,
+  }) {
+    return Builder(builder: (context) {
+      final current = _InheritedNavigationView.maybeOf(context);
+      return _InheritedNavigationView(
+        key: key,
+        displayMode:
+            displayMode ?? current?.displayMode ?? PaneDisplayMode.open,
+        minimalPaneOpen: minimalPaneOpen ?? current?.minimalPaneOpen ?? false,
+        currentItemIndex: currentItemIndex ?? current?.currentItemIndex ?? -1,
+        pane: pane ?? current?.pane,
+        previousItemIndex: previousItemIndex ?? current?.previousItemIndex ?? 0,
+        isTransitioning: isTransitioning ?? current?.isTransitioning ?? false,
+        child: child,
+      );
+    });
+  }
+
+  @override
+  bool updateShouldNotify(covariant _InheritedNavigationView oldWidget) {
+    return oldWidget.displayMode != displayMode ||
+        oldWidget.minimalPaneOpen != minimalPaneOpen ||
+        oldWidget.pane != pane ||
+        oldWidget.previousItemIndex != previousItemIndex ||
+        oldWidget.currentItemIndex != currentItemIndex ||
+        oldWidget.isTransitioning != isTransitioning;
   }
 }

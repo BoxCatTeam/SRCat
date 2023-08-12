@@ -14,17 +14,19 @@ dependencies:
   # Fluent UI
   # https://pub.dev/packages/fluent_ui
   # https://pub.flutter-io.cn/packages/fluent_ui
-  fluent_ui: ^4.7.0
+  fluent_ui:
+    git:
+      url: https://github.com/bdlukaa/fluent_ui.git
 
   # System Theme
   # https://pub.dev/packages/system_theme
   # https://pub.flutter-io.cn/packages/system_theme
-  system_theme: ^2.3.0
+  system_theme: ^2.3.1
   
   # Fluent UI Icons
   # https://pub.dev/packages/fluentui_system_icons
   # https://pub.flutter-io.cn/packages/fluentui_system_icons
-  fluentui_system_icons: ^1.1.205
+  fluentui_system_icons: ^1.1.208
 
   # flutter_acrylic
   # https://pub.dev/packages/flutter_acrylic
@@ -76,8 +78,8 @@ dependencies:
   # SQLite
   # https://pub.dev/packages/sqflite
   # https://pub.flutter-io.cn/packages/sqflite
-  sqflite: ^2.2.8+4
-  sqflite_common_ffi: ^2.2.5
+  sqflite: ^2.3.0
+  sqflite_common_ffi: ^2.3.0
 
   # Device Info
   # https://pub.dev/packages/device_info_plus
@@ -97,7 +99,7 @@ dependencies:
   # Dio
   # https://pub.dev/packages/dio
   # https://pub.flutter-io.cn/packages/dio
-  dio: ^5.2.1+1
+  dio: ^5.3.2
 
   # Connectivity
   # https://pub.dev/packages/connectivity_plus

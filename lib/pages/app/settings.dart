@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-07 03:42:37
-/// LastEditTime: 2023-05-22 23:18:58
+/// LastEditTime: 2023-08-12 10:06:04
 /// FilePath: /lib/pages/app/settings.dart
 /// ===========================================================================
 
@@ -199,7 +199,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     bool isChecking = ref.watch(settingsRiverpod).isCheckingUpdate;
 
     Widget about = Expander(
-      headerHeight: 55,
       header: Row(
         children: <Widget>[
           const SRCatIcon(fluent_system_icons.FluentIcons.apps_48_regular, size: 23),

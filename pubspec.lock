@@ -158,10 +158,10 @@ packages:
     dependency: "direct main"
     description:
       name: dio
-      sha256: a9d76e72985d7087eb7c5e7903224ae52b337131518d127c554b9405936752b8
+      sha256: ce75a1b40947fea0a0e16ce73337122a86762e38b982e1ccb909daa3b9bc4197
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "5.2.1+1"
+    version: "5.3.2"
   dyn_mouse_scroll:
     dependency: "direct main"
     description:
@@ -277,19 +277,20 @@ packages:
   fluent_ui:
     dependency: "direct main"
     description:
-      name: fluent_ui
-      sha256: be237134ab215d4a1591307f6286f4aa53ed5a492c2ee56be5d86be344fd16db
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "4.7.0"
+      path: "."
+      ref: HEAD
+      resolved-ref: "68889dc46636ca84c057ca4e2a8c460336c371cf"
+      url: "https://github.com/bdlukaa/fluent_ui.git"
+    source: git
+    version: "4.7.2"
   fluentui_system_icons:
     dependency: "direct main"
     description:
       name: fluentui_system_icons
-      sha256: "8f7a374e71618c101d631bdfded01f0764c882634534e1966046fd7278fec4d0"
+      sha256: "06afa3904d45bf4e455ecde7f36ac0f237a7c17a29b08c9da75444dc956a693e"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.1.205"
+    version: "1.1.208"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -751,26 +752,26 @@ packages:
     dependency: "direct main"
     description:
       name: sqflite
-      sha256: b4d6710e1200e96845747e37338ea8a819a12b51689a3bcf31eff0003b37a0b9
+      sha256: "591f1602816e9c31377d5f008c2d9ef7b8aca8941c3f89cc5fd9d84da0c38a9a"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.2.8+4"
+    version: "2.3.0"
   sqflite_common:
     dependency: transitive
     description:
       name: sqflite_common
-      sha256: e77abf6ff961d69dfef41daccbb66b51e9983cdd5cb35bf30733598057401555
+      sha256: "1b92f368f44b0dee2425bb861cfa17b6f6cf3961f762ff6f941d20b33355660a"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.4.5"
+    version: "2.5.0"
   sqflite_common_ffi:
     dependency: "direct main"
     description:
       name: sqflite_common_ffi
-      sha256: f86de82d37403af491b21920a696b19f01465b596f545d1acd4d29a0a72418ad
+      sha256: "0d5cc1be2eb18400ac6701c31211d44164393aa75886093002ecdd947be04f93"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.2.5"
+    version: "2.3.0+2"
   sqlite3:
     dependency: transitive
     description:
@@ -823,10 +824,10 @@ packages:
     dependency: "direct main"
     description:
       name: system_theme
-      sha256: "359e1965d70b9e492c2b1db4dc89544c2b4d0fd24172584d46c45f8df94a364d"
+      sha256: "1f208db140a3d1e1eac2034b54920d95699c1534df576ced44b3312c5de3975f"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.3.0"
+    version: "2.3.1"
   system_theme_web:
     dependency: transitive
     description:
