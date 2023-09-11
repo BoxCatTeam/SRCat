@@ -14,9 +14,7 @@ dependencies:
   # Fluent UI
   # https://pub.dev/packages/fluent_ui
   # https://pub.flutter-io.cn/packages/fluent_ui
-  fluent_ui:
-    git:
-      url: https://github.com/bdlukaa/fluent_ui.git
+  fluent_ui: ^4.7.3
 
   # System Theme
   # https://pub.dev/packages/system_theme
