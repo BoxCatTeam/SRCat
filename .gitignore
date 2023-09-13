@@ -45,3 +45,6 @@ app.*.map.json
 
 srcat-autoupdate.exe
 .local-chrome/
+
+/private_files
+/test_files

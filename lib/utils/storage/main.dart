@@ -1,22 +1,34 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-08 17:46:03
-/// LastEditTime: 2023-06-07 22:38:28
+/// LastEditTime: 2023-09-13 21:18:30
 /// FilePath: /lib/utils/storage/main.dart
 /// ===========================================================================
 
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:srcat/utils/main.dart';
+import 'package:srcat/application.dart';
+import 'package:srcat/compatible/config.dart';
 import 'package:srcat/utils/file/main.dart';
 
 /// 公用配置工具类
 class SRCatStorageUtils {
-  static final String _defaultConfigPath = "${SRCatFileUtils.getExeDir()}/data/config.srcat-conf";
+  static late String _defaultConfigPath;
   static bool _loaded = false;
   static Map<String, dynamic> _configMap = {};
   /// 初始化类
   static Future<void> init() async {
+    _defaultConfigPath = "${await SRCatFileUtils.getUserPackagesDir()}/${Application.msixAppSID}/AppData/srcat-conf";
+
+    // 迁移配置文件
+    if (SRCatUtils.getVersionNumber(Application.packageInfo.version) < 2003) {
+      if (await SRCatConfigCompatibleUtils.check()) {
+        await SRCatConfigCompatibleUtils.migrate();
+      }
+    }
+    
     if (_loaded) {
       if (kDebugMode) print("[Storage Utils] 请勿重复初始化。");
       return;

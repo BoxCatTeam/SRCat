@@ -22,4 +22,7 @@ class Application {
   static late PackageInfo packageInfo;
 
   static late ProviderContainer globalProviderScope;
+
+  /* MSIX App SID */
+  static const String msixAppSID = "37882BoxCat.SRCat_xw2m0v8007pzg";
 }

@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-06 19:23:46
-/// LastEditTime: 2023-06-07 02:13:23
+/// LastEditTime: 2023-09-13 20:52:50
 /// FilePath: /lib/main.dart
 /// ===========================================================================
 
@@ -52,6 +52,7 @@ Future<void> main(List<String> args) async {
   }
 
   await SRCatStorageUtils.init();
+  await SRCatFileInitUtils.initPrivateDir();
   if (await SRCatStorageUtils.asyncRead("data_path") != null) {
     await SRCatFileInitUtils.init();
     await SRCatSQLiteUtils.init();

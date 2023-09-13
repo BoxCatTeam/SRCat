@@ -775,10 +775,18 @@ packages:
     dependency: transitive
     description:
       name: sqlite3
-      sha256: "2cef47b59d310e56f8275b13734ee80a9cf4a48a43172020cb55a620121fbf66"
+      sha256: db65233e6b99e99b2548932f55a987961bc06d82a31a0665451fa0b4fff4c3fb
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.11.1"
+    version: "2.1.0"
+  sqlite3_flutter_libs:
+    dependency: "direct main"
+    description:
+      name: sqlite3_flutter_libs
+      sha256: "11a41f380fbcbda5bbba03ddcdbe0545e46094ab043783c46c70e8335831df03"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.5.17"
   stack_trace:
     dependency: transitive
     description:
@@ -975,8 +983,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: "2ca47fca737773ee8d210368da80b8af08b86f8c"
+      ref: "35c2d0f039758a29993d7f6a5389b54b78c756cc"
+      resolved-ref: "35c2d0f039758a29993d7f6a5389b54b78c756cc"
       url: "https://github.com/BakaLabs/flutter-webview-windows.git"
     source: git
     version: "0.2.4"

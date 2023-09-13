@@ -1,7 +1,7 @@
 /// ===========================================================================
 /// Copyright (c) 2020-2023, BoxCat. All rights reserved.
 /// Date: 2023-05-09 09:51:27
-/// LastEditTime: 2023-07-19 23:32:54
+/// LastEditTime: 2023-09-13 22:02:38
 /// FilePath: /lib/libs/srcat/warp/cache.dart
 /// ===========================================================================
 
@@ -9,7 +9,6 @@ import 'dart:io';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:srcat/utils/file/main.dart';
 import 'package:srcat/utils/storage/main.dart';
 
 class SRCatWarpCacheFileLib {
@@ -94,7 +93,7 @@ class SRCatWarpCacheFileLib {
     String? cache = await cacheFolder();
     if (cache == null) return null;
 
-    String path = "${SRCatFileUtils.getExeDir()}/data/hsr_data_temp";
+    String path = "${await SRCatStorageUtils.read("data_path") as String}/cache/hsr_data_temp";
     File tempCache = File(path);
 
     if (await tempCache.exists()) {

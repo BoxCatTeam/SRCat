@@ -8,6 +8,10 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 
+import 'dart:ffi';
+import 'package:ffi/ffi.dart';
+import 'package:win32/win32.dart';
+
 /// 文件工具类
 class SRCatFileUtils {
   /// 应用可执行文件路径
@@ -21,6 +25,37 @@ class SRCatFileUtils {
   /// 获取 Windows 可执行文件所在目录
   static String getExeDir() {
     return exePath.substring(0, exePath.lastIndexOf(Platform.pathSeparator));
+  }
+
+  /// 使用 ffi 与 win32 获取 用户目录/AppData/Local/Packages 目录
+  static Future<String> getUserPackagesDir() async {
+    String dir = "";
+    final Pointer<Pointer<Utf16>> pathPtrPtr = calloc<Pointer<Utf16>>();
+    final Pointer<GUID> knownFolderID = calloc<GUID>()..ref.setGUID(FOLDERID_LocalAppData);
+
+    try {
+      final int hr = SHGetKnownFolderPath(
+        knownFolderID,
+        KF_FLAG_DEFAULT,
+        NULL,
+        pathPtrPtr,
+      );
+
+      if (FAILED(hr)) {
+        if (hr == E_INVALIDARG || hr == E_FAIL) {
+          throw WindowsException(hr);
+        }
+        dir = await Future<String?>.value() ?? getExeDir();
+      }
+
+      final String path = pathPtrPtr.value.toDartString();
+      dir = await Future<String>.value(path);
+    } finally {
+      calloc.free(pathPtrPtr);
+      calloc.free(knownFolderID);
+    }
+
+    return "$dir/Packages";
   }
 
   /// 创建文件夹

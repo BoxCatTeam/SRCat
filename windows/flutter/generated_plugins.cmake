@@ -8,6 +8,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   flutter_acrylic
   screen_retriever
   sentry_flutter
+  sqlite3_flutter_libs
   system_theme
   url_launcher_windows
   webview_windows
