@@ -9,6 +9,7 @@
 <p align="center">崩坏：星穹铁道 - 工具箱 / 愿此行，有猫猫一直相伴</p>
 
 > **SRCat 开发中，并非完全体，可能存在许多奇怪的 BUG (￣﹃￣)**
+> 0.2.x 为陈旧版本，一切新版本相关的更新以 [Develop](https://github.com/BoxCatTeam/SRCat/tree/develop) 分支为准
 
 ## 使用说明
 1. 前往 [Releases](https://github.com/BoxCatTeam/SRCat/releases) 下载最新版
