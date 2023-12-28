@@ -8,7 +8,8 @@
 <h1 align="center" size="80">SRCat</h1>
 <p align="center">崩坏：星穹铁道 - 工具箱 / 愿此行，有猫猫一直相伴</p>
 
-**开发暂停中，请使用其他同类工具，比如 [Starward](https://github.com/Scighost/Starward) 。跃迁数据可以在跃迁记录页面选择导出，并导入 Starwar 等支持 [SRGF](https://uigf.org/zh/standards/SRGF.html) 的工具中( ´･･)ﾉ(._.`)**
+**开发暂停中，请使用其他同类工具，比如 [Starward](https://github.com/Scighost/Starward) 。跃迁数据可以在跃迁记录页面选择导出，并导入 Starwar 等支持 [SRGF](https://uigf.org/zh/standards/SRGF.html) 的工具中( ´･･)ﾉ(._.`)** <br/>
+**元数据与图片数据暂停更新，目前元数据版本为1.5，如急需使用，请用其它同类型工具进行代替**
 
 > **SRCat 开发中，并非完全体，可能存在许多奇怪的 BUG (￣﹃￣)** <br>
 > 0.2.x 为陈旧版本，一切新版本相关的更新以 [Develop](https://github.com/BoxCatTeam/SRCat/tree/develop) 分支为准
